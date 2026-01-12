@@ -38,14 +38,18 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
+          password: ${{ secrets.PASSWORD }}
+          port: 2222
           script: |
+            echo "--- Checking Current Directory ---"
+            pwd
+            ls -la
+
+            echo "--- Login Docker ---"
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            cd /root/carb-partner
+            cd /root/carb-partner || echo "cannot access /root/carb-partner"
 
+            echo "--- Pulling & Up ---"
             docker compose pull carb-staging
-
             docker compose up -d carb-staging
-            
             docker image prune -f
