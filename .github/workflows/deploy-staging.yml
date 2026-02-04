@@ -32,3 +32,8 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:staging
+          build-args: |
+            VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+            VITE_LINE_CLIENT_ID=${{ secrets.VITE_LINE_CLIENT_ID }}
+            VITE_LINE_REDIRECT_URI=${{ secrets.VITE_LINE_REDIRECT_URI }}
+            VITE_LINE_OAUTH_STATE=${{ secrets.VITE_LINE_OAUTH_STATE }}
