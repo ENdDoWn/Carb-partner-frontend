@@ -37,3 +37,4 @@ jobs:
             VITE_LINE_CLIENT_ID=${{ secrets.VITE_LINE_CLIENT_ID }}
             VITE_LINE_REDIRECT_URI=${{ secrets.VITE_LINE_REDIRECT_URI }}
             VITE_LINE_OAUTH_STATE=${{ secrets.VITE_LINE_OAUTH_STATE }}
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
