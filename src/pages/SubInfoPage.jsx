@@ -1,11 +1,101 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Info, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { ArrowLeft, Info, Check, Bell, PartyPopper } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import MobileLayout from '../components/MobileLayout';
+
+// Scroll Wheel Picker Component
+const ScrollWheelPicker = ({ items, value, onChange, width = 'w-20' }) => {
+  const containerRef = useRef(null);
+  const itemHeight = 48; // height of each item in px
+  const visibleItems = 5; // show 5 items (2 above, 1 center, 2 below)
+  
+  const selectedIndex = items.indexOf(value);
+  
+  useEffect(() => {
+    if (containerRef.current && selectedIndex >= 0) {
+      containerRef.current.scrollTop = selectedIndex * itemHeight;
+    }
+  }, []);
+
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const scrollTop = containerRef.current.scrollTop;
+      const index = Math.round(scrollTop / itemHeight);
+      const clampedIndex = Math.max(0, Math.min(index, items.length - 1));
+      if (items[clampedIndex] !== value) {
+        onChange(items[clampedIndex]);
+      }
+    }
+  };
+
+  const handleItemClick = (index) => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: index * itemHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  return (
+    <div className={`relative ${width}`} style={{ height: itemHeight * visibleItems }}>
+      {/* Highlight bar for selected item */}
+      <div 
+        className="absolute left-0 right-0 pointer-events-none z-10 border-t-2 border-b-2 border-[#6CD2D9]"
+        style={{ 
+          top: itemHeight * 2, 
+          height: itemHeight 
+        }}
+      />
+      
+      {/* Fade overlay top */}
+      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent pointer-events-none z-20" />
+      
+      {/* Fade overlay bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none z-20" />
+      
+      {/* Scrollable container */}
+      <div
+        ref={containerRef}
+        className="h-full overflow-y-auto no-scrollbar snap-y snap-mandatory"
+        onScroll={handleScroll}
+        style={{ scrollSnapType: 'y mandatory' }}
+      >
+        {/* Padding items at top */}
+        <div style={{ height: itemHeight * 2 }} />
+        
+        {items.map((item, index) => {
+          const isSelected = item === value;
+          return (
+            <div
+              key={index}
+              onClick={() => handleItemClick(index)}
+              className={`flex items-center justify-center cursor-pointer snap-center transition-all duration-150 ${
+                isSelected 
+                  ? 'text-[#6CD2D9] font-bold text-xl' 
+                  : 'text-slate-300 text-lg'
+              }`}
+              style={{ height: itemHeight }}
+            >
+              {item}
+            </div>
+          );
+        })}
+        
+        {/* Padding items at bottom */}
+        <div style={{ height: itemHeight * 2 }} />
+      </div>
+    </div>
+  );
+};
 
 // Main Component
 const SubInfoPage = () => {
-  // 1. State สำหรับควบคุม Step (1-4)
+  const navigate = useNavigate();
+
+  // 1. State สำหรับควบคุม Step (1-6)
   const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 6;
 
   // 2. State สำหรับเก็บข้อมูลทั้งหมด
   const [formData, setFormData] = useState({
@@ -19,7 +109,7 @@ const SubInfoPage = () => {
   // --- Handlers ---
   
   const handleNext = () => {
-    if (currentStep < 4) {
+    if (currentStep < totalSteps) {
       setCurrentStep(prev => prev + 1);
     } else {
       handleSubmit();
@@ -49,16 +139,19 @@ const SubInfoPage = () => {
   const handleSubmit = () => {
     // 🔥 ส่งข้อมูลไป Backend ตรงนี้
     console.log("Ready to submit:", formData);
-    alert("บันทึกข้อมูลสำเร็จ! (ดูใน Console)");
+    // Navigate to home after submit
+    navigate('/home');
   };
 
   // คำนวณ % ของ Progress Bar
-  const progressPercentage = (currentStep / 4) * 100;
+  const progressPercentage = (currentStep / totalSteps) * 100;
 
   return (
+    <MobileLayout>
     <div className="min-h-screen bg-white font-sans text-slate-800 flex flex-col relative overflow-hidden">
       
-      {/* --- Header & Progress Bar --- */}
+      {/* --- Header & Progress Bar (Hidden on Step 6) --- */}
+      {currentStep !== 6 && (
       <div className="pt-6 pb-4 px-4 bg-white z-10">
         {/* Top Nav */}
         <div className="flex items-center mb-4">
@@ -66,14 +159,14 @@ const SubInfoPage = () => {
             <ArrowLeft size={24} className="text-slate-700" />
           </button>
           <span className="ml-2 font-bold text-lg text-slate-800">
-            {currentStep === 4 ? '' : 'Tell us a bit about yourself'}
+            {currentStep === 4 || currentStep === 5 ? '' : 'บอกเราเกี่ยวกับตัวคุณหน่อย'}
           </span>
         </div>
 
         {/* Animated Progress Bar */}
         <div className="space-y-2">
           <div className="flex justify-between text-xs font-semibold text-slate-400">
-            <span>Step {currentStep} of 4</span>
+            <span>ขั้นตอนที่ {currentStep} จาก {totalSteps}</span>
           </div>
           <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
             <div 
@@ -83,27 +176,28 @@ const SubInfoPage = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* --- Body Content (Switches based on Step) --- */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 pb-24">
+      <div className={`flex-1 overflow-y-auto px-6 py-4 pb-24 ${currentStep === 6 ? 'flex items-center justify-center' : ''}`}>
         
         {/* STEP 1: GENDER */}
         {currentStep === 1 && (
           <div className="animate-fade-in space-y-8">
             <div className="text-center mt-4">
-              <h2 className="text-2xl font-bold mb-2">What is your gender?</h2>
-              <p className="text-slate-500">This helps us calculate your nutritional needs more accurately.</p>
+              <h2 className="text-2xl font-bold mb-2">คุณเป็นเพศอะไร?</h2>
+              <p className="text-slate-500">ข้อมูลนี้ช่วยให้เราคำนวณความต้องการโภชนาการของคุณได้แม่นยำขึ้น</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <GenderCard 
-                label="Male" 
+                label="ชาย" 
                 icon="♂" 
                 selected={formData.gender === 'male'} 
                 onClick={() => updateData('gender', 'male')} 
               />
               <GenderCard 
-                label="Female" 
+                label="หญิง" 
                 icon="♀" 
                 selected={formData.gender === 'female'} 
                 onClick={() => updateData('gender', 'female')} 
@@ -116,28 +210,28 @@ const SubInfoPage = () => {
         {currentStep === 2 && (
           <div className="animate-fade-in space-y-8">
              <div className="mt-2">
-              <h2 className="text-2xl font-bold mb-2">What's your weekly activity level?</h2>
-              <p className="text-slate-500">Exercise impacts your blood sugar. Let us know your typical routine.</p>
+              <h2 className="text-2xl font-bold mb-2">ระดับกิจกรรมของคุณต่อสัปดาห์?</h2>
+              <p className="text-slate-500">การออกกำลังกายส่งผลต่อระดับน้ำตาลในเลือด บอกเราเกี่ยวกับกิจวัตรของคุณ</p>
             </div>
 
             <div className="space-y-4">
               <ActivityOption 
-                title="Not Very Active" 
-                desc="0-2 days/week" 
+                title="ไม่ค่อยออกกำลังกาย" 
+                desc="0-2 วัน/สัปดาห์" 
                 icon="🚶"
                 selected={formData.activityLevel === 'low'}
                 onClick={() => updateData('activityLevel', 'low')}
               />
               <ActivityOption 
-                title="Lightly Active" 
-                desc="3-4 days/week" 
+                title="ออกกำลังกายเบาๆ" 
+                desc="3-4 วัน/สัปดาห์" 
                 icon="🏃"
                 selected={formData.activityLevel === 'medium'}
                 onClick={() => updateData('activityLevel', 'medium')}
               />
               <ActivityOption 
-                title="Active" 
-                desc="5+ days/week" 
+                title="ออกกำลังกายสม่ำเสมอ" 
+                desc="5+ วัน/สัปดาห์" 
                 icon="🏋️"
                 selected={formData.activityLevel === 'high'}
                 onClick={() => updateData('activityLevel', 'high')}
@@ -150,20 +244,20 @@ const SubInfoPage = () => {
         {currentStep === 3 && (
           <div className="animate-fade-in space-y-8">
             <div className="mt-2">
-              <h2 className="text-2xl font-bold mb-2">Physical Data</h2>
-              <p className="text-slate-500">Let's get some basic information to personalize your experience.</p>
+              <h2 className="text-2xl font-bold mb-2">ข้อมูลร่างกาย</h2>
+              <p className="text-slate-500">กรอกข้อมูลพื้นฐานเพื่อปรับแต่งประสบการณ์ของคุณ</p>
             </div>
 
             <div className="space-y-6">
               {/* Weight */}
               <div className="space-y-2">
-                <label className="font-bold text-slate-700">Weight</label>
+                <label className="font-bold text-slate-700">น้ำหนัก</label>
                 <div className="relative">
                   <input 
                     type="number" 
                     value={formData.weight}
                     onChange={(e) => updateData('weight', e.target.value)}
-                    placeholder="Enter your weight"
+                    placeholder="กรอกน้ำหนักของคุณ"
                     className="w-full px-4 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-lg"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">kg</span>
@@ -172,13 +266,13 @@ const SubInfoPage = () => {
 
               {/* Height */}
               <div className="space-y-2">
-                <label className="font-bold text-slate-700">Height</label>
+                <label className="font-bold text-slate-700">ส่วนสูง</label>
                 <div className="relative">
                   <input 
                     type="number" 
                     value={formData.height}
                     onChange={(e) => updateData('height', e.target.value)}
-                    placeholder="Enter your height"
+                    placeholder="กรอกส่วนสูงของคุณ"
                     className="w-full px-4 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-lg"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">cm</span>
@@ -188,7 +282,7 @@ const SubInfoPage = () => {
               {/* Info Note */}
               <div className="flex gap-3 items-start bg-cyan-50 p-4 rounded-xl">
                 <Info className="text-[#6CD2D9] shrink-0 mt-1" size={20} />
-                <p className="text-sm text-slate-600">This information is used to calculate your BMI and personalize your health plan.</p>
+                <p className="text-sm text-slate-600">ข้อมูลนี้ใช้คำนวณค่า BMI และปรับแต่งแผนสุขภาพของคุณ</p>
               </div>
             </div>
           </div>
@@ -198,55 +292,122 @@ const SubInfoPage = () => {
         {currentStep === 4 && (
           <div className="animate-fade-in space-y-8 text-center pt-8">
             <div>
-              <h2 className="text-2xl font-bold mb-2">What's your date of birth?</h2>
-              <p className="text-slate-500">Your age helps us tailor your health recommendations.</p>
+              <h2 className="text-2xl font-bold mb-2">วันเกิดของคุณคือ?</h2>
+              <p className="text-slate-500">อายุของคุณช่วยให้เราปรับคำแนะนำด้านสุขภาพให้เหมาะสม</p>
             </div>
 
-            {/* Simulated Date Picker Style */}
-            <div className="flex gap-2 justify-center mt-10">
-              <input 
-                type="number" placeholder="DD" 
-                className="w-20 p-4 text-center text-xl font-bold border-b-2 border-slate-200 focus:border-[#6CD2D9] focus:outline-none bg-transparent"
-                value={formData.birthDate.day}
-                onChange={(e) => updateDate('day', e.target.value)}
+            {/* Scroll Wheel Date Picker */}
+            <div className="flex justify-center gap-2 mt-6">
+              <ScrollWheelPicker
+                items={Array.from({ length: 31 }, (_, i) => i + 1)}
+                value={formData.birthDate.day ? parseInt(formData.birthDate.day) : 15}
+                onChange={(val) => updateDate('day', val.toString())}
+                width="w-16"
               />
-              <input 
-                type="number" placeholder="MM" 
-                className="w-20 p-4 text-center text-xl font-bold border-b-2 border-slate-200 focus:border-[#6CD2D9] focus:outline-none bg-transparent"
-                value={formData.birthDate.month}
-                onChange={(e) => updateDate('month', e.target.value)}
+              <ScrollWheelPicker
+                items={['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.']}
+                value={formData.birthDate.month ? getMonthName(parseInt(formData.birthDate.month)) : 'ก.ย.'}
+                onChange={(val) => updateDate('month', (getMonthIndex(val) + 1).toString())}
+                width="w-20"
               />
-              <input 
-                type="number" placeholder="YYYY" 
-                className="w-24 p-4 text-center text-xl font-bold border-b-2 border-slate-200 focus:border-[#6CD2D9] focus:outline-none bg-transparent"
-                value={formData.birthDate.year}
-                onChange={(e) => updateDate('year', e.target.value)}
+              <ScrollWheelPicker
+                items={Array.from({ length: 80 }, (_, i) => 2025 - i)}
+                value={formData.birthDate.year ? parseInt(formData.birthDate.year) : 1999}
+                onChange={(val) => updateDate('year', val.toString())}
+                width="w-20"
               />
             </div>
+          </div>
+        )}
 
-             {/* Visual helper for scroll (Decoration only since real scroll is hard in pure CSS) */}
-             <div className="mt-8 opacity-30 pointer-events-none select-none">
-                <div className="text-3xl font-bold text-slate-300">14 Aug 1998</div>
-                <div className="text-3xl font-bold text-[#6CD2D9] my-2">
-                    {formData.birthDate.day || '15'} {formData.birthDate.month ? getMonthName(formData.birthDate.month) : 'Sep'} {formData.birthDate.year || '1999'}
-                </div>
-                <div className="text-3xl font-bold text-slate-300">16 Oct 2000</div>
-             </div>
+        {/* STEP 5: NOTIFICATIONS */}
+        {currentStep === 5 && (
+          <div className="animate-fade-in flex flex-col items-center justify-center text-center pt-12">
+            {/* Icon Circle */}
+            <div className="w-24 h-24 bg-cyan-50 rounded-full flex items-center justify-center mb-8">
+              <Bell className="text-[#6CD2D9] w-10 h-10" />
+            </div>
+
+            {/* Text */}
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">
+              เปิดการแจ้งเตือน
+            </h2>
+            <p className="text-slate-500 leading-relaxed max-w-xs mb-8">
+              รับการแจ้งเตือนสำหรับมื้ออาหาร ยา และการตรวจน้ำตาลในเลือด เพื่อดูแลสุขภาพของคุณอย่างต่อเนื่อง
+            </p>
+          </div>
+        )}
+
+        {/* STEP 6: ALL SET - CELEBRATION */}
+        {currentStep === 6 && (
+          <div className="animate-fade-in flex flex-col items-center justify-center text-center pt-12 relative">
+            {/* Confetti Animation */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {[...Array(50)].map((_, i) => (
+                <div
+                  key={i}
+                  className="confetti"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 3}s`,
+                    backgroundColor: ['#6CD2D9', '#FCD34D', '#F472B6', '#A78BFA', '#34D399', '#FB923C'][Math.floor(Math.random() * 6)],
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Icon Circle with Animation */}
+            <div className="w-24 h-24 bg-cyan-50 rounded-full flex items-center justify-center mb-8 animate-bounce-slow">
+              <PartyPopper className="text-[#6CD2D9] w-10 h-10 animate-wiggle" />
+            </div>
+
+            {/* Text */}
+            <h2 className="text-2xl font-bold text-slate-900 mb-4 animate-scale-in">
+              พร้อมใช้งานแล้ว!
+            </h2>
+            <p className="text-slate-500 leading-relaxed max-w-xs mb-8 animate-fade-in-delayed">
+              ยินดีที่ตั้งค่าเสร็จสมบูรณ์ การเดินทางดูแลสุขภาพเบาหวานของคุณเริ่มต้นแล้ว
+            </p>
           </div>
         )}
       </div>
 
       {/* --- Footer (Fixed Bottom) --- */}
-      <div className="absolute bottom-0 left-0 w-full p-4 bg-white border-t border-slate-100">
-        <button
-          onClick={handleNext}
-          className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white font-bold py-4 rounded-full shadow-lg transition duration-200 text-lg"
-        >
-          Continue
-        </button>
+      <div className={`absolute bottom-0 left-0 w-full p-4 bg-white ${currentStep !== 6 ? 'border-t border-slate-100' : ''}`}>
+        {currentStep === 6 ? (
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white font-bold py-4 rounded-full shadow-lg transition duration-200 text-lg"
+          >
+            เริ่มใช้งาน Carb Partner
+          </button>
+        ) : currentStep === 5 ? (
+          <div className="space-y-3">
+            <button
+              onClick={handleNext}
+              className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white font-bold py-4 rounded-full shadow-lg transition duration-200 text-lg"
+            >
+              อนุญาตการแจ้งเตือน
+            </button>
+            <button
+              onClick={handleNext}
+              className="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-4 rounded-full transition duration-200 text-lg"
+            >
+              ไม่อนุญาต
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleNext}
+            className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white font-bold py-4 rounded-full shadow-lg transition duration-200 text-lg"
+          >
+            ดำเนินการต่อ
+          </button>
+        )}
       </div>
 
     </div>
+    </MobileLayout>
   );
 };
 
@@ -292,8 +453,14 @@ const ActivityOption = ({ title, desc, icon, selected, onClick }) => (
 
 // Helper for month name
 const getMonthName = (monthNum) => {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return months[monthNum - 1] || "Sep";
+    const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    return months[monthNum - 1] || "ก.ย.";
+};
+
+// Helper for month index
+const getMonthIndex = (monthName) => {
+    const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    return months.indexOf(monthName);
 };
 
 // Add simple fade-in animation to Tailwind config if not exists, 

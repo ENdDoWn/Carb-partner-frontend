@@ -3,12 +3,14 @@ import {
   ChevronLeft, ChevronRight, User, Pencil, 
   HelpCircle, Mail, LogOut, Camera
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // Import Components ที่แยกไว้ (ใช้ร่วมกับหน้าอื่น)
 import MobileLayout from '../components/MobileLayout';
 import BottomNavigation from '../components/Navigation';
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
   // --- 1. State ---
   const [isEditing, setIsEditing] = useState(false); // ควบคุมการเปิด/ปิดหน้า Edit
   
@@ -68,7 +70,7 @@ const ProfilePage = () => {
           
           {/* Header */}
           <div className="bg-white p-4 pt-safe-top flex items-center justify-between sticky top-0 z-10">
-             <button className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
+             <button onClick={() => navigate('/home')} className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
                 <ChevronLeft size={24} />
              </button>
              <h1 className="text-lg font-bold text-slate-800">โปรไฟล์</h1>

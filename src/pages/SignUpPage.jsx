@@ -183,7 +183,6 @@ const SignUpPage = () => {
 
       <div className="w-full max-w-sm space-y-3">
         <GoogleLoginButton />
-        <SocialButton icon={<FacebookIcon />} text="ลงทะเบียนด้วย Facebook" />
         <LineLoginButton />
       </div>
 

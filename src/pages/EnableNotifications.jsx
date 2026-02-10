@@ -1,8 +1,10 @@
 import React from 'react';
 import { Bell } from 'lucide-react';
+import MobileLayout from '../components/MobileLayout';
 
 const EnableNotifications = () => {
   return (
+    <MobileLayout>
     <div className="min-h-screen bg-white flex flex-col p-6 font-sans text-slate-800 relative">
       
       {/* Content Container (Centered vertically) */}
@@ -33,6 +35,7 @@ const EnableNotifications = () => {
         </button>
       </div>
     </div>
+    </MobileLayout>
   );
 };
 

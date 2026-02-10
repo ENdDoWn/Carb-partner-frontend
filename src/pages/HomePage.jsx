@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Bell, User, Search, Droplet, ChevronRight, 
   Coffee, Sun, Moon, IceCream, Utensils 
@@ -8,6 +9,22 @@ import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
 
 const HomePage = () => {
+  const navigate = useNavigate();
+  const [showBloodSugarModal, setShowBloodSugarModal] = useState(false);
+  const [bloodSugarInput, setBloodSugarInput] = useState('');
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (showBloodSugarModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [showBloodSugarModal]);
+  
   const userData = {
     name: "จอห์น โด",
     date: "อังคาร, 26 พ.ย.",
@@ -31,7 +48,7 @@ const HomePage = () => {
       <div className="flex-1 overflow-y-auto overflow-x-hidden pb-28 no-scrollbar">
         
         {/* Header Section */}
-        <div className="bg-white p-6 pb-4 rounded-b-3xl shadow-sm pt-safe-top relative z-10">
+        <div className=" p-6 pb-4 pt-safe-top relative z-10">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white overflow-hidden border-2 border-white shadow-sm">
@@ -43,11 +60,14 @@ const HomePage = () => {
                 <p className="text-xs text-slate-500 mt-1">{userData.date}</p>
               </div>
             </div>
-            <div className="flex gap-2">
-              <button className="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 border border-slate-100 active:bg-slate-100">
+            <div className="flex gap-2 flex-col">
+              <button 
+                onClick={() => navigate('/profile')}
+                className="w-15 h-15 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 border border-slate-100 active:bg-slate-100 shadow-sm"
+              >
                  <User size={20} />
               </button>
-              <button className="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 border border-slate-100 relative active:bg-slate-100">
+              <button className="w-15 h-15 flex items-center justify-center bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 border border-slate-100 relative active:bg-slate-100 shadow-sm">
                  <Bell size={20} />
                  <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
               </button>
@@ -56,7 +76,7 @@ const HomePage = () => {
 
           {/* Carb Ring */}
           <div className="flex justify-center my-4 relative">
-            <div className="relative w-48 h-48 flex items-center justify-center">
+            <div className="relative w- h-48 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90">
                 <circle cx="50%" cy="50%" r={radius} stroke="#E2E8F0" strokeWidth="12" fill="transparent" strokeLinecap="round" />
                 <circle cx="50%" cy="50%" r={radius} stroke="#6CD2D9" strokeWidth="12" fill="transparent" strokeDasharray={circumference} strokeDashoffset={dashOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
@@ -73,7 +93,10 @@ const HomePage = () => {
         <div className="px-5 mt-6 space-y-6">
           
           {/* Search Bar */}
-          <button className="w-full bg-gradient-to-r from-[#7ddce3] to-[#5fb4bb] p-4 rounded-2xl flex items-center justify-between text-white shadow-md active:scale-[0.98] transition-transform">
+          <button 
+            onClick={() => navigate('/find-food')}
+            className="w-full h-25 bg-[#6CD2D9] p-4 rounded-2xl flex items-center justify-between text-white shadow-md active:scale-[0.98] transition-transform"
+          >
             <div className="flex items-center gap-4">
                <div className="bg-white/20 p-2 rounded-lg">
                   <Search size={24} />
@@ -100,7 +123,10 @@ const HomePage = () => {
                  </span>
               </div>
               <p className="text-[10px] text-slate-400 mb-4">ล่าสุดเมื่อ {userData.lastCheck}</p>
-              <button className="bg-[#55BCC3] text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm active:bg-[#4aaeb5]">
+              <button 
+                onClick={() => setShowBloodSugarModal(true)}
+                className="bg-[#55BCC3] text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm active:bg-[#4aaeb5]"
+              >
                 บันทึกกลูโคส
               </button>
             </div>
@@ -129,15 +155,61 @@ const HomePage = () => {
                 </p>
              </div>
              
-             <div className="flex items-center justify-end gap-1 text-[#8D6E33] text-xs font-bold">
+             <button 
+                onClick={() => navigate('/health')}
+                className="flex items-center justify-end gap-1 text-[#8D6E33] text-xs font-bold ml-auto"
+             >
                 <span>อ่านต่อ</span>
                 <ChevronRight size={14} />
-             </div>
+             </button>
           </div>
         </div>
       </div>
 
 
+        
+      {/* Blood Sugar Modal */}
+      {showBloodSugarModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-6">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+            <h3 className="text-xl font-bold text-slate-800 mb-1">Blood Sugar</h3>
+            <p className="text-sm text-slate-400 mb-6">Enter your current Blood Sugar</p>
+            
+            <div className="relative mb-6">
+              <input
+                type="number"
+                value={bloodSugarInput}
+                onChange={(e) => setBloodSugarInput(e.target.value)}
+                placeholder=""
+                className="w-full px-4 py-3 pr-16 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-lg"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">mg/dL</span>
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowBloodSugarModal(false);
+                  setBloodSugarInput('');
+                }}
+                className="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-full hover:bg-slate-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  console.log('Blood Sugar saved:', bloodSugarInput);
+                  setShowBloodSugarModal(false);
+                  setBloodSugarInput('');
+                }}
+                className="flex-1 bg-[#6CD2D9] text-white font-bold py-3 rounded-full hover:bg-[#5bc0c7] transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
         
       {/* เรียกใช้ Nav Bar โดยส่ง prop activePage="home" */}
       <Navigation activePage="home" />
