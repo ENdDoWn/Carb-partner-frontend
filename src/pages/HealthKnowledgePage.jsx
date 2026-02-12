@@ -12,11 +12,18 @@ import Navigation from '../components/Navigation';
 
 const HealthKnowledgePage = () => {
   const navigate = useNavigate();
+   const handleBack = () => {
+      if (window.history.length > 1) {
+         navigate(-1);
+      } else {
+         navigate('/home');
+      }
+   };
   return (
     <MobileLayout>
       {/* --- Header --- */}
       <div className="bg-white p-4 pt-safe-top flex items-center justify-between sticky top-0 z-10 border-b border-slate-50">
-         <button onClick={() => navigate('/home')} className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
+         <button onClick={handleBack} className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
             <ChevronLeft size={24} />
          </button>
          <h1 className="text-lg font-bold text-slate-800">ความรู้สุขภาพ</h1>

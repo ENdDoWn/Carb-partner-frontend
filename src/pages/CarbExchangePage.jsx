@@ -2,12 +2,21 @@ import React from 'react';
 import { 
   ChevronLeft, Search, ArrowUpDown, Info 
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // Import Shared Components
 import MobileLayout from '../components/MobileLayout';
 import Navigation from '../components/Navigation';
 
 const CarbExchangePage = () => {
+   const navigate = useNavigate();
+   const handleBack = () => {
+      if (window.history.length > 1) {
+         navigate(-1);
+      } else {
+         navigate('/home');
+      }
+   };
   return (
     <MobileLayout>
       {/* --- Header --- */}

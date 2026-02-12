@@ -42,6 +42,11 @@ const ProfilePage = () => {
     setIsEditing(false);
   };
 
+   const handleLogout = () => {
+      localStorage.removeItem('access_token');
+      navigate('/signin');
+   };
+
   // บันทึกข้อมูล
   const handleSave = () => {
     // คำนวณ BMI ใหม่แบบคร่าวๆ
@@ -124,7 +129,10 @@ const ProfilePage = () => {
             </div>
 
             {/* Logout */}
-            <button className="w-full bg-red-50 text-red-500 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition-colors">
+                  <button
+                     onClick={handleLogout}
+                     className="w-full bg-red-50 text-red-500 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition-colors"
+                  >
                <LogOut size={20} />
                <span>ออกจากระบบ</span>
             </button>

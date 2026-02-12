@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import ProtectedRoute from './components/ProtectedRoute'
+import ProfileGate from './components/ProfileGate';
 import LineCallbackPage from './pages/LineCallbackPage';
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
@@ -22,14 +23,15 @@ function App() {
         <Route path="/" element={<Navigate to="/signin" replace />} />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/check-profile" element={<ProtectedRoute><ProfileGate /></ProtectedRoute>} />
         <Route path="/subinfo" element={<ProtectedRoute><SubInfoPage /></ProtectedRoute>} />
-        <Route path="/feedback" element={<FeedbackPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/daily" element={<DailyPage />} />
-        <Route path="/stats" element={<StatsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/health" element={<HealthKnowledgePage />} />
-        <Route path="/exchange" element={<CarbExchangePage />} />
+        <Route path="/feedback" element={<ProtectedRoute><FeedbackPage /></ProtectedRoute>} />
+        <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+        <Route path="/daily" element={<ProtectedRoute><DailyPage /></ProtectedRoute>} />
+        <Route path="/stats" element={<ProtectedRoute><StatsPage /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="/health" element={<ProtectedRoute><HealthKnowledgePage /></ProtectedRoute>} />
+        <Route path="/exchange" element={<ProtectedRoute><CarbExchangePage /></ProtectedRoute>} />
         <Route path="/line/callback" element={<LineCallbackPage />} />
         <Route path="/find-food" element={<FindFoodPage />} />
         <Route path="/food-details" element={<FoodDetailsPage />} />

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   ChevronLeft, TrendingUp, TrendingDown,
   ChevronRight, MoreHorizontal 
@@ -131,7 +132,15 @@ const CustomLineChart = ({ activeTab }) => {
 
 // --- Main Page Component ---
 const StatsPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('สัปดาห์');
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/home');
+    }
+  };
 
   return (
     <MobileLayout>

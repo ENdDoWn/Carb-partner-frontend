@@ -3,6 +3,7 @@ import {
   Bell, User, Search, Plus, Home, BarChart2, ScanLine, History, ArrowRightLeft, 
   ChevronLeft, ChevronRight, Calendar, Clock, Utensils, Coffee, Sun, Moon, IceCream, X
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
@@ -159,8 +160,16 @@ const CircularProgress = ({ value, max, color, size = 120, strokeWidth = 10, lab
 
 // --- Main Page Component ---
 const DailyLogPage = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/home');
+    }
+  };
 
   // Lock body scroll when modal is open
   useEffect(() => {

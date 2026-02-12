@@ -43,7 +43,7 @@ const SignInPage = () => {
       });
       
       localStorage.setItem('access_token', res.data.access_token);
-      navigate('/subinfo');
+      navigate('/check-profile');
 
     } catch (error) {
       console.error("Login Error:", error);
