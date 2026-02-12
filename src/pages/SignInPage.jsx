@@ -5,6 +5,7 @@ import GoogleLoginButton from '../components/GoogleLoginButton';
 import PrivacyModal from '../components/PrivacyModal';
 import LineLoginButton from '../components/LineLoginButton';
 import api from '../api';
+import CarbIcon from '../assets/images/carb-icon.png';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ const SignInPage = () => {
       <div className="mb-6 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center">
-            <span className="text-cyan-500 font-bold text-xl">C</span>
+            <img src={CarbIcon} alt="Carb Partner Logo" className="w-10 h-10" />
           </div>
           <span className="text-xl font-bold text-slate-900">Carb Partner</span>
         </div>

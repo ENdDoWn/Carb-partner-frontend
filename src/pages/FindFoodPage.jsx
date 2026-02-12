@@ -10,16 +10,16 @@ import Navigation from '../components/Navigation';
 const FindFoodPage = () => {
   // Mock Data สำหรับรายการอาหาร
   const foodItems = [
-    { id: 1, name: "Apple", detail: "1 medium (182g)", emoji: "🍎", bg: "bg-red-100" },
-    { id: 2, name: "Banana", detail: "1 medium (118g)", emoji: "🍌", bg: "bg-yellow-100" },
-    { id: 3, name: "Brown Rice", detail: "1 cup cooked (195g)", emoji: "🍚", bg: "bg-orange-100" },
-    { id: 4, name: "Chicken Breast", detail: "100g, grilled", emoji: "🍗", bg: "bg-orange-50" },
-    { id: 5, name: "Broccoli", detail: "1 cup chopped (91g)", emoji: "🥦", bg: "bg-green-100" },
-    { id: 6, name: "Almonds", detail: "1/4 cup (28g)", emoji: "🌰", bg: "bg-amber-100" },
+    { id: 1, name: "แอปเปิ้ล", detail: "1 ลูกกลาง (182 กรัม)", emoji: "🍎", bg: "bg-red-100" },
+    { id: 2, name: "กล้วยหอม", detail: "1 ลูกกลาง (118 กรัม)", emoji: "🍌", bg: "bg-yellow-100" },
+    { id: 3, name: "ข้าวกล้อง", detail: "1 ถ้วยหุงสุก (195 กรัม)", emoji: "🍚", bg: "bg-orange-100" },
+    { id: 4, name: "อกไก่", detail: "100 กรัม, ย่าง", emoji: "🍗", bg: "bg-orange-50" },
+    { id: 5, name: "บร็อคโคลี", detail: "1 ถ้วยหั่น (91 กรัม)", emoji: "🥦", bg: "bg-green-100" },
+    { id: 6, name: "อัลมอนด์", detail: "1/4 ถ้วย (28 กรัม)", emoji: "🌰", bg: "bg-amber-100" },
   ];
 
   // Filter Chips
-  const filters = ["All", "Recent", "Fruits", "Vegetables", "Meat", "Dairy", "Snacks", "Beverages", "Desserts"];
+  const filters = ["ทั้งหมด", "ล่าสุด", "ผลไม้", "ผัก", "เนื้อสัตว์", "นมและผลิตภัณฑ์นม", "ของว่าง", "เครื่องดื่ม", "ขนมหวาน"];
 
   return (
     <MobileLayout>
@@ -28,7 +28,7 @@ const FindFoodPage = () => {
          <button className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
             <ChevronLeft size={24} />
          </button>
-         <h1 className="text-lg font-bold text-slate-800">Find a Food</h1>
+         <h1 className="text-lg font-bold text-slate-800">ค้นหาอาหาร</h1>
          <div className="w-10"></div>
       </div>
 
@@ -40,7 +40,7 @@ const FindFoodPage = () => {
            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
            <input 
               type="text" 
-              placeholder="Search for food..."
+              placeholder="ค้นหาอาหาร..."
               className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-slate-200 text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6CD2D9]"
            />
         </div>
@@ -62,7 +62,7 @@ const FindFoodPage = () => {
         </div>
 
         {/* Popular Items Header */}
-        <h2 className="font-bold text-slate-800 mb-4 text-base">Popular Items</h2>
+        <h2 className="font-bold text-slate-800 mb-4 text-base">รายการยอดนิยม</h2>
 
         {/* Food List */}
         <div className="space-y-4">

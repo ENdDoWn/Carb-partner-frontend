@@ -211,10 +211,10 @@ const DailyLogPage = () => {
       {/* --- Top Bar --- */}
       <div className="bg-[#F8FAFC] px-4 pt-safe-top pb-2">
         <div className="flex items-center justify-between py-4">
-          <button className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-full">
-            <ChevronLeft size={24} />
-          </button>
-          <h1 className="text-lg font-bold text-slate-800">บันทึกประจำวัน</h1>
+          <div className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-full">
+
+          </div>
+          <h1 className="text-lg font-bold text-slate-800 text-center w-full">บันทึกประจำวัน</h1>
           <button 
             onClick={() => setShowCalendar(true)}
             className="p-2 -mr-2 text-slate-600 hover:bg-slate-100 rounded-full"

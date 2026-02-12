@@ -139,11 +139,9 @@ const StatsPage = () => {
       {/* Header */}
       <div className="px-4 pt-safe-top pb-2 bg-white sticky top-0 z-20">
         <div className="flex items-center justify-between py-3">
-          <button className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
-            <ChevronLeft size={24} />
-          </button>
-          <h1 className="text-lg font-bold text-slate-800">สถิติ</h1>
-          <div className="w-10"></div> {/* Spacer */}
+
+          <h1 className="text-lg font-bold text-slate-800 text-center w-full">สถิติ</h1>
+
         </div>
 
         {/* Tabs Segmented Control */}
