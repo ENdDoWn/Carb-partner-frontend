@@ -3,10 +3,19 @@ import {
   ChevronLeft, Droplet, Flame, Zap, Dumbbell, 
   CheckCircle2, Info, Utensils
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import MobileLayout from '../components/MobileLayout';
 
 const FoodDetailsPage = () => {
+   const navigate = useNavigate();
+   const handleBack = () => {
+      if (window.history.length > 1) {
+         navigate(-1);
+      } else {
+         navigate('/home');
+      }
+   };
   return (
     <MobileLayout>
       
@@ -22,7 +31,7 @@ const FoodDetailsPage = () => {
          
          {/* Top Navigation Overlay */}
          <div className="absolute top-0 left-0 w-full p-4 pt-safe-top z-10 flex justify-between items-center">
-            <button className="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-slate-800 hover:bg-white shadow-sm">
+            <button onClick={handleBack} className="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-slate-800 hover:bg-white shadow-sm">
                <ChevronLeft size={24} />
             </button>
          </div>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Info, Check, Bell, PartyPopper } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/MobileLayout';
+import { saveUserQuestionnaire, getUserInfo } from '../Api/User';
 
 // Scroll Wheel Picker Component
 const ScrollWheelPicker = ({ items, value, onChange, width = 'w-20' }) => {
@@ -36,6 +37,8 @@ const ScrollWheelPicker = ({ items, value, onChange, width = 'w-20' }) => {
       });
     }
   };
+
+
 
   return (
     <div className={`relative ${width}`} style={{ height: itemHeight * visibleItems }}>
@@ -96,19 +99,32 @@ const SubInfoPage = () => {
   // 1. State สำหรับควบคุม Step (1-6)
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 6;
+  const [alertMessage, setAlertMessage] = useState('');
 
   // 2. State สำหรับเก็บข้อมูลทั้งหมด
   const [formData, setFormData] = useState({
-    gender: '', // 'male' | 'female'
-    activityLevel: '', // 'low' | 'medium' | 'high'
+    sex: '', // 'male' | 'female'
+    active: '', // 'low' | 'medium' | 'high'
     weight: '',
     height: '',
-    birthDate: { day: '', month: '', year: '' }
+    birth_date: { day: '', month: '', year: '' }
   });
 
+  useEffect(() => {
+    // ตรวจสอบก่อนว่าถ้ายังไม่มีข้อมูล ให้ใส่ค่า Default ลงไปเลย
+    if (!formData.birth_date.day) updateDate('day', '15');
+    if (!formData.birth_date.month) updateDate('month', '9'); // ก.ย.
+    if (!formData.birth_date.year) updateDate('year', '1999');
+  }, []);
   // --- Handlers ---
   
   const handleNext = () => {
+    const validationMessage = validateStep(currentStep, formData);
+    if (validationMessage) {
+      setAlertMessage(validationMessage);
+      return;
+    }
+
     if (currentStep < totalSteps) {
       setCurrentStep(prev => prev + 1);
     } else {
@@ -120,6 +136,11 @@ const SubInfoPage = () => {
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1);
     } else {
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate('/signin');
+      }
       // Logic for going back to previous page (e.g., Login)
       console.log("Back to previous page");
     }
@@ -132,16 +153,70 @@ const SubInfoPage = () => {
   const updateDate = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      birthDate: { ...prev.birthDate, [field]: value }
+      birth_date: { ...prev.birth_date, [field]: value }
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const validationMessage = validateStep(totalSteps, formData, true);
+    if (validationMessage) {
+      setAlertMessage(validationMessage);
+      return;
+    }
+
     // 🔥 ส่งข้อมูลไป Backend ตรงนี้
     console.log("Ready to submit:", formData);
-    // Navigate to home after submit
+    const formattedData = {
+      ...formData,
+      birth_date: formatThaiDate(formData.birth_date) // Format as dd-mm-yyyy
+    }
+    console.log("Formatted Data:", formattedData);
+    const res = await saveUserQuestionnaire(formattedData);
     navigate('/home');
   };
+
+  const validateStep = (step, data, validateAll = false) => {
+    const hasBirthDate = data.birth_date.day && data.birth_date.month && data.birth_date.year;
+
+    if ((step === 1 || validateAll) && !data.sex) {
+      return 'กรุณาเลือกเพศของคุณ';
+    }
+
+    if ((step === 2 || validateAll) && !data.active) {
+      return 'กรุณาเลือกระดับกิจกรรมของคุณ';
+    }
+
+    if (step === 3 || validateAll) {
+      if (!data.weight) {
+        return 'กรุณากรอกน้ำหนักของคุณ';
+      }
+      if (!data.height) {
+        return 'กรุณากรอกส่วนสูงของคุณ';
+      }
+      if (Number(data.weight) <= 0) {
+        return 'น้ำหนักต้องมากกว่า 0';
+      }
+      if (Number(data.height) <= 0) {
+        return 'ส่วนสูงต้องมากกว่า 0';
+      }
+    }
+
+    if ((step === 4 || validateAll) && !hasBirthDate) {
+      return 'กรุณาเลือกวันเกิดของคุณ';
+    }
+
+    return '';
+  };
+
+  const formatThaiDate = (birth_date) => {
+  if (!birth_date.day || !birth_date.month || !birth_date.year) return "";
+
+  const d = birth_date.day.toString().padStart(2, '0');
+  const m = birth_date.month.toString().padStart(2, '0');
+  const y = parseInt(birth_date.year) + 543;
+
+  return `${d}/${m}/${y}`;
+};
 
   // คำนวณ % ของ Progress Bar
   const progressPercentage = (currentStep / totalSteps) * 100;
@@ -149,6 +224,12 @@ const SubInfoPage = () => {
   return (
     <MobileLayout>
     <div className="min-h-screen bg-white font-sans text-slate-800 flex flex-col relative overflow-hidden">
+      {alertMessage && (
+        <AlertModal
+          message={alertMessage}
+          onClose={() => setAlertMessage('')}
+        />
+      )}
       
       {/* --- Header & Progress Bar (Hidden on Step 6) --- */}
       {currentStep !== 6 && (
@@ -193,14 +274,14 @@ const SubInfoPage = () => {
               <GenderCard 
                 label="ชาย" 
                 icon="♂" 
-                selected={formData.gender === 'male'} 
-                onClick={() => updateData('gender', 'male')} 
+                selected={formData.sex === 'male'} 
+                onClick={() => updateData('sex', 'male')} 
               />
               <GenderCard 
                 label="หญิง" 
                 icon="♀" 
-                selected={formData.gender === 'female'} 
-                onClick={() => updateData('gender', 'female')} 
+                selected={formData.sex === 'female'} 
+                onClick={() => updateData('sex', 'female')} 
               />
             </div>
           </div>
@@ -219,22 +300,22 @@ const SubInfoPage = () => {
                 title="ไม่ค่อยออกกำลังกาย" 
                 desc="0-2 วัน/สัปดาห์" 
                 icon="🚶"
-                selected={formData.activityLevel === 'low'}
-                onClick={() => updateData('activityLevel', 'low')}
+                selected={formData.active === 'low'}
+                onClick={() => updateData('active', 'low')}
               />
               <ActivityOption 
                 title="ออกกำลังกายเบาๆ" 
                 desc="3-4 วัน/สัปดาห์" 
                 icon="🏃"
-                selected={formData.activityLevel === 'medium'}
-                onClick={() => updateData('activityLevel', 'medium')}
+                selected={formData.active === 'medium'}
+                onClick={() => updateData('active', 'medium')}
               />
               <ActivityOption 
                 title="ออกกำลังกายสม่ำเสมอ" 
                 desc="5+ วัน/สัปดาห์" 
                 icon="🏋️"
-                selected={formData.activityLevel === 'high'}
-                onClick={() => updateData('activityLevel', 'high')}
+                selected={formData.active === 'high'}
+                onClick={() => updateData('active', 'high')}
               />
             </div>
           </div>
@@ -300,19 +381,19 @@ const SubInfoPage = () => {
             <div className="flex justify-center gap-2 mt-6">
               <ScrollWheelPicker
                 items={Array.from({ length: 31 }, (_, i) => i + 1)}
-                value={formData.birthDate.day ? parseInt(formData.birthDate.day) : 15}
+                value={formData.birth_date.day ? parseInt(formData.birth_date.day) : 15}
                 onChange={(val) => updateDate('day', val.toString())}
                 width="w-16"
               />
               <ScrollWheelPicker
                 items={['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.']}
-                value={formData.birthDate.month ? getMonthName(parseInt(formData.birthDate.month)) : 'ก.ย.'}
+                value={formData.birth_date.month ? getMonthName(parseInt(formData.birth_date.month)) : 'ก.ย.'}
                 onChange={(val) => updateDate('month', (getMonthIndex(val) + 1).toString())}
                 width="w-20"
               />
               <ScrollWheelPicker
                 items={Array.from({ length: 80 }, (_, i) => 2025 - i)}
-                value={formData.birthDate.year ? parseInt(formData.birthDate.year) : 1999}
+                value={formData.birth_date.year ? parseInt(formData.birth_date.year) : 1999}
                 onChange={(val) => updateDate('year', val.toString())}
                 width="w-20"
               />
@@ -447,6 +528,23 @@ const ActivityOption = ({ title, desc, icon, selected, onClick }) => (
     {/* Radio Circle */}
     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selected ? 'border-[#6CD2D9]' : 'border-slate-300'}`}>
       {selected && <div className="w-3 h-3 rounded-full bg-[#6CD2D9]" />}
+    </div>
+  </div>
+);
+
+const AlertModal = ({ message, onClose }) => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+    <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-cyan-50">
+        <Info className="text-[#6CD2D9]" size={22} />
+      </div>
+      <p className="text-slate-700 font-semibold">{message}</p>
+      <button
+        onClick={onClose}
+        className="mt-6 w-full rounded-full bg-[#6CD2D9] py-3 font-bold text-white transition hover:bg-[#5bc0c7]"
+      >
+        ตกลง
+      </button>
     </div>
   </div>
 );

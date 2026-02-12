@@ -1,7 +1,7 @@
 import api from '../api';
 
 export const getUserInfo = async () => {
-  const res = await api.get('/user')
+  const res = await api.get('/users/me/')
   return res.data
 }
 
@@ -11,7 +11,7 @@ export const updateUserInfo = async (data) => {
 }
 
 export const saveUserQuestionnaire = async (data) => {
-  const res = await api.post('/user/questionnaire', data)
+  const res = await api.post('/users/add_info/', data)
   return res.data
 }
 
@@ -26,6 +26,6 @@ export const allCarbHistory = async () => {
 }
 
 export const updateBloodSugar = async (data) => {
-  const res = await api.put('/user/blood-sugar', data)
+  const res = await api.post('/add_sugars', data)
   return res.data
 }

@@ -3,6 +3,7 @@ import {
   Bell, User, Search, Plus, Home, BarChart2, ScanLine, History, ArrowRightLeft, 
   ChevronLeft, ChevronRight, Calendar, Clock, Utensils, Coffee, Sun, Moon, IceCream, X
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
@@ -159,8 +160,16 @@ const CircularProgress = ({ value, max, color, size = 120, strokeWidth = 10, lab
 
 // --- Main Page Component ---
 const DailyLogPage = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/home');
+    }
+  };
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -211,7 +220,7 @@ const DailyLogPage = () => {
       {/* --- Top Bar --- */}
       <div className="bg-[#F8FAFC] px-4 pt-safe-top pb-2">
         <div className="flex items-center justify-between py-4">
-          <button className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-full">
+          <button onClick={handleBack} className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-full">
             <ChevronLeft size={24} />
           </button>
           <h1 className="text-lg font-bold text-slate-800">บันทึกประจำวัน</h1>

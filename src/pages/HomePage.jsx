@@ -7,11 +7,37 @@ import {
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
+import { getUserInfo, updateBloodSugar } from '../Api/User';
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [showBloodSugarModal, setShowBloodSugarModal] = useState(false);
   const [bloodSugarInput, setBloodSugarInput] = useState('');
+  const [bloodSugarError, setBloodSugarError] = useState('');
+  const defaultUserData = {
+    name: 'จอห์น โด',
+    date: 'อังคาร, 26 พ.ย.',
+    carbCurrent: 120,
+    carbTarget: 200,
+    bloodSugar: 115,
+    bloodSugarStatus: 'คงที่',
+    lastCheck: '08:45 น.'
+  };
+  const [userData, setUserData] = useState(defaultUserData);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await getUserInfo();
+      const user = data?.user;
+      if (user) {
+        const emailPrefix = user.email ? user.email.split('@')[0] : null;
+        setUserData(prev => ({
+          ...prev,
+          name: emailPrefix || user.email || prev.name
+        }));
+      }
+    };
+    fetchUserData();
+  }, []);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -24,15 +50,36 @@ const HomePage = () => {
       document.body.style.overflow = 'auto';
     };
   }, [showBloodSugarModal]);
-  
-  const userData = {
-    name: "จอห์น โด",
-    date: "อังคาร, 26 พ.ย.",
-    carbCurrent: 120,
-    carbTarget: 200,
-    bloodSugar: 115,
-    bloodSugarStatus: "คงที่",
-    lastCheck: "08:45 น."
+
+  const buildBloodSugarPayload = (value) => ({
+    timestamp: new Date().toISOString(),
+    sugar_level: Number(value)
+  });
+
+  const handleSaveBloodSugar = async () => {
+    const sugarValue = Number(bloodSugarInput);
+    if (!Number.isFinite(sugarValue) || sugarValue <= 0) {
+      setBloodSugarError('กรุณากรอกค่าน้ำตาลให้ถูกต้อง');
+      return;
+    }
+
+    setBloodSugarError('');
+
+    const payload = buildBloodSugarPayload(sugarValue);
+
+    try {
+      await updateBloodSugar(payload);
+      setUserData(prev => ({
+        ...prev,
+        bloodSugar: sugarValue
+      }));
+    } catch (error) {
+      console.log('updateBloodSugar failed', error);
+    } finally {
+      setShowBloodSugarModal(false);
+      setBloodSugarInput('');
+      setBloodSugarError('');
+    }
   };
 
   // Logic คำนวณวงกลม
@@ -179,12 +226,18 @@ const HomePage = () => {
               <input
                 type="number"
                 value={bloodSugarInput}
-                onChange={(e) => setBloodSugarInput(e.target.value)}
+                onChange={(e) => {
+                  setBloodSugarInput(e.target.value);
+                  setBloodSugarError('');
+                }}
                 placeholder=""
                 className="w-full px-4 py-3 pr-16 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-lg"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">mg/dL</span>
             </div>
+            {bloodSugarError && (
+              <p className="text-sm text-red-500 mb-4">{bloodSugarError}</p>
+            )}
             
             <div className="flex gap-3">
               <button
@@ -198,9 +251,7 @@ const HomePage = () => {
               </button>
               <button
                 onClick={() => {
-                  console.log('Blood Sugar saved:', bloodSugarInput);
-                  setShowBloodSugarModal(false);
-                  setBloodSugarInput('');
+                  handleSaveBloodSugar();
                 }}
                 className="flex-1 bg-[#6CD2D9] text-white font-bold py-3 rounded-full hover:bg-[#5bc0c7] transition-colors"
               >

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   ChevronLeft, TrendingUp, TrendingDown,
   ChevronRight, MoreHorizontal 
@@ -131,7 +132,15 @@ const CustomLineChart = ({ activeTab }) => {
 
 // --- Main Page Component ---
 const StatsPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('สัปดาห์');
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/home');
+    }
+  };
 
   return (
     <MobileLayout>
@@ -139,7 +148,7 @@ const StatsPage = () => {
       {/* Header */}
       <div className="px-4 pt-safe-top pb-2 bg-white sticky top-0 z-20">
         <div className="flex items-center justify-between py-3">
-          <button className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
+          <button onClick={handleBack} className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
             <ChevronLeft size={24} />
           </button>
           <h1 className="text-lg font-bold text-slate-800">สถิติ</h1>
