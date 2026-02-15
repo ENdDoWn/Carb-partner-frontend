@@ -46,9 +46,9 @@ export const getUserInfo = async () => {
 export const updateUserInfo = async (data) => {
   const res = await api.put('/users/me/', data);
   if (res?.data) {
-    writeCachedUserData(res.data);
+    writeCachedUserData(data.user);
   }
-  return res.data;
+  return data.user;
 }
 
 export const saveUserQuestionnaire = async (data) => {

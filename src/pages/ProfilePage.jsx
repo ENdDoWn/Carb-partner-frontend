@@ -39,7 +39,6 @@ const ProfilePage = () => {
             if (!user) {
                return;
             }
-
             const nextUserData = {
                ...userData,
                name: user.name || userData.name,
@@ -124,8 +123,7 @@ const ProfilePage = () => {
       const nextUserData = { ...editFormData, bmi: newBMI };
 
       try {
-         console.log('Updating user data with:', nextUserData);
-         await updateUserInfo(nextUserData);
+         await updateUserInfo({ user: nextUserData });
          setUserData(nextUserData);
          setEditFormData(nextUserData);
          setIsEditing(false);
