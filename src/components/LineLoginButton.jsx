@@ -7,13 +7,6 @@ const LineLoginButton = () => {
     const STATE = import.meta.env.VITE_LINE_OAUTH_STATE; 
     const SCOPE = "profile openid email"; 
 
-    console.log("Line Login Config:", {
-        LINE_CLIENT_ID,
-        LINE_REDIRECT_URI,
-        STATE,
-        SCOPE
-    });
-
     const handleLineLogin = () => {
         const lineUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CLIENT_ID}&redirect_uri=${LINE_REDIRECT_URI}&state=${STATE}&scope=${SCOPE}`;
         window.location.href = lineUrl;

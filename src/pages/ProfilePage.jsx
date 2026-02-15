@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   ChevronLeft, ChevronRight, User, Pencil, 
   HelpCircle, Mail, LogOut, Camera
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 // Import Components ที่แยกไว้ (ใช้ร่วมกับหน้าอื่น)
 import MobileLayout from '../components/MobileLayout';
 import BottomNavigation from '../components/Navigation';
+import { getUserInfo, updateUserInfo } from '../Api/User';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -22,12 +23,44 @@ const ProfilePage = () => {
     weight: 75,
     height: 180,
     bmi: 23.1,
-    activityLevel: "ปานกลาง",
+    active: "medium",
     carbGoal: 150
   });
 
   // State สำหรับฟอร์มแก้ไข (Temp State)
   const [editFormData, setEditFormData] = useState(userData);
+   const [saveError, setSaveError] = useState('');
+
+   useEffect(() => {
+      const loadUserData = async () => {
+         try {
+            const data = await getUserInfo();
+            const user = data?.user;
+            if (!user) {
+               return;
+            }
+
+            const nextUserData = {
+               ...userData,
+               name: user.name || userData.name,
+               email: user.email || userData.email,
+               age: user.age ?? userData.age,
+               weight: user.weight ?? userData.weight,
+               height: user.height ?? userData.height,
+               bmi: user.bmi ?? userData.bmi,
+               active: user.active || userData.active,
+               carbGoal: user.carbGoal ?? userData.carbGoal
+            };
+
+            setUserData(nextUserData);
+            setEditFormData(nextUserData);
+         } catch (error) {
+            console.log('Failed to load user data', error);
+         }
+      };
+
+      loadUserData();
+   }, []);
 
   // --- 2. Handlers ---
   
@@ -48,19 +81,67 @@ const ProfilePage = () => {
    };
 
   // บันทึกข้อมูล
-  const handleSave = () => {
-    // คำนวณ BMI ใหม่แบบคร่าวๆ
-    const heightInM = editFormData.height / 100;
-    const newBMI = (editFormData.weight / (heightInM * heightInM)).toFixed(1);
-    
-    setUserData({ ...editFormData, bmi: newBMI });
-    setIsEditing(false);
-  };
+   const validateProfileData = (data) => {
+      if (!data.name || !data.name.trim()) {
+         return 'กรุณากรอกชื่อผู้ใช้งาน';
+      }
+
+      const age = Number(data.age);
+      if (!Number.isFinite(age) || age <= 0) {
+         return 'กรุณากรอกอายุให้ถูกต้อง';
+      }
+
+      const weight = Number(data.weight);
+      if (!Number.isFinite(weight) || weight <= 0) {
+         return 'กรุณากรอกน้ำหนักให้ถูกต้อง';
+      }
+
+      const height = Number(data.height);
+      if (!Number.isFinite(height) || height <= 0) {
+         return 'กรุณากรอกส่วนสูงให้ถูกต้อง';
+      }
+
+      const carbGoal = Number(data.carbGoal);
+      if (!Number.isFinite(carbGoal) || carbGoal <= 0) {
+         return 'กรุณากรอกเป้าหมายคาร์บให้ถูกต้อง';
+      }
+
+      return '';
+   };
+
+   const handleSave = async () => {
+      const errorMessage = validateProfileData(editFormData);
+      if (errorMessage) {
+         setSaveError(errorMessage);
+         return;
+      }
+
+      setSaveError('');
+
+      // คำนวณ BMI ใหม่แบบคร่าวๆ
+      const heightInM = Number(editFormData.height) / 100;
+      const newBMI = (Number(editFormData.weight) / (heightInM * heightInM)).toFixed(1);
+      const nextUserData = { ...editFormData, bmi: newBMI };
+
+      try {
+         console.log('Updating user data with:', nextUserData);
+         await updateUserInfo(nextUserData);
+         setUserData(nextUserData);
+         setEditFormData(nextUserData);
+         setIsEditing(false);
+      } catch (error) {
+         console.log('Failed to update user data', error);
+         setSaveError('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+      }
+   };
 
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditFormData(prev => ({ ...prev, [name]: value }));
+      if (saveError) {
+         setSaveError('');
+      }
   };
 
   // --- 3. Render ---
@@ -228,13 +309,13 @@ const ProfilePage = () => {
                    <label className="text-xs font-bold text-slate-700 mb-1 block">ระดับกิจกรรม</label>
                    <div className="relative">
                       <select 
-                        name="activityLevel"
-                        value={editFormData.activityLevel} onChange={handleChange}
+                        name="active"
+                        value={editFormData.active} onChange={handleChange}
                         className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-slate-700 font-medium appearance-none bg-white"
                       >
-                         <option>น้อยมาก</option>
-                         <option>ปานกลาง</option>
-                         <option>หนัก</option>
+                         <option value={"low"}>น้อยมาก</option>
+                         <option value={"medium"}>ปานกลาง</option>
+                         <option value={"high"}>หนัก</option>
                       </select>
                       <ChevronRight className="absolute right-3 top-3.5 text-slate-400 rotate-90" size={16} />
                    </div>
@@ -267,6 +348,9 @@ const ProfilePage = () => {
 
           {/* Fixed Save Button */}
           <div className="p-4 bg-white border-t border-slate-100 pb-safe-bottom">
+             {saveError && (
+               <p className="text-sm text-red-500 mb-3">{saveError}</p>
+             )}
              <button 
                 onClick={handleSave}
                 className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white font-bold py-3.5 rounded-full shadow-lg transition duration-200 text-lg"

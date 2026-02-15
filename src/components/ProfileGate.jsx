@@ -13,8 +13,8 @@ const ProfileGate = () => {
       try {
         const userInfo = await getUserInfo();
         if (!isActive) return;
-
-        const nextPath = userInfo?.has_profile ? '/home' : '/subinfo';
+        
+        const nextPath = userInfo?.user?.has_profile ? '/home' : '/subinfo';
         setTargetPath(nextPath);
       } catch (error) {
         if (!isActive) return;
