@@ -7,7 +7,7 @@ import {
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
-import { getUserInfo, updateBloodSugar } from '../Api/User';
+import { getUserInfo, updateBloodSugar, allBloodSugarHistory } from '../Api/User';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -15,11 +15,11 @@ const HomePage = () => {
   const [bloodSugarInput, setBloodSugarInput] = useState('');
   const [bloodSugarError, setBloodSugarError] = useState('');
   const defaultUserData = {
-    name: 'จอห์น โด',
-    date: 'อังคาร, 26 พ.ย.',
+    full_name: '',
+    date: new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' }),
     carbCurrent: 120,
     carbTarget: 200,
-    bloodSugar: 115,
+    bloodSugar: 0,
     bloodSugarStatus: 'คงที่',
     lastCheck: '08:45 น.'
   };
@@ -27,12 +27,20 @@ const HomePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const data = await getUserInfo();
+      const bloodSugar = await allBloodSugarHistory();
+       const latestSugar = bloodSugar?.length ? bloodSugar[0] : null;
+       console.log('Latest blood sugar record:', latestSugar);
+      setUserData(prev => ({
+        ...prev,
+        bloodSugar: latestSugar?.sugar_level || prev.bloodSugar,
+        lastCheck: latestSugar?.created_at ? new Date(latestSugar.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric' }) : prev.lastCheck
+      }));
       const user = data?.user;
       if (user) {
         const emailPrefix = user.email ? user.email.split('@')[0] : null;
         setUserData(prev => ({
           ...prev,
-          name: emailPrefix || user.email || prev.name
+          full_name: user.full_name || prev.full_name,
         }));
       }
     };
@@ -68,6 +76,7 @@ const HomePage = () => {
     const payload = buildBloodSugarPayload(sugarValue);
 
     try {
+      console.log('Attempting to update blood sugar with payload:', payload);
       await updateBloodSugar(payload);
       setUserData(prev => ({
         ...prev,
@@ -103,7 +112,7 @@ const HomePage = () => {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-slate-900 leading-tight">สวัสดีตอนเช้า,</h1>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">{userData.name}</h2>
+                <h2 className="text-lg font-bold text-slate-900 leading-tight">{userData.full_name}</h2>
                 <p className="text-xs text-slate-500 mt-1">{userData.date}</p>
               </div>
             </div>

@@ -17,7 +17,7 @@ const ProfilePage = () => {
   
   // ข้อมูลผู้ใช้ (Shared State ระหว่างหน้าดูและหน้าแก้ไข)
   const [userData, setUserData] = useState({
-    name: "John Doe",
+    full_name: "John Doe",
     email: "alex.johnson@example.com",
     age: 34,
     weight: 75,
@@ -35,13 +35,15 @@ const ProfilePage = () => {
       const loadUserData = async () => {
          try {
             const data = await getUserInfo();
+            console.log('API response for user info:', data);
             const user = data?.user;
+            console.log('User data:', user);
             if (!user) {
                return;
             }
             const nextUserData = {
                ...userData,
-               name: user.name || userData.name,
+               full_name: user.full_name || userData.full_name,
                email: user.email || userData.email,
                age: user.age ?? userData.age,
                weight: user.weight ?? userData.weight,
@@ -50,7 +52,7 @@ const ProfilePage = () => {
                active: user.active || userData.active,
                carbGoal: user.carbGoal ?? userData.carbGoal
             };
-
+            console.log('Loaded user data:', nextUserData);
             setUserData(nextUserData);
             setEditFormData(nextUserData);
          } catch (error) {
@@ -81,7 +83,7 @@ const ProfilePage = () => {
 
   // บันทึกข้อมูล
    const validateProfileData = (data) => {
-      if (!data.name || !data.name.trim()) {
+      if (!data.full_name || !data.full_name.trim()) {
          return 'กรุณากรอกชื่อผู้ใช้งาน';
       }
 
@@ -123,6 +125,7 @@ const ProfilePage = () => {
       const nextUserData = { ...editFormData, bmi: newBMI };
 
       try {
+         console.log('Saving user data:', nextUserData);
          await updateUserInfo({ user: nextUserData });
          setUserData(nextUserData);
          setEditFormData(nextUserData);
@@ -177,7 +180,7 @@ const ProfilePage = () => {
                     <Pencil size={14} />
                  </button>
               </div>
-              <h2 className="text-xl font-bold text-slate-900">{userData.name}</h2>
+              <h2 className="text-xl font-bold text-slate-900">{userData.full_name}</h2>
               <button 
                 onClick={handleOpenEdit}
                 className="text-sm text-[#6CD2D9] font-bold flex items-center gap-1 mt-1 hover:underline"
@@ -252,7 +255,7 @@ const ProfilePage = () => {
                       <Camera size={14} />
                    </button>
                 </div>
-                <h2 className="font-bold text-slate-900">{userData.name}</h2>
+                <h2 className="font-bold text-slate-900">{userData.full_name}</h2>
                 <p className="text-xs text-slate-400">{userData.email}</p>
              </div>
 
@@ -264,8 +267,8 @@ const ProfilePage = () => {
                    <label className="text-xs font-bold text-slate-700 mb-1 block">ชื่อ</label>
                    <h3 className="text-xs font-bold text-slate-400 mb-2">ข้อมูลส่วนตัว</h3>
                    <input 
-                      type="text" name="name"
-                      value={editFormData.name} onChange={handleChange}
+                      type="text" name="full_name"
+                      value={editFormData.full_name} onChange={handleChange}
                       className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-slate-700 font-medium"
                    />
                 </div>

@@ -44,11 +44,11 @@ export const getUserInfo = async () => {
 }
 
 export const updateUserInfo = async (data) => {
-  const res = await api.put('/users/me/', data);
+  const res = await api.post('/users/update_profile/', data);
   if (res?.data) {
-    writeCachedUserData(data.user);
+    writeCachedUserData(res.data);
   }
-  return data.user;
+  return res.data;
 }
 
 export const saveUserQuestionnaire = async (data) => {
@@ -65,8 +65,13 @@ export const allCarbHistory = async () => {
   const res = await api.get('/user/carb-history')
   return res.data
 }
+export const allBloodSugarHistory = async () => {
+  const res = await api.get('/blood_sugar_report')
+  return res.data
+}
 
 export const updateBloodSugar = async (data) => {
   const res = await api.post('/add_sugars', data)
-  return res.data
+  console.log('Blood sugar update response:', res);
+  return true
 }
