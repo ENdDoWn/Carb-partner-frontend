@@ -33,7 +33,7 @@ const Navigation = ({ activePage }) => {
         <div className="relative -top-6">
           <button 
             className="w-16 h-16 bg-[#6CD2D9] hover:bg-[#5bc0c7] rounded-full shadow-[0_0_20px_rgba(108,210,217,0.6)] flex items-center justify-center transform transition-transform active:scale-95"
-            onClick={() => navigate('/find-food')}
+            onClick={() => navigate('/camera')}
           >
             <ScanLine size={30} className="text-white" />
           </button>
