@@ -15,6 +15,7 @@ import CarbExchangePage from './pages/CarbExchangePage';
 import FindFoodPage from './pages/FindFoodPage';
 import FoodDetailsPage from './pages/FoodDetailsPage';
 import CameraPage from './pages/CameraPage';
+import ScanResultPage from './pages/ScanResultPage';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/camera" element={<ProtectedRoute><CameraPage /></ProtectedRoute>} />
         <Route path="/find-food" element={<FindFoodPage />} />
         <Route path="/food-details" element={<FoodDetailsPage />} />
+        <Route path="/scan-result" element={<ProtectedRoute><ScanResultPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )
