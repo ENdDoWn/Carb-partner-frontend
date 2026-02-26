@@ -48,7 +48,7 @@ const Navigation = ({ activePage }) => {
         {/* Exchange */}
         <button className={getItemClass('exchange')} onClick={() => navigate('/exchange')}>
           <ArrowRightLeft size={24} strokeWidth={activePage === 'exchange' ? 2.5 : 2} />
-          <span className="text-center leading-3">Carb<br/>Exchange</span>
+          <span className="text-center leading-3">แลกเปลี่ยน<br/>คาร์บ</span>
         </button>
 
       </div>

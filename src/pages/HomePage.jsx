@@ -228,8 +228,8 @@ const HomePage = () => {
       {showBloodSugarModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-6">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 className="text-xl font-bold text-slate-800 mb-1">Blood Sugar</h3>
-            <p className="text-sm text-slate-400 mb-6">Enter your current Blood Sugar</p>
+            <h3 className="text-xl font-bold text-slate-800 mb-1">น้ำตาลในเลือด</h3>
+            <p className="text-sm text-slate-400 mb-6">กรอกค่าน้ำตาลในเลือดปัจจุบันของคุณ</p>
             
             <div className="relative mb-6">
               <input
@@ -242,7 +242,7 @@ const HomePage = () => {
                 placeholder=""
                 className="w-full px-4 py-3 pr-16 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-lg"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">mg/dL</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">มก./ดล.</span>
             </div>
             {bloodSugarError && (
               <p className="text-sm text-red-500 mb-4">{bloodSugarError}</p>
@@ -256,7 +256,7 @@ const HomePage = () => {
                 }}
                 className="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-full hover:bg-slate-200 transition-colors"
               >
-                Cancel
+                ยกเลิก
               </button>
               <button
                 onClick={() => {
@@ -264,7 +264,7 @@ const HomePage = () => {
                 }}
                 className="flex-1 bg-[#6CD2D9] text-white font-bold py-3 rounded-full hover:bg-[#5bc0c7] transition-colors"
               >
-                Save
+                บันทึก
               </button>
             </div>
           </div>

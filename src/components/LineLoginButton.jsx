@@ -16,13 +16,13 @@ const LineLoginButton = () => {
         <button
             type="button"
             onClick={handleLineLogin}
-            className="w-[360px] mx-auto h-[40px] border border-slate-200 bg-white hover:bg-slate-50 rounded-full flex items-center justify-center gap-2 transition duration-200 group"
+            className="w-[360px] mx-auto h-[40px] border border-slate-200 bg-white hover:bg-slate-50 rounded-full flex items-center px-3 transition duration-200 group relative"
         >
             <div className="w-7 h-7 flex items-center justify-center">
                 <img src={lineIcon} alt="Line" className="w-full h-full object-contain" />
             </div>
             
-            <span className="text-slate-700 font-medium text-sm group-hover:text-slate-900">
+            <span className="text-slate-700 font-medium text-sm group-hover:text-slate-900 absolute left-1/2 -translate-x-1/2">
                 ลงชื่อเข้าใช้ด้วย Line
             </span>
         </button>
