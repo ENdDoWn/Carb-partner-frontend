@@ -349,15 +349,20 @@ const CameraPage = () => {
             ========================================= */}
         {capturedImage && (
           <>
-            {/* แสดงรูปที่ถ่าย */}
-            <img 
-              src={capturedImage} 
-              alt="Captured Meal" 
-              className="absolute inset-0 w-full h-full object-cover z-0"
-            />
+            {/* Black background */}
+            <div className="absolute inset-0 bg-black z-0" />
+            
+            {/* แสดงรูปที่ถ่าย - ตรงกลางพร้อม black bar บนล่าง */}
+            <div className="absolute inset-0 flex items-center justify-center z-[1] py-20">
+              <img 
+                src={capturedImage} 
+                alt="Captured Meal" 
+                className="w-full h-full object-contain"
+              />
+            </div>
             
             {/* Top Controls (Back/Retake) */}
-            <div className="absolute top-0 left-0 w-full p-6 pt-safe-top flex justify-between items-start z-10">
+            <div className="absolute top-0 left-0 w-full p-6 pt-safe-top flex justify-between items-start z-10 bg-gradient-to-b from-black/60 to-transparent">
               <button 
                 onClick={handleRetake}
                 className="w-10 h-10 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/60 transition-colors"
