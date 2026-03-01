@@ -196,12 +196,12 @@ const CameraPage = () => {
     console.log("พร้อมส่งให้ Backend (Base64 length):", capturedImage.length);
     
     // ดาวน์โหลดรูปลงเครื่องเพื่อเช็คว่า crop ได้จริง
-    // const link = document.createElement('a');
-    // link.href = capturedImage;
-    // link.download = `cropped_food_1024x1024_${Date.now()}.jpg`;
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
+    const link = document.createElement('a');
+    link.href = capturedImage;
+    link.download = `cropped_food_1024x1024_${Date.now()}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     
     // TODO: ตรงนี้ Backend สามารถเอา capturedImage (ที่เป็น Base64 string) ส่งผ่าน API ได้เลย
   };
