@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { 
   ArrowLeft, ZapOff, Zap, RefreshCcw, Image as ImageIcon,
-  X, Check
+  X, Check,
+  Radius
 } from 'lucide-react';
 
 import MobileLayout from '../components/MobileLayout';
@@ -16,6 +17,8 @@ const CameraPage = () => {
   const [capturedImage, setCapturedImage] = useState(null); // เก็บรูปที่ถ่ายไว้
   const [flashOn, setFlashOn] = useState(false); // สถานะแฟลช
   const [facingMode, setFacingMode] = useState('environment'); // 'environment' = กล้องหลัง, 'user' = กล้องหน้า
+  
+  const TARGET_SIZE = 1024; // ขนาด output ที่ต้องการ
 
   // --- เปิดกล้อง ---
   useEffect(() => {
@@ -56,23 +59,61 @@ const CameraPage = () => {
     };
   }, [capturedImage, facingMode]); // รีรันเมื่อ facingMode เปลี่ยนด้วย
 
-  // --- ฟังก์ชันถ่ายรูป ---
+  // --- ฟังก์ชันถ่ายรูป (ครอปตามกรอบที่แสดงบนหน้าจอ 90% ของด้านสั้น) ---
   const handleCapture = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
       
-      // ตั้งค่า Canvas ให้ขนาดเท่ากับ Video ที่กำลังเล่นอยู่
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      // ขนาดหน้าจอที่แสดง video (element size)
+      const screenWidth = video.clientWidth;
+      const screenHeight = video.clientHeight;
+      
+      // Video แสดงแบบ object-cover: scale ให้เต็มหน้าจอแล้ว crop ส่วนเกิน
+      const videoAspect = videoWidth / videoHeight;
+      const screenAspect = screenWidth / screenHeight;
+      
+      let scaleX, scaleY, offsetX, offsetY;
+      
+      if (videoAspect > screenAspect) {
+        // Video กว้างกว่า: scale ตาม height, crop ข้างซ้าย-ขวา
+        scaleY = videoHeight / screenHeight;
+        scaleX = scaleY;
+        offsetX = (videoWidth - screenWidth * scaleX) / 2;
+        offsetY = 0;
+      } else {
+        // Video สูงกว่า: scale ตาม width, crop บน-ล่าง
+        scaleX = videoWidth / screenWidth;
+        scaleY = scaleX;
+        offsetX = 0;
+        offsetY = (videoHeight - screenHeight * scaleY) / 2;
+      }
+      
+      // กรอบบนหน้าจอ = min(90vw, 90vh) ตรงกลาง
+      const frameSizeOnScreen = Math.min(screenWidth, screenHeight) * 0.9;
+      
+      // คำนวณขนาดและตำแหน่งกรอบใน video pixels
+      const cropSizeInVideo = frameSizeOnScreen * scaleX;
+      const cropX = offsetX + (screenWidth * scaleX - cropSizeInVideo) / 2;
+      const cropY = offsetY + (screenHeight * scaleY - cropSizeInVideo) / 2;
+      
+      // ตั้งค่า Canvas เป็น 1024x1024
+      canvas.width = TARGET_SIZE;
+      canvas.height = TARGET_SIZE;
       
       const context = canvas.getContext('2d');
-      // วาดภาพจาก Video ลงบน Canvas
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      context.drawImage(
+        video, 
+        cropX, cropY, cropSizeInVideo, cropSizeInVideo,
+        0, 0, TARGET_SIZE, TARGET_SIZE
+      );
       
-      // แปลง Canvas เป็น Base64 Image (JPEG คุณภาพ 80%)
-      const imageUrl = canvas.toDataURL('image/jpeg', 0.8);
+      // แปลง Canvas เป็น Base64 Image (JPEG คุณภาพ 90%)
+      const imageUrl = canvas.toDataURL('image/jpeg', 0.9);
       setCapturedImage(imageUrl);
+      console.log('Cropped from frame: 1024x1024, Base64 length:', imageUrl.length);
     }
   };
 
@@ -120,7 +161,31 @@ const CameraPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setCapturedImage(event.target.result);
+        // ครอปรูปที่เลือกให้เป็น 1024x1024 ตรงกลาง
+        const img = new Image();
+        img.onload = () => {
+          // สร้าง canvas ใหม่สำหรับ crop เพื่อให้แน่ใจว่าทำงานถูกต้อง
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = TARGET_SIZE;
+          tempCanvas.height = TARGET_SIZE;
+          
+          // Crop สี่เหลี่ยมจัตุรัสตรงกลางรูป
+          const cropSize = Math.min(img.width, img.height);
+          const cropX = (img.width - cropSize) / 2;
+          const cropY = (img.height - cropSize) / 2;
+          
+          const context = tempCanvas.getContext('2d');
+          context.drawImage(
+            img,
+            cropX, cropY, cropSize, cropSize,
+            0, 0, TARGET_SIZE, TARGET_SIZE
+          );
+          
+          const croppedImage = tempCanvas.toDataURL('image/jpeg', 0.9);
+          setCapturedImage(croppedImage);
+          console.log('Cropped picked image: 1024x1024, Base64 length:', croppedImage.length);
+        };
+        img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -129,7 +194,15 @@ const CameraPage = () => {
   // --- ฟังก์ชันยืนยันการใช้รูป ---
   const handleConfirm = () => {
     console.log("พร้อมส่งให้ Backend (Base64 length):", capturedImage.length);
-    alert("ถ่ายรูปสำเร็จ! ดูโค้ด Base64 ใน Console");
+    
+    // ดาวน์โหลดรูปลงเครื่องเพื่อเช็คว่า crop ได้จริง
+    // const link = document.createElement('a');
+    // link.href = capturedImage;
+    // link.download = `cropped_food_1024x1024_${Date.now()}.jpg`;
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+    
     // TODO: ตรงนี้ Backend สามารถเอา capturedImage (ที่เป็น Base64 string) ส่งผ่าน API ได้เลย
   };
 
@@ -181,13 +254,39 @@ const CameraPage = () => {
 
             {/* Real Camera Feed */}
             {hasPermission === true && (
-              <video 
-                ref={videoRef}
-                autoPlay 
-                playsInline 
-                muted
-                className="absolute inset-0 w-full h-full object-cover z-0"
-              />
+              <>
+                <video 
+                  ref={videoRef}
+                  autoPlay 
+                  playsInline 
+                  muted
+                  className="absolute inset-0 w-full h-full object-cover z-0"
+                />
+                
+                {/* Viewfinder Frame Overlay - กรอบสี่เหลี่ยม 1024x1024 ตรงกลาง */}
+                <div className="absolute inset-0 flex items-center justify-center z-[5] pointer-events-none">
+                  
+                  {/* กรอบสี่เหลี่ยมตรงกลาง */}
+                  <div 
+                    className="relative"
+                    style={{ 
+                      width: 'min(90vw, 90vh)',
+                      height: 'min(90vw, 90vh)',
+                    }}
+                  >
+                    {/* มุมทั้ง 4 */}
+                    <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#6CD2D9] rounded-tl-xl" />
+                    <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#6CD2D9] rounded-tr-xl" />
+                    <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#6CD2D9] rounded-bl-xl" />
+                    <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#6CD2D9] rounded-br-xl" />
+                    
+                    {/* ข้อความแนะนำ */}
+                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-white/80 text-sm whitespace-nowrap bg-black/40 px-3 py-1 rounded-full">
+                      วางอาหารให้อยู่ในกรอบ
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
 
             {/* Top Controls */}
