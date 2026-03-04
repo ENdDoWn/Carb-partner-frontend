@@ -1,13 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { 
   ArrowLeft, ZapOff, Zap, RefreshCcw, Image as ImageIcon,
-  X, Check,
-  Radius
+  X, Check
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import MobileLayout from '../components/MobileLayout';
+import { ScanFood } from '../Api/Food';
 
 const CameraPage = () => {
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null); // เพิ่ม Canvas สำหรับวาดรูป
   const fileInputRef = useRef(null); // Ref สำหรับเลือกไฟล์รูปภาพ
@@ -17,6 +19,7 @@ const CameraPage = () => {
   const [capturedImage, setCapturedImage] = useState(null); // เก็บรูปที่ถ่ายไว้
   const [flashOn, setFlashOn] = useState(false); // สถานะแฟลช
   const [facingMode, setFacingMode] = useState('environment'); // 'environment' = กล้องหลัง, 'user' = กล้องหน้า
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const TARGET_SIZE = 1024; // ขนาด output ที่ต้องการ
 
@@ -192,18 +195,31 @@ const CameraPage = () => {
   };
 
   // --- ฟังก์ชันยืนยันการใช้รูป ---
-  const handleConfirm = () => {
-    console.log("พร้อมส่งให้ Backend (Base64 length):", capturedImage.length);
-    
-    // ดาวน์โหลดรูปลงเครื่องเพื่อเช็คว่า crop ได้จริง
-    const link = document.createElement('a');
-    link.href = capturedImage;
-    link.download = `cropped_food_1024x1024_${Date.now()}.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // TODO: ตรงนี้ Backend สามารถเอา capturedImage (ที่เป็น Base64 string) ส่งผ่าน API ได้เลย
+  const handleConfirm = async () => {
+    if (!capturedImage || isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+      const result = await ScanFood({ image_base64: capturedImage });
+      const carbValue = Number(result?.carb);
+
+      if (Number.isNaN(carbValue)) {
+        throw new Error('รูปแบบข้อมูล carb ไม่ถูกต้อง');
+      }
+
+      navigate('/scan-result', {
+        state: {
+          carb: carbValue,
+          image: capturedImage,
+          scanResult: result,
+        },
+      });
+    } catch (error) {
+      console.error('Scan food failed:', error);
+      alert('ไม่สามารถวิเคราะห์อาหารได้ กรุณาลองใหม่อีกครั้ง');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -381,9 +397,10 @@ const CameraPage = () => {
               </button>
               <button 
                 onClick={handleConfirm}
-                className="flex-1 bg-[#6CD2D9] text-white font-bold py-4 rounded-full flex items-center justify-center gap-2 shadow-lg hover:bg-[#5bc0c7] transition-colors"
+                disabled={isSubmitting}
+                className="flex-1 bg-[#6CD2D9] text-white font-bold py-4 rounded-full flex items-center justify-center gap-2 shadow-lg hover:bg-[#5bc0c7] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <Check size={20} /> ใช้รูปนี้
+                <Check size={20} /> {isSubmitting ? 'กำลังวิเคราะห์...' : 'ใช้รูปนี้'}
               </button>
             </div>
           </>

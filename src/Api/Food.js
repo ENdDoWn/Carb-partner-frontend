@@ -10,7 +10,7 @@ export const getFoodById = async (id) => {
   return res.data
 }
 
-export const createScanFood = async (data) => {
-  const res = await api.post('/foods/scan', data)
+export const ScanFood = async (data) => {
+  const res = await api.post('/food/analyze/', data)
   return res.data
 }

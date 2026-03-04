@@ -12,6 +12,7 @@ const ProfileGate = () => {
     const loadUserInfo = async () => {
       try {
         const userInfo = await getUserInfo();
+        console.log('Fetched user info:', userInfo);
         if (!isActive) return;
         
         const nextPath = userInfo?.user?.has_profile ? '/home' : '/subinfo';

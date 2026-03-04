@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Clock, ChevronDown 
 } from 'lucide-react';
@@ -6,8 +7,10 @@ import {
 import MobileLayout from '../components/MobileLayout';
 
 const ScanResultPage = () => {
-  // --- ค่าคงที่ ---
-  const carbAmount = 25;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const carbAmount = Number(location.state?.carb ?? 0);
+  const scannedImage = location.state?.image;
   
   // เอาเวลาปัจจุบัน
   const now = new Date();
@@ -19,7 +22,10 @@ const ScanResultPage = () => {
         
         {/* --- Header --- */}
         <div className="bg-white p-4 pt-safe-top flex items-center justify-between z-10 sticky top-0">
-          <button className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full transition-colors">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full transition-colors"
+          >
             <ArrowLeft size={24} />
           </button>
           <h1 className="text-lg font-bold text-slate-800">ผลการสแกน</h1>
@@ -32,7 +38,7 @@ const ScanResultPage = () => {
           {/* Image Section */}
           <div className="w-full h-64 rounded-3xl overflow-hidden mb-6 shadow-sm border border-slate-100">
             <img 
-              src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+              src={scannedImage || 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} 
               alt="Apple" 
               className="w-full h-full object-cover"
             />
