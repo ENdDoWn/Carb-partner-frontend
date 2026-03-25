@@ -11,6 +11,7 @@ import DailyPage from './pages/DailyPage';
 import StatsPage from './pages/StatisPage';
 import ProfilePage from './pages/ProfilePage';
 import HealthKnowledgePage from './pages/HealthKnowledgePage';
+import HealthKnowledgeReaderPage from './pages/HealthKnowledgeReaderPage';
 import CarbExchangePage from './pages/CarbExchangePage';
 import FindFoodPage from './pages/FindFoodPage';
 import FoodDetailsPage from './pages/FoodDetailsPage';
@@ -34,6 +35,7 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/health" element={<ProtectedRoute><HealthKnowledgePage /></ProtectedRoute>} />
         <Route path="/exchange" element={<ProtectedRoute><CarbExchangePage /></ProtectedRoute>} />
+        <Route path="/health/reader" element={<HealthKnowledgeReaderPage />} />
         <Route path="/line/callback" element={<LineCallbackPage />} />
         <Route path="/camera" element={<ProtectedRoute><CameraPage /></ProtectedRoute>} />
         <Route path="/find-food" element={<FindFoodPage />} />

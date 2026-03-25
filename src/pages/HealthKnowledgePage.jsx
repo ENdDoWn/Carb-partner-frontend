@@ -12,6 +12,9 @@ import Navigation from '../components/Navigation';
 
 const HealthKnowledgePage = () => {
   const navigate = useNavigate();
+   const openReader = (topic) => {
+      navigate(`/health/reader?topic=${topic}`);
+   };
    const handleBack = () => {
       if (window.history.length > 1) {
          navigate(-1);
@@ -42,13 +45,15 @@ const HealthKnowledgePage = () => {
                 iconBg="bg-cyan-50"
                 title="ชนิดของเบาหวาน"
                 subtitle="ทำความเข้าใจเบาหวานประเภทต่างๆ"
+                        onClick={() => openReader('diabetes-types')}
               />
-              <KnowledgeCard 
+              {/* <KnowledgeCard 
                 icon={<AlertCircle size={24} className="text-[#6CD2D9]" />}
                 iconBg="bg-cyan-50"
                 title="อาการและสัญญาณ"
                 subtitle="สังเกตสัญญาณเตือนของโรค"
-              />
+                        onClick={() => openReader('diabetes-signs')}
+              /> */}
            </div>
         </section>
 
@@ -67,6 +72,7 @@ const HealthKnowledgePage = () => {
                 iconBg="bg-cyan-50"
                 title="การนับคาร์โบไฮเดรต"
                 subtitle="เทคนิคควบคุมระดับน้ำตาล"
+                        onClick={() => openReader('carb-counting')}
               />
            </div>
         </section>
@@ -80,6 +86,7 @@ const HealthKnowledgePage = () => {
                 iconBg="bg-cyan-50"
                 title="แอโรบิก"
                 subtitle="การออกกำลังกายแบบคาร์ดิโอ"
+                        onClick={() => openReader('exercise')}
               />
            </div>
         </section>
@@ -102,8 +109,12 @@ const SectionHeader = ({ title }) => (
   </div>
 );
 
-const KnowledgeCard = ({ icon, iconBg, title, subtitle }) => (
-  <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer">
+const KnowledgeCard = ({ icon, iconBg, title, subtitle, onClick }) => (
+   <button
+      type="button"
+      onClick={onClick}
+      className="w-full bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer"
+   >
      <div className="flex items-center gap-4">
         <div className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center shrink-0`}>
            {icon}
@@ -114,7 +125,7 @@ const KnowledgeCard = ({ icon, iconBg, title, subtitle }) => (
         </div>
      </div>
      <ChevronRight size={20} className="text-slate-300" />
-  </div>
+   </button>
 );
 
 export default HealthKnowledgePage;
