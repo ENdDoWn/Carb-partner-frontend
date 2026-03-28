@@ -1,13 +1,78 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ChevronLeft, TrendingUp, TrendingDown,
-  ChevronRight, MoreHorizontal 
+  ChevronLeft, TrendingUp, TrendingDown
 } from 'lucide-react';
 
 // Import Components ที่แยกไว้
 import MobileLayout from '../components/MobileLayout';
 import Navigation from '../components/Navigation';
+import statsHistoryMock from '../mock/stats-history.mock.json';
+
+const TAB_OPTIONS = [
+  { key: 'day', label: 'วัน' },
+  { key: 'week', label: 'สัปดาห์' },
+  { key: 'month', label: 'เดือน' },
+];
+
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const buildLinePath = (points) => {
+  if (!points.length) return '';
+
+  return points.reduce((acc, point, index) => {
+    if (index === 0) return `M${point.x},${point.y}`;
+    return `${acc} L${point.x},${point.y}`;
+  }, '');
+};
+
+const getChartCoordinates = (seriesPoints, width, height, yMin, yMax) => {
+  const stepX = seriesPoints.length > 1 ? (width - 20) / (seriesPoints.length - 1) : 0;
+
+  return seriesPoints.map((point, index) => {
+    const normalized = yMax === yMin ? 0 : (point.value - yMin) / (yMax - yMin);
+    return {
+      x: 10 + index * stepX,
+      y: 140 - clamp(normalized, 0, 1) * (height - 40),
+      value: point.value,
+      rawX: point.x,
+    };
+  });
+};
+
+const getStatsViewModel = (activeTab, historyPayload) => {
+  const tabData = historyPayload?.tabs?.[activeTab];
+  if (!tabData) return null;
+
+  const yAxis = tabData.chart?.yAxis ?? { min: 0, max: 200, unit: '' };
+  const labels = tabData.chart?.labels ?? [];
+  const chartSeries = (tabData.chart?.series ?? []).map((series) => {
+    const points = getChartCoordinates(series.points ?? [], 340, 120, yAxis.min, yAxis.max);
+    return {
+      ...series,
+      points,
+      path: buildLinePath(points),
+    };
+  });
+
+  const highlight = tabData.chart?.highlight ?? { seriesKey: chartSeries[0]?.key, index: 0 };
+  const highlightedSeries = chartSeries.find((series) => series.key === highlight.seriesKey) ?? chartSeries[0];
+  const highlightedPoint = highlightedSeries?.points?.[highlight.index] ?? highlightedSeries?.points?.[0] ?? null;
+
+  return {
+    comparisonLabel: tabData.comparisonLabel ?? '',
+    summaryCards: tabData.summaryCards ?? [],
+    targetSuccess: tabData.targetSuccess ?? { percent: 0, trendText: '0%', isPositive: true },
+    carbGoal: tabData.carbGoal ?? { consumed: 0, goal: 0, unit: '' },
+    chart: {
+      labels,
+      yAxis,
+      series: chartSeries,
+      highlightedPoint,
+      highlightedColor: highlightedSeries?.color ?? '#EF4444',
+    },
+  };
+};
 
 // --- Components ย่อยสำหรับหน้านี้ ---
 
@@ -43,52 +108,13 @@ const StatCard = ({ title, value, unit, trend, isPositive }) => (
 );
 
 // 3. Custom Line Chart (กราฟเส้นโค้ง SVG)
-const CustomLineChart = ({ activeTab }) => {
-  // Chart data for each tab
-  const chartData = {
-    วัน: {
-      carbPath: "M10,100 C40,80 80,120 120,90 C160,60 200,100 240,80 C280,60 310,90 340,70",
-      sugarPath: "M10,110 C40,90 80,130 120,100 C160,70 200,110 240,90 C280,70 310,100 340,80",
-      tooltipPos: { cx: 170, cy: 70, tx: 140, ty: 40, value: "95 มก./ดล." },
-      labels: [
-        { x: 15, text: "6" },
-        { x: 55, text: "9" },
-        { x: 100, text: "12" },
-        { x: 145, text: "15" },
-        { x: 190, text: "18" },
-        { x: 235, text: "21" },
-        { x: 280, text: "24" },
-        { x: 325, text: "น." }
-      ]
-    },
-    สัปดาห์: {
-      carbPath: "M10,110 C40,140 80,80 120,100 C160,120 200,60 240,60 C280,60 310,120 340,100",
-      sugarPath: "M10,120 C50,60 90,80 130,100 C170,120 210,50 240,70 C280,100 310,140 340,120",
-      tooltipPos: { cx: 215, cy: 55, tx: 185, ty: 25, value: "145 มก./ดล." },
-      labels: [
-        { x: 20, text: "จ." },
-        { x: 70, text: "อ." },
-        { x: 120, text: "พ." },
-        { x: 170, text: "พฤ." },
-        { x: 220, text: "ศ." },
-        { x: 270, text: "ส." },
-        { x: 320, text: "อา." }
-      ]
-    },
-    เดือน: {
-      carbPath: "M10,80 C50,100 90,60 130,90 C170,120 210,70 250,80 C290,90 310,60 340,50",
-      sugarPath: "M10,90 C50,110 90,70 130,100 C170,130 210,80 250,90 C290,100 310,70 340,60",
-      tooltipPos: { cx: 310, cy: 55, tx: 275, ty: 25, value: "110 มก./ดล." },
-      labels: [
-        { x: 25, text: "สัปดาห์ 1" },
-        { x: 125, text: "สัปดาห์ 2" },
-        { x: 225, text: "สัปดาห์ 3" },
-        { x: 320, text: "สัปดาห์ 4" }
-      ]
-    }
-  };
+const CustomLineChart = ({ chartModel }) => {
+  if (!chartModel) return null;
 
-  const data = chartData[activeTab];
+  const labelStepX = chartModel.labels.length > 1 ? (340 - 20) / (chartModel.labels.length - 1) : 0;
+  const tooltipValue = chartModel.highlightedPoint
+    ? `${chartModel.highlightedPoint.value.toFixed(0)} ${chartModel.yAxis.unit === 'mg/dL' ? 'มก./ดล.' : chartModel.yAxis.unit}`
+    : '';
 
   return (
     <div className="w-full h-48 relative mt-4">
@@ -98,31 +124,35 @@ const CustomLineChart = ({ activeTab }) => {
         <line x1="0" y1="90" x2="350" y2="90" stroke="#F1F5F9" strokeWidth="1" />
         <line x1="0" y1="140" x2="350" y2="140" stroke="#F1F5F9" strokeWidth="1" />
 
-        {/* --- Yellow Line (Carb) --- */}
-        <path 
-          d={data.carbPath}
-          fill="none" stroke="#FCD34D" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
-        />
-
-        {/* --- Red Line (Sugar) --- */}
-        <path 
-          d={data.sugarPath}
-          fill="none" stroke="#EF4444" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
-        />
+        {chartModel.series.map((series) => (
+          <path
+            key={series.key}
+            d={series.path}
+            fill="none"
+            stroke={series.color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ))}
 
         {/* Tooltip Dot & Label (จุดแดงและป้ายกำกับ) */}
-        <circle cx={data.tooltipPos.cx} cy={data.tooltipPos.cy} r="4" fill="#EF4444" stroke="white" strokeWidth="2" />
-        <g transform={`translate(${data.tooltipPos.tx}, ${data.tooltipPos.ty})`}>
+        {chartModel.highlightedPoint && (
+          <>
+            <circle cx={chartModel.highlightedPoint.x} cy={chartModel.highlightedPoint.y} r="4" fill={chartModel.highlightedColor} stroke="white" strokeWidth="2" />
+            <g transform={`translate(${chartModel.highlightedPoint.x - 35}, ${chartModel.highlightedPoint.y - 30})`}>
           <rect x="0" y="0" width="70" height="22" rx="6" fill="#EF4444" />
-          <text x="35" y="15" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">{data.tooltipPos.value}</text>
+              <text x="35" y="15" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">{tooltipValue}</text>
           {/* Triangle pointing down */}
           <path d="M30,22 L35,27 L40,22 Z" fill="#EF4444" />
         </g>
+          </>
+        )}
 
         {/* X-Axis Labels */}
         <g className="text-[10px] fill-slate-400 font-medium" transform="translate(0, 170)">
-          {data.labels.map((label, index) => (
-            <text key={index} x={label.x} textAnchor="middle">{label.text}</text>
+          {chartModel.labels.map((label, index) => (
+            <text key={`${label}-${index}`} x={10 + index * labelStepX} textAnchor="middle">{label}</text>
           ))}
         </g>
       </svg>
@@ -133,7 +163,37 @@ const CustomLineChart = ({ activeTab }) => {
 // --- Main Page Component ---
 const StatsPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('สัปดาห์');
+  const [activeTab, setActiveTab] = useState('week');
+
+  // Backend note:
+  // 1) Put API response into statsHistoryData variable.
+  // 2) JSON shape required:
+  // {
+  //   "tabs": {
+  //     "day|week|month|year": {
+  //       "comparisonLabel": "string",
+  //       "chart": {
+  //         "yAxis": { "min": number, "max": number, "unit": "string" },
+  //         "labels": ["string"],
+  //         "series": [{ "key": "string", "label": "string", "color": "#RRGGBB", "points": [{ "x": "string", "value": number }] }],
+  //         "highlight": { "seriesKey": "string", "index": number }
+  //       },
+  //       "summaryCards": [{ "id": "string", "title": "string", "value": number, "unit": "string", "trendText": "string", "isPositive": boolean }],
+  //       "targetSuccess": { "percent": number, "trendText": "string", "isPositive": boolean },
+  //       "carbGoal": { "consumed": number, "goal": number, "unit": "string" }
+  //     }
+  //   }
+  // }
+  const statsHistoryData = statsHistoryMock;
+
+  const activeTabLabel = TAB_OPTIONS.find((tab) => tab.key === activeTab)?.label ?? 'สัปดาห์';
+  const viewModel = useMemo(() => getStatsViewModel(activeTab, statsHistoryData), [activeTab, statsHistoryData]);
+  const targetPercent = clamp(viewModel?.targetSuccess?.percent ?? 0, 0, 100);
+  const targetDashOffset = 175 - (175 * targetPercent) / 100;
+  const carbConsumed = viewModel?.carbGoal?.consumed ?? 0;
+  const carbGoal = viewModel?.carbGoal?.goal ?? 0;
+  const carbProgressPercent = carbGoal > 0 ? clamp((carbConsumed / carbGoal) * 100, 0, 100) : 0;
+
   const handleBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
@@ -148,16 +208,26 @@ const StatsPage = () => {
       {/* Header */}
       <div className="px-4 pt-safe-top pb-2 bg-white sticky top-0 z-20">
         <div className="flex items-center justify-between py-3">
+          <button onClick={handleBack} className="p-2 -ml-2 text-slate-800 hover:bg-slate-50 rounded-full">
+            <ChevronLeft size={24} />
+          </button>
 
           <h1 className="text-lg font-bold text-slate-800 text-center w-full">สถิติ</h1>
+
+          <div className="w-10"></div>
 
         </div>
 
         {/* Tabs Segmented Control */}
         <div className="bg-slate-100 p-1 rounded-xl flex mb-2">
-          <TabButton label="วัน" active={activeTab === 'วัน'} onClick={() => setActiveTab('วัน')} />
-          <TabButton label="สัปดาห์" active={activeTab === 'สัปดาห์'} onClick={() => setActiveTab('สัปดาห์')} />
-          <TabButton label="เดือน" active={activeTab === 'เดือน'} onClick={() => setActiveTab('เดือน')} />
+          {TAB_OPTIONS.map((tab) => (
+            <TabButton
+              key={tab.key}
+              label={tab.label}
+              active={activeTab === tab.key}
+              onClick={() => setActiveTab(tab.key)}
+            />
+          ))}
         </div>
       </div>
 
@@ -168,41 +238,35 @@ const StatsPage = () => {
         <div className="bg-white p-5 rounded-3xl shadow-sm">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h2 className="font-bold text-slate-800 text-lg">แนวโน้มราย{activeTab}</h2>
-              <p className="text-xs text-slate-400">เทียบกับ{activeTab === 'วัน' ? 'เมื่อวาน' : activeTab === 'สัปดาห์' ? 'สัปดาห์ที่แล้ว' : 'เดือนที่แล้ว'}</p>
+              <h2 className="font-bold text-slate-800 text-lg">แนวโน้มราย{activeTabLabel}</h2>
+              <p className="text-xs text-slate-400">เทียบกับ{viewModel?.comparisonLabel}</p>
             </div>
             {/* Legend */}
             <div className="flex gap-3 text-xs font-bold text-slate-600">
-               <div className="flex items-center gap-1">
-                 <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                 <span>น้ำตาล</span>
-               </div>
-               <div className="flex items-center gap-1">
-                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
-                 <span>คาร์บ</span>
-               </div>
+               {viewModel?.chart?.series?.map((series) => (
+                 <div key={series.key} className="flex items-center gap-1">
+                   <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: series.color }}></div>
+                   <span>{series.label}</span>
+                 </div>
+               ))}
             </div>
           </div>
           
-          <CustomLineChart activeTab={activeTab} />
+          <CustomLineChart chartModel={viewModel?.chart} />
         </div>
 
         {/* 2. Summary Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
-          <StatCard 
-            title="ระดับน้ำตาลในเลือดเฉลี่ย"
-            value="120"
-            unit="มก./ดล."
-            trend="+2%"
-            isPositive={true}
-          />
-          <StatCard 
-            title="ปริมาณคาร์บเฉลี่ย"
-            value="150"
-            unit="ก."
-            trend="-3%"
-            isPositive={false}
-          />
+          {(viewModel?.summaryCards ?? []).map((card) => (
+            <StatCard
+              key={card.id}
+              title={card.title}
+              value={card.value}
+              unit={card.unit}
+              trend={card.trendText}
+              isPositive={card.isPositive}
+            />
+          ))}
         </div>
 
         {/* 3. Target Success Card */}
@@ -211,18 +275,18 @@ const StatsPage = () => {
           <div className="relative w-16 h-16 shrink-0">
              <svg className="w-full h-full transform -rotate-90">
                 <circle cx="50%" cy="50%" r="28" stroke="#E2E8F0" strokeWidth="6" fill="transparent" />
-                <circle cx="50%" cy="50%" r="28" stroke="#55BCC3" strokeWidth="6" fill="transparent" strokeDasharray="175" strokeDashoffset="26" strokeLinecap="round" />
+               <circle cx="50%" cy="50%" r="28" stroke="#55BCC3" strokeWidth="6" fill="transparent" strokeDasharray="175" strokeDashoffset={targetDashOffset} strokeLinecap="round" />
              </svg>
              <div className="absolute inset-0 flex items-center justify-center font-bold text-sm text-slate-800">
-               85%
+              {targetPercent.toFixed(0)}%
              </div>
           </div>
           
           <div>
              <h3 className="font-bold text-slate-800">อยู่ในเกณฑ์เป้าหมาย</h3>
-             <div className="flex items-center gap-1 text-xs font-bold text-green-500 mt-1">
-                <TrendingUp size={14} />
-                <span>+5% เทียบกับ{activeTab === 'วัน' ? 'เมื่อวาน' : activeTab === 'สัปดาห์' ? 'สัปดาห์ที่แล้ว' : 'เดือนที่แล้ว'}</span>
+             <div className={`flex items-center gap-1 text-xs font-bold mt-1 ${viewModel?.targetSuccess?.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+               {viewModel?.targetSuccess?.isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+               <span>{viewModel?.targetSuccess?.trendText} เทียบกับ{viewModel?.comparisonLabel}</span>
              </div>
           </div>
         </div>
@@ -230,16 +294,16 @@ const StatsPage = () => {
         {/* 4. Weekly Carb Goal Card */}
         <div className="bg-white p-5 rounded-3xl shadow-sm mb-4">
            <div className="flex justify-between items-end mb-2">
-              <h3 className="font-bold text-slate-800">เป้าหมายคาร์บราย{activeTab}</h3>
+              <h3 className="font-bold text-slate-800">เป้าหมายคาร์บราย{activeTabLabel}</h3>
               <div className="text-xs">
-                 <span className="font-bold text-slate-800">250ก.</span>
-                 <span className="text-slate-400"> / 400ก.</span>
+                <span className="font-bold text-slate-800">{carbConsumed}{viewModel?.carbGoal?.unit}</span>
+                <span className="text-slate-400"> / {carbGoal}{viewModel?.carbGoal?.unit}</span>
               </div>
            </div>
            
            {/* Linear Progress Bar */}
            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-[#55BCC3] w-[62%] rounded-full"></div>
+              <div className="h-full bg-[#55BCC3] rounded-full" style={{ width: `${carbProgressPercent}%` }}></div>
            </div>
         </div>
 

@@ -1,0 +1,247 @@
+{
+  "days": [
+    {
+      "date": "2026-02-11",
+      "summary": {
+        "carbConsumed": 120,
+        "carbGoal": 200,
+        "bloodSugarCurrent": 110,
+        "bloodSugarMax": 180
+      },
+      "bloodSugarLogs": [
+        {
+          "id": "bg-1",
+          "label": "ก่อนอาหารเช้า",
+          "time": "07:05 น.",
+          "value": 95,
+          "unit": "mg/dL"
+        },
+        {
+          "id": "bg-2",
+          "label": "หลังอาหารกลางวัน",
+          "time": "13:30 น.",
+          "value": 110,
+          "unit": "mg/dL"
+        }
+      ],
+      "meals": [
+        {
+          "key": "breakfast",
+          "label": "อาหารเช้า",
+          "totalCarb": 45,
+          "items": [
+            {
+              "id": "b-1",
+              "name": "ขนมปังปิ้งเนยถั่ว",
+              "portion": "2 แผ่น",
+              "carb": 45
+            }
+          ]
+        },
+        {
+          "key": "lunch",
+          "label": "อาหารกลางวัน",
+          "totalCarb": 75,
+          "items": [
+            {
+              "id": "l-1",
+              "name": "สลัดไก่",
+              "portion": "1 ชาม",
+              "carb": 25
+            },
+            {
+              "id": "l-2",
+              "name": "น้ำส้มคั้น",
+              "portion": "1 แก้ว",
+              "carb": 50
+            }
+          ]
+        },
+        {
+          "key": "dinner",
+          "label": "อาหารเย็น",
+          "totalCarb": 0,
+          "items": []
+        },
+        {
+          "key": "snack",
+          "label": "ของว่าง",
+          "totalCarb": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "date": "2026-02-10",
+      "summary": {
+        "carbConsumed": 168,
+        "carbGoal": 200,
+        "bloodSugarCurrent": 124,
+        "bloodSugarMax": 180
+      },
+      "bloodSugarLogs": [
+        {
+          "id": "bg-3",
+          "label": "ก่อนอาหารเช้า",
+          "time": "06:50 น.",
+          "value": 101,
+          "unit": "mg/dL"
+        },
+        {
+          "id": "bg-4",
+          "label": "ก่อนนอน",
+          "time": "21:20 น.",
+          "value": 124,
+          "unit": "mg/dL"
+        }
+      ],
+      "meals": [
+        {
+          "key": "breakfast",
+          "label": "อาหารเช้า",
+          "totalCarb": 52,
+          "items": [
+            {
+              "id": "b-2",
+              "name": "ข้าวต้มปลา",
+              "portion": "1 ถ้วย",
+              "carb": 52
+            }
+          ]
+        },
+        {
+          "key": "lunch",
+          "label": "อาหารกลางวัน",
+          "totalCarb": 60,
+          "items": [
+            {
+              "id": "l-3",
+              "name": "ข้าวกะเพราไก่",
+              "portion": "1 จาน",
+              "carb": 60
+            }
+          ]
+        },
+        {
+          "key": "dinner",
+          "label": "อาหารเย็น",
+          "totalCarb": 56,
+          "items": [
+            {
+              "id": "d-1",
+              "name": "ก๋วยเตี๋ยวน้ำ",
+              "portion": "1 ชาม",
+              "carb": 56
+            }
+          ]
+        },
+        {
+          "key": "snack",
+          "label": "ของว่าง",
+          "totalCarb": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "date": "2026-02-08",
+      "summary": {
+        "carbConsumed": 0,
+        "carbGoal": 200,
+        "bloodSugarCurrent": 0,
+        "bloodSugarMax": 180
+      },
+      "bloodSugarLogs": [],
+      "meals": [
+        {
+          "key": "breakfast",
+          "label": "อาหารเช้า",
+          "totalCarb": 0,
+          "items": []
+        },
+        {
+          "key": "lunch",
+          "label": "อาหารกลางวัน",
+          "totalCarb": 0,
+          "items": []
+        },
+        {
+          "key": "dinner",
+          "label": "อาหารเย็น",
+          "totalCarb": 0,
+          "items": []
+        },
+        {
+          "key": "snack",
+          "label": "ของว่าง",
+          "totalCarb": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "date": "2026-02-05",
+      "summary": {
+        "carbConsumed": 90,
+        "carbGoal": 200,
+        "bloodSugarCurrent": 102,
+        "bloodSugarMax": 180
+      },
+      "bloodSugarLogs": [
+        {
+          "id": "bg-5",
+          "label": "ก่อนอาหารเย็น",
+          "time": "18:10 น.",
+          "value": 102,
+          "unit": "mg/dL"
+        }
+      ],
+      "meals": [
+        {
+          "key": "breakfast",
+          "label": "อาหารเช้า",
+          "totalCarb": 30,
+          "items": [
+            {
+              "id": "b-3",
+              "name": "โยเกิร์ต",
+              "portion": "1 ถ้วย",
+              "carb": 15
+            },
+            {
+              "id": "b-4",
+              "name": "กล้วยหอม",
+              "portion": "1 ลูก",
+              "carb": 15
+            }
+          ]
+        },
+        {
+          "key": "lunch",
+          "label": "อาหารกลางวัน",
+          "totalCarb": 60,
+          "items": [
+            {
+              "id": "l-4",
+              "name": "ข้าวมันไก่",
+              "portion": "1 จาน",
+              "carb": 60
+            }
+          ]
+        },
+        {
+          "key": "dinner",
+          "label": "อาหารเย็น",
+          "totalCarb": 0,
+          "items": []
+        },
+        {
+          "key": "snack",
+          "label": "ของว่าง",
+          "totalCarb": 0,
+          "items": []
+        }
+      ]
+    }
+  ]
+}

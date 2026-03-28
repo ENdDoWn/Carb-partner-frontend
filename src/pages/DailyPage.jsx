@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Bell, User, Search, Plus, Home, BarChart2, ScanLine, History, ArrowRightLeft, 
-  ChevronLeft, ChevronRight, Calendar, Clock, Utensils, Coffee, Sun, Moon, IceCream, X
+  ChevronLeft, ChevronRight, Calendar, Clock, Utensils, Coffee, Sun, Moon, IceCream
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
+import dailyHistoryMock from '../mock/daily-history.mock.json';
 
 // --- Thai month names ---
 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 const thaiFullMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
 const thaiDays = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
 
-// --- Mock data - dates with data ---
-const datesWithData = ['2026-02-11', '2026-02-10', '2026-02-08', '2026-02-05'];
+const MEAL_SECTIONS = [
+  { key: 'breakfast', label: 'อาหารเช้า', icon: Coffee, placeholder: 'ยังไม่มีบันทึกมื้อนี้' },
+  { key: 'lunch', label: 'อาหารกลางวัน', icon: Sun, placeholder: 'ยังไม่มีบันทึกมื้อนี้' },
+  { key: 'dinner', label: 'อาหารเย็น', icon: Moon, placeholder: 'บันทึกมื้อเย็นเพื่อดูปริมาณคาร์บ' },
+  { key: 'snack', label: 'ของว่าง', icon: IceCream, placeholder: 'ยังไม่มีบันทึกของว่าง' },
+];
 
 // --- Format date to string ---
 const formatDateKey = (date) => {
@@ -32,8 +36,18 @@ const isToday = (date) => {
          date.getFullYear() === today.getFullYear();
 };
 
+const isRecordHasData = (record) => {
+  if (!record) return false;
+
+  const hasMealItems = (record.meals ?? []).some((meal) => (meal.items ?? []).length > 0);
+  const hasBloodSugarLogs = (record.bloodSugarLogs ?? []).length > 0;
+  const hasCarbProgress = (record.summary?.carbConsumed ?? 0) > 0;
+
+  return hasMealItems || hasBloodSugarLogs || hasCarbProgress;
+};
+
 // --- Calendar Popup Component ---
-const CalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate }) => {
+const CalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate, datesWithData }) => {
   const [viewDate, setViewDate] = useState(new Date(selectedDate));
   
   if (!isOpen) return null;
@@ -163,6 +177,36 @@ const DailyLogPage = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const selectedDateKey = formatDateKey(selectedDate);
+
+  // Backend note:
+  // Replace dailyHistoryData with API response using the same shape as src/mock/daily-history.mock.json
+  // Expected root: { "days": [{ "date", "summary", "bloodSugarLogs", "meals" }] }
+  const dailyHistoryData = dailyHistoryMock;
+  const dailyHistoryList = dailyHistoryData?.days ?? [];
+  const datesWithData = dailyHistoryList.filter(isRecordHasData).map((day) => day.date);
+  const selectedRecord = dailyHistoryList.find((day) => day.date === selectedDateKey) ?? null;
+  const hasData = isRecordHasData(selectedRecord);
+
+  const summary = selectedRecord?.summary ?? {
+    carbConsumed: 0,
+    carbGoal: 200,
+    bloodSugarCurrent: 0,
+    bloodSugarMax: 180,
+  };
+
+  const carbRemaining = Math.max((summary.carbGoal ?? 0) - (summary.carbConsumed ?? 0), 0);
+  const bloodSugarLogs = selectedRecord?.bloodSugarLogs ?? [];
+  const mealMap = Object.fromEntries((selectedRecord?.meals ?? []).map((meal) => [meal.key, meal]));
+  const mealSections = MEAL_SECTIONS.map((section) => {
+    const meal = mealMap[section.key] ?? { items: [], totalCarb: 0 };
+    return {
+      ...section,
+      totalCarb: meal.totalCarb ?? 0,
+      items: meal.items ?? [],
+    };
+  });
+
   const handleBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
@@ -182,9 +226,6 @@ const DailyLogPage = () => {
       document.body.style.overflow = 'auto';
     };
   }, [showCalendar]);
-
-  // Check if selected date has data
-  const hasData = datesWithData.includes(formatDateKey(selectedDate));
 
   // Navigate date
   const prevDay = () => {
@@ -215,14 +256,15 @@ const DailyLogPage = () => {
         onClose={() => setShowCalendar(false)}
         selectedDate={selectedDate}
         onSelectDate={setSelectedDate}
+        datesWithData={datesWithData}
       />
 
       {/* --- Top Bar --- */}
       <div className="bg-[#F8FAFC] px-4 pt-safe-top pb-2">
         <div className="flex items-center justify-between py-4">
-          <div className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-full">
-
-          </div>
+          <button onClick={handleBack} className="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-full">
+            <ChevronLeft size={24} />
+          </button>
           <h1 className="text-lg font-bold text-slate-800 text-center w-full">บันทึกประจำวัน</h1>
           <button 
             onClick={() => setShowCalendar(true)}
@@ -248,20 +290,20 @@ const DailyLogPage = () => {
           <h2 className="font-bold text-slate-800 mb-4">ความคืบหน้าวันนี้</h2>
           <div className="flex justify-center mb-6">
             <CircularProgress 
-              value={hasData ? 120 : 0} max={200} color="#6CD2D9" 
+              value={summary.carbConsumed} max={summary.carbGoal || 200} color="#6CD2D9" 
               unit="g" 
-              subLabel={hasData ? "ที่บริโภคแล้ว" : "-"}
+              subLabel={hasData ? 'ที่บริโภคแล้ว' : 'ยังไม่มีข้อมูล'}
               size={140} strokeWidth={14}
             />
           </div>
           <div className="flex justify-between px-4">
             <div className="flex flex-col items-center">
               <span className="text-xs text-slate-400 mb-1">เป้าหมาย</span>
-              <span className="text-lg font-bold text-slate-800">200g</span>
+              <span className="text-lg font-bold text-slate-800">{summary.carbGoal}g</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-xs text-slate-400 mb-1">คงเหลือ</span>
-              <span className="text-lg font-bold text-slate-800">{hasData ? '80g' : '-'}</span>
+              <span className="text-lg font-bold text-slate-800">{hasData ? `${carbRemaining}g` : '-'}</span>
             </div>
           </div>
         </div>
@@ -271,36 +313,26 @@ const DailyLogPage = () => {
           <h2 className="font-bold text-slate-800 mb-4">ระดับน้ำตาลในเลือด</h2>
           <div className="flex justify-center mb-6">
              <CircularProgress 
-              value={hasData ? 110 : 0} max={180} color="#FCD34D"
-              label={hasData ? "mg/dL" : "-"}
+              value={summary.bloodSugarCurrent} max={summary.bloodSugarMax || 180} color="#FCD34D"
+              label={hasData ? 'mg/dL' : '-'}
               size={120} strokeWidth={12}
             />
           </div>
           
-          {hasData ? (
+          {bloodSugarLogs.length > 0 ? (
             <div className="space-y-4">
-              {/* List Item 1 */}
-              <div className="flex items-center justify-between border-b border-slate-50 pb-3">
-                <div className="flex items-start gap-3">
-                  <Clock size={16} className="text-slate-400 mt-1" />
-                  <div>
-                    <p className="text-sm font-bold text-slate-700">ก่อนอาหารเช้า</p>
-                    <p className="text-xs text-slate-400">07:05 น.</p>
+              {bloodSugarLogs.map((log, index) => (
+                <div key={log.id} className={`flex items-center justify-between ${index !== bloodSugarLogs.length - 1 ? 'border-b border-slate-50 pb-3' : ''}`}>
+                  <div className="flex items-start gap-3">
+                    <Clock size={16} className="text-slate-400 mt-1" />
+                    <div>
+                      <p className="text-sm font-bold text-slate-700">{log.label}</p>
+                      <p className="text-xs text-slate-400">{log.time}</p>
+                    </div>
                   </div>
+                  <span className="text-sm font-bold text-slate-800">{log.value} {log.unit}</span>
                 </div>
-                <span className="text-sm font-bold text-slate-800">95 mg/dL.</span>
-              </div>
-              {/* List Item 2 */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <Clock size={16} className="text-slate-400 mt-1" />
-                  <div>
-                    <p className="text-sm font-bold text-slate-700">หลังอาหารกลางวัน</p>
-                    <p className="text-xs text-slate-400">13:30 น.</p>
-                  </div>
-                </div>
-                <span className="text-sm font-bold text-slate-800">110 mg/dL.</span>
-              </div>
+              ))}
             </div>
           ) : (
             <div className="text-center text-slate-400 text-sm py-4">
@@ -309,115 +341,49 @@ const DailyLogPage = () => {
           )}
         </div>
 
-        {/* Card 3: Breakfast */}
-        {hasData ? (
-          <div className="bg-white rounded-3xl p-5 shadow-sm">
-            <div className="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
-              <div className="w-10 h-10 rounded-full bg-cyan-50 flex items-center justify-center text-[#6CD2D9]">
-                <Coffee size={20} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-slate-800">อาหารเช้า</h3>
-                <p className="text-xs text-slate-400">คาร์บ 45g</p>
-              </div>
-            </div>
-            
-            {/* Food Items */}
-            <div className="space-y-3 pl-2">
-              <div className="flex justify-between items-start">
-                <div className="flex gap-3">
-                  <div className="mt-1"><Utensils size={14} className="text-slate-300" /></div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-700">ขนมปังปิ้งเนยถั่ว</p>
-                    <p className="text-xs text-slate-400">2 แผ่น</p>
-                  </div>
-                </div>
-                <span className="text-sm font-bold text-slate-800">45g</span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-3xl p-4 shadow-sm flex items-center gap-4 py-5">
-            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-              <Coffee size={20} />
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-800">อาหารเช้า</h3>
-              <p className="text-xs text-slate-400">-</p>
-            </div>
-          </div>
-        )}
+        {mealSections.map((meal) => {
+          const Icon = meal.icon;
+          const hasMealItems = meal.items.length > 0;
 
-        {/* Card 4: Lunch */}
-        {hasData ? (
-          <div className="bg-white rounded-3xl p-5 shadow-sm">
-            <div className="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
-              <div className="w-10 h-10 rounded-full bg-cyan-50 flex items-center justify-center text-[#6CD2D9]">
-                <Sun size={20} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-slate-800">อาหารกลางวัน</h3>
-                <p className="text-xs text-slate-400">คาร์บ 75g</p>
-              </div>
-            </div>
-            
-            {/* Food Items */}
-            <div className="space-y-3 pl-2">
-              <div className="flex justify-between items-start">
-                <div className="flex gap-3">
-                  <div className="mt-1"><Utensils size={14} className="text-slate-300" /></div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-700">สลัดไก่</p>
-                    <p className="text-xs text-slate-400">1 ชาม</p>
-                  </div>
+          return hasMealItems ? (
+            <div key={meal.key} className="bg-white rounded-3xl p-5 shadow-sm">
+              <div className="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div className="w-10 h-10 rounded-full bg-cyan-50 flex items-center justify-center text-[#6CD2D9]">
+                  <Icon size={20} />
                 </div>
-                <span className="text-sm font-bold text-slate-800">25g</span>
-              </div>
-              <div className="flex justify-between items-start">
-                <div className="flex gap-3">
-                  <div className="mt-1"><Utensils size={14} className="text-slate-300" /></div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-700">น้ำส้มคั้น</p>
-                    <p className="text-xs text-slate-400">1 แก้ว</p>
-                  </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-slate-800">{meal.label}</h3>
+                  <p className="text-xs text-slate-400">คาร์บ {meal.totalCarb}g</p>
                 </div>
-                <span className="text-sm font-bold text-slate-800">50g</span>
+              </div>
+
+              <div className="space-y-3 pl-2">
+                {meal.items.map((item) => (
+                  <div key={item.id} className="flex justify-between items-start">
+                    <div className="flex gap-3">
+                      <div className="mt-1"><Utensils size={14} className="text-slate-300" /></div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-700">{item.name}</p>
+                        <p className="text-xs text-slate-400">{item.portion}</p>
+                      </div>
+                    </div>
+                    <span className="text-sm font-bold text-slate-800">{item.carb}g</span>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-3xl p-4 shadow-sm flex items-center gap-4 py-5">
-            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-              <Sun size={20} />
+          ) : (
+            <div key={meal.key} className="bg-white rounded-3xl p-4 shadow-sm flex items-center gap-4 py-5">
+              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                <Icon size={20} />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800">{meal.label}</h3>
+                <p className="text-xs text-slate-400">{hasData ? meal.placeholder : '-'}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-slate-800">อาหารกลางวัน</h3>
-              <p className="text-xs text-slate-400">-</p>
-            </div>
-          </div>
-        )}
-
-        {/* Card 5: Dinner (Empty State) */}
-        <div className="bg-white rounded-3xl p-4 shadow-sm flex items-center gap-4 py-5">
-           <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-              <Moon size={20} />
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-800">อาหารเย็น</h3>
-              <p className="text-xs text-slate-400">{hasData ? 'บันทึกมื้อเย็นเพื่อดูปริมาณคาร์บ' : '-'}</p>
-            </div>
-        </div>
-
-        {/* Card 6: Snack (Empty State) */}
-        <div className="bg-white rounded-3xl p-4 shadow-sm flex items-center gap-4 py-5">
-           <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-              <IceCream size={20} />
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-800">ของว่าง</h3>
-              <p className="text-xs text-slate-400">{hasData ? 'ยังไม่มีบันทึกของว่าง' : '-'}</p>
-            </div>
-        </div>
+          );
+        })}
 
       </div>
 

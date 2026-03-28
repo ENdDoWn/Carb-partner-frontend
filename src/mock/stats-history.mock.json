@@ -1,0 +1,196 @@
+{
+  "tabs": {
+    "day": {
+      "comparisonLabel": "เมื่อวาน",
+      "chart": {
+        "yAxis": { "min": 60, "max": 220, "unit": "mg/dL" },
+        "labels": ["06", "09", "12", "15", "18", "21", "24"],
+        "series": [
+          {
+            "key": "sugar",
+            "label": "น้ำตาล",
+            "color": "#EF4444",
+            "points": [
+              { "x": "06", "value": 95 },
+              { "x": "09", "value": 120 },
+              { "x": "12", "value": 142 },
+              { "x": "15", "value": 110 },
+              { "x": "18", "value": 130 },
+              { "x": "21", "value": 115 },
+              { "x": "24", "value": 98 }
+            ]
+          },
+          {
+            "key": "carb",
+            "label": "คาร์บ",
+            "color": "#FCD34D",
+            "points": [
+              { "x": "06", "value": 72 },
+              { "x": "09", "value": 96 },
+              { "x": "12", "value": 140 },
+              { "x": "15", "value": 92 },
+              { "x": "18", "value": 108 },
+              { "x": "21", "value": 86 },
+              { "x": "24", "value": 70 }
+            ]
+          }
+        ],
+        "highlight": { "seriesKey": "sugar", "index": 2 }
+      },
+      "summaryCards": [
+        {
+          "id": "avgSugar",
+          "title": "ระดับน้ำตาลในเลือดเฉลี่ย",
+          "value": 120,
+          "unit": "มก./ดล.",
+          "trendText": "+2%",
+          "isPositive": true
+        },
+        {
+          "id": "avgCarb",
+          "title": "ปริมาณคาร์บเฉลี่ย",
+          "value": 150,
+          "unit": "ก.",
+          "trendText": "-3%",
+          "isPositive": false
+        }
+      ],
+      "targetSuccess": {
+        "percent": 85,
+        "trendText": "+5%",
+        "isPositive": true
+      },
+      "carbGoal": {
+        "consumed": 250,
+        "goal": 400,
+        "unit": "ก."
+      }
+    },
+    "week": {
+      "comparisonLabel": "สัปดาห์ที่แล้ว",
+      "chart": {
+        "yAxis": { "min": 60, "max": 220, "unit": "mg/dL" },
+        "labels": ["จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส.", "อา."],
+        "series": [
+          {
+            "key": "sugar",
+            "label": "น้ำตาล",
+            "color": "#EF4444",
+            "points": [
+              { "x": "จ.", "value": 130 },
+              { "x": "อ.", "value": 118 },
+              { "x": "พ.", "value": 138 },
+              { "x": "พฤ.", "value": 125 },
+              { "x": "ศ.", "value": 145 },
+              { "x": "ส.", "value": 116 },
+              { "x": "อา.", "value": 120 }
+            ]
+          },
+          {
+            "key": "carb",
+            "label": "คาร์บ",
+            "color": "#FCD34D",
+            "points": [
+              { "x": "จ.", "value": 112 },
+              { "x": "อ.", "value": 104 },
+              { "x": "พ.", "value": 130 },
+              { "x": "พฤ.", "value": 108 },
+              { "x": "ศ.", "value": 126 },
+              { "x": "ส.", "value": 98 },
+              { "x": "อา.", "value": 94 }
+            ]
+          }
+        ],
+        "highlight": { "seriesKey": "sugar", "index": 4 }
+      },
+      "summaryCards": [
+        {
+          "id": "avgSugar",
+          "title": "ระดับน้ำตาลในเลือดเฉลี่ย",
+          "value": 124,
+          "unit": "มก./ดล.",
+          "trendText": "+1%",
+          "isPositive": true
+        },
+        {
+          "id": "avgCarb",
+          "title": "ปริมาณคาร์บเฉลี่ย",
+          "value": 142,
+          "unit": "ก.",
+          "trendText": "-4%",
+          "isPositive": false
+        }
+      ],
+      "targetSuccess": {
+        "percent": 82,
+        "trendText": "+2%",
+        "isPositive": true
+      },
+      "carbGoal": {
+        "consumed": 980,
+        "goal": 1400,
+        "unit": "ก."
+      }
+    },
+    "month": {
+      "comparisonLabel": "เดือนที่แล้ว",
+      "chart": {
+        "yAxis": { "min": 60, "max": 220, "unit": "mg/dL" },
+        "labels": ["สัปดาห์ 1", "สัปดาห์ 2", "สัปดาห์ 3", "สัปดาห์ 4"],
+        "series": [
+          {
+            "key": "sugar",
+            "label": "น้ำตาล",
+            "color": "#EF4444",
+            "points": [
+              { "x": "สัปดาห์ 1", "value": 128 },
+              { "x": "สัปดาห์ 2", "value": 120 },
+              { "x": "สัปดาห์ 3", "value": 136 },
+              { "x": "สัปดาห์ 4", "value": 112 }
+            ]
+          },
+          {
+            "key": "carb",
+            "label": "คาร์บ",
+            "color": "#FCD34D",
+            "points": [
+              { "x": "สัปดาห์ 1", "value": 108 },
+              { "x": "สัปดาห์ 2", "value": 100 },
+              { "x": "สัปดาห์ 3", "value": 124 },
+              { "x": "สัปดาห์ 4", "value": 95 }
+            ]
+          }
+        ],
+        "highlight": { "seriesKey": "sugar", "index": 3 }
+      },
+      "summaryCards": [
+        {
+          "id": "avgSugar",
+          "title": "ระดับน้ำตาลในเลือดเฉลี่ย",
+          "value": 119,
+          "unit": "มก./ดล.",
+          "trendText": "-2%",
+          "isPositive": true
+        },
+        {
+          "id": "avgCarb",
+          "title": "ปริมาณคาร์บเฉลี่ย",
+          "value": 136,
+          "unit": "ก.",
+          "trendText": "-6%",
+          "isPositive": false
+        }
+      ],
+      "targetSuccess": {
+        "percent": 88,
+        "trendText": "+4%",
+        "isPositive": true
+      },
+      "carbGoal": {
+        "consumed": 4300,
+        "goal": 5600,
+        "unit": "ก."
+      }
+    }
+  }
+}

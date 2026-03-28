@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
   ChevronLeft, Search, ChevronRight 
 } from 'lucide-react';
@@ -10,6 +10,17 @@ import Navigation from '../components/Navigation';
 
 const FindFoodPage = () => {
    const navigate = useNavigate();
+   const [selectedType, setSelectedType] = useState('all');
+   const [searchKeyword, setSearchKeyword] = useState('');
+
+   const typeLabelMap = {
+      rice_grain_flour: 'ข้าว แป้ง และธัญพืช',
+      noodles: 'เส้นและก๋วยเตี๋ยว',
+      fruits: 'ผลไม้',
+      single_dish: 'อาหารจานเดียว',
+      milk_snack: 'นมและขนม',
+   };
+
    const handleBack = () => {
       if (window.history.length > 1) {
          navigate(-1);
@@ -18,17 +29,71 @@ const FindFoodPage = () => {
       }
    };
   // Mock Data สำหรับรายการอาหาร
-  const foodItems = [
-    { id: 1, name: "แอปเปิ้ล", detail: "1 ลูกกลาง (182 กรัม)", emoji: "🍎", bg: "bg-red-100" },
-    { id: 2, name: "กล้วยหอม", detail: "1 ลูกกลาง (118 กรัม)", emoji: "🍌", bg: "bg-yellow-100" },
-    { id: 3, name: "ข้าวกล้อง", detail: "1 ถ้วยหุงสุก (195 กรัม)", emoji: "🍚", bg: "bg-orange-100" },
-    { id: 4, name: "อกไก่", detail: "100 กรัม, ย่าง", emoji: "🍗", bg: "bg-orange-50" },
-    { id: 5, name: "บร็อคโคลี", detail: "1 ถ้วยหั่น (91 กรัม)", emoji: "🥦", bg: "bg-green-100" },
-    { id: 6, name: "อัลมอนด์", detail: "1/4 ถ้วย (28 กรัม)", emoji: "🌰", bg: "bg-amber-100" },
-  ];
+const foodItems = [
+  // --- 1. หมวดข้าว แป้ง และธัญพืช (rice_grain_flour) ---
+  { id: 1, name: "ข้าวซ้อมมือ / ข้าวขาว", detail: "55 กรัม (1 ทัพพี)", carb: "1", emoji: "🍚", type: "rice_grain_flour", bg: "bg-orange-100" },
+  { id: 2, name: "ข้าวเหนียว", detail: "35 กรัม (1/2 ทัพพี)", carb: "1", emoji: "🌾", type: "rice_grain_flour", bg: "bg-orange-50" },
+  { id: 3, name: "ขนมปังขาว / โฮลวีท", detail: "1 แผ่น (25-30 กรัม)", carb: "1", emoji: "🍞", type: "rice_grain_flour", bg: "bg-yellow-50" },
+  { id: 4, name: "มันเทศ / มันฝรั่งต้ม", detail: "75-90 กรัม", carb: "1", emoji: "🍠", type: "rice_grain_flour", bg: "bg-purple-100" },
+  { id: 5, name: "ข้าวโพดต้ม", detail: "1 ฝักเล็ก (100 กรัม)", carb: "1", emoji: "🌽", type: "rice_grain_flour", bg: "bg-yellow-100" },
 
-  // Filter Chips
-  const filters = ["ทั้งหมด", "ล่าสุด", "ผลไม้", "ผัก", "เนื้อสัตว์", "นมและผลิตภัณฑ์นม", "ของว่าง", "เครื่องดื่ม", "ขนมหวาน"];
+  // --- 2. หมวดเส้นและก๋วยเตี๋ยว (noodles) ---
+  { id: 6, name: "เส้นหมี่ / เส้นก๋วยเตี๋ยวสุก", detail: "70 กรัม (1 ทัพพี)", carb: "1", emoji: "🍜", type: "noodles", bg: "bg-yellow-50" },
+  { id: 7, name: "วุ้นเส้นลวก", detail: "80 กรัม (1 ทัพพี)", carb: "1", emoji: "🍝", type: "noodles", bg: "bg-slate-50" },
+  { id: 8, name: "เส้นขนมจีน", detail: "75 กรัม (1 จับ)", carb: "1", emoji: "🍥", type: "noodles", bg: "bg-gray-100" },
+  { id: 9, name: "มักกะโรนี / พาสต้าสุก", detail: "70 กรัม", carb: "1", emoji: "🍝", type: "noodles", bg: "bg-amber-50" },
+
+  // --- 3. หมวดผลไม้ (fruits) - เพิ่มเติมจากรูปภาพ ---
+  { id: 10, name: "กล้วยน้ำว้า", detail: "1 ผล (45 กรัม)", carb: "1", emoji: "🍌", type: "fruits", bg: "bg-yellow-100" },
+  { id: 11, name: "กล้วยหอม", detail: "1/2 ผลกลาง (50 กรัม)", carb: "1", emoji: "🍌", type: "fruits", bg: "bg-yellow-200" },
+  { id: 12, name: "กีวี่", detail: "1 ผล (120 กรัม)", carb: "1", emoji: "🥝", type: "fruits", bg: "bg-green-100" },
+  { id: 13, name: "แก้วมังกร", detail: "1/2 ผลกลาง (120 กรัม)", carb: "1", emoji: "🐉", type: "fruits", bg: "bg-pink-100" },
+  { id: 14, name: "มะละกอสุก", detail: "8 ชิ้นคำ (115 กรัม)", carb: "1", emoji: "🥭", type: "fruits", bg: "bg-orange-100" },
+  { id: 15, name: "แตงโม", detail: "8 ชิ้นคำ (285 กรัม)", carb: "1", emoji: "🍉", type: "fruits", bg: "bg-red-100" },
+  { id: 16, name: "แอปเปิ้ล", detail: "1 ผลเล็ก (100 กรัม)", carb: "1", emoji: "🍎", type: "fruits", bg: "bg-red-50" },
+  { id: 17, name: "ส้มเขียวหวาน", detail: "2 ผลกลาง (150 กรัม)", carb: "1", emoji: "🍊", type: "fruits", bg: "bg-orange-50" },
+  { id: 18, name: "องุ่น", detail: "17 ผลเล็ก / 6 ผลใหญ่", carb: "1", emoji: "🍇", type: "fruits", bg: "bg-purple-50" },
+  { id: 19, name: "ทุเรียน", detail: "1 เม็ดเล็ก (50 กรัม)", carb: "1", emoji: "🍈", type: "fruits", bg: "bg-yellow-50" },
+
+  // --- 4. หมวดอาหารจานเดียว (single_dish) ---
+  { id: 20, name: "ข้าวมันไก่", detail: "หนัก 245 กรัม", carb: 2.3, calories: "380 kcal", emoji: "🍗", type: "single_dish", bg: "bg-yellow-50" },
+  { id: 21, name: "ข้าวหมูแดง", detail: "หนัก 250 กรัม", carb: 4, calories: "430 kcal", emoji: "🍛", type: "single_dish", bg: "bg-red-50" },
+  { id: 22, name: "ผัดไทยใส่ไข่", detail: "หนัก 268 กรัม", carb: 3, calories: "600 kcal", emoji: "🍳", type: "single_dish", bg: "bg-orange-100" },
+  { id: 23, name: "สุกี้ทะเล", detail: "หนัก 590 กรัม", carb: 1.7, calories: "235 kcal", emoji: "🍲", type: "single_dish", bg: "bg-blue-50" },
+  { id: 24, name: "ก๋วยจั๊บ", detail: "หนัก 645 กรัม", carb: 2.3, calories: "490 kcal", emoji: "🍜", type: "single_dish", bg: "bg-stone-50" },
+
+  // --- 5. หมวดนมและขนม (milk_snack) ---
+  { id: 25, name: "นมสดจืดไขมันเต็มส่วน", detail: "1 แก้ว (240 มล.)", carb: 1, emoji: "🥛", type: "milk_snack", bg: "bg-blue-50" },
+  { id: 26, name: "โยเกิร์ต 0% ไขมัน", detail: "1 ถ้วยเล็ก (110 กรัม)", carb: 1, emoji: "🍦", type: "milk_snack", bg: "bg-indigo-50" },
+  { id: 27, name: "ขนมครก", detail: "3 คู่ (90 กรัม)", carb: 3, emoji: "🍮", type: "milk_snack", bg: "bg-yellow-50" },
+  { id: 28, name: "โดนัทพอนเดอริงเกรซ", detail: "1 ชิ้น", carb: 2, emoji: "🍩", type: "milk_snack", bg: "bg-pink-50" },
+  { id: 29, name: "ไอศกรีม", detail: "1/2 ถ้วยตวง", carb: 1, emoji: "🍦", type: "milk_snack", bg: "bg-cyan-50" }
+];
+
+   const filterOptions = useMemo(
+      () => [
+         { key: 'all', label: 'ทั้งหมด' },
+         ...Object.entries(typeLabelMap).map(([key, label]) => ({ key, label })),
+      ],
+      []
+   );
+
+   const normalizedKeyword = searchKeyword.trim().toLowerCase();
+
+   const filteredFoodItems = useMemo(() => {
+      return foodItems.filter((item) => {
+         const matchType = selectedType === 'all' || item.type === selectedType;
+
+         if (!normalizedKeyword) {
+            return matchType;
+         }
+
+         const searchTarget = `${item.name} ${item.detail} ${typeLabelMap[item.type] || ''}`.toLowerCase();
+         const matchKeyword = searchTarget.includes(normalizedKeyword);
+
+         return matchType && matchKeyword;
+      });
+   }, [selectedType, normalizedKeyword]);
 
   return (
     <MobileLayout>
@@ -50,22 +115,25 @@ const FindFoodPage = () => {
            <input 
               type="text" 
               placeholder="ค้นหาอาหาร..."
+                     value={searchKeyword}
+                     onChange={(event) => setSearchKeyword(event.target.value)}
               className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white border border-slate-200 text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6CD2D9]"
            />
         </div>
 
         {/* Filter Chips (Horizontal Scroll) */}
-        <div className="flex gap-3 overflow-x-auto no-scrollbar mb-8 pb-2">
-           {filters.map((filter, index) => (
+      <div className="flex gap-3 overflow-x-auto no-scrollbar mb-8 pb-2 touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
+                {filterOptions.map((filter) => (
               <button 
-                key={index}
-                className={`px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${
-                  index === 0 
+                        key={filter.key}
+                        onClick={() => setSelectedType(filter.key)}
+         className={`px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
+                           selectedType === filter.key
                     ? 'bg-[#6CD2D9] text-white shadow-md' 
                     : 'bg-cyan-50 text-[#55BCC3] hover:bg-cyan-100'
                 }`}
               >
-                {filter}
+                        {filter.label}
               </button>
            ))}
         </div>
@@ -75,7 +143,7 @@ const FindFoodPage = () => {
 
         {/* Food List */}
         <div className="space-y-4">
-           {foodItems.map((item) => (
+           {filteredFoodItems.map((item) => (
               <div key={item.id} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-2xl cursor-pointer transition-colors group">
                  <div className="flex items-center gap-4">
                     {/* Icon Circle */}
@@ -85,6 +153,7 @@ const FindFoodPage = () => {
                     <div>
                        <h3 className="font-bold text-slate-800 text-sm">{item.name}</h3>
                        <p className="text-xs text-slate-400">{item.detail}</p>
+                       <p className="text-[11px] text-cyan-600 font-semibold mt-0.5">{typeLabelMap[item.type]}</p>
                     </div>
                  </div>
                  <button className="text-slate-300 group-hover:text-[#6CD2D9]">
@@ -92,6 +161,13 @@ const FindFoodPage = () => {
                  </button>
               </div>
            ))}
+
+           {filteredFoodItems.length === 0 && (
+             <div className="text-center py-10 px-4 bg-slate-50 rounded-2xl">
+               <p className="text-sm font-semibold text-slate-700">ไม่พบรายการอาหาร</p>
+               <p className="text-xs text-slate-500 mt-1">ลองเปลี่ยนคำค้นหา หรือเลือกประเภทอื่น</p>
+             </div>
+           )}
         </div>
 
       </div>

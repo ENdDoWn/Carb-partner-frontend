@@ -61,12 +61,12 @@ const HealthKnowledgePage = () => {
         <section>
            <SectionHeader title="อาหารที่ควรรับประทาน" />
            <div className="space-y-3">
-              <KnowledgeCard 
+              {/* <KnowledgeCard 
                 icon={<Utensils size={24} className="text-[#6CD2D9]" />}
                 iconBg="bg-cyan-50"
                 title="หลักการทานอาหาร"
                 subtitle="แนวทางการเลือกรับประทาน"
-              />
+              /> */}
               <KnowledgeCard 
                 icon={<Calculator size={24} className="text-[#6CD2D9]" />}
                 iconBg="bg-cyan-50"
@@ -84,8 +84,8 @@ const HealthKnowledgePage = () => {
               <KnowledgeCard 
                 icon={<Activity size={24} className="text-[#6CD2D9]" />}
                 iconBg="bg-cyan-50"
-                title="แอโรบิก"
-                subtitle="การออกกำลังกายแบบคาร์ดิโอ"
+                title="การออกกำลังกาย"
+                subtitle="แนวทางการออกกำลังกายที่เหมาะกับผู้ป่วยเบาหวาน"
                         onClick={() => openReader('exercise')}
               />
            </div>
