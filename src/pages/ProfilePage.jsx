@@ -477,8 +477,8 @@ const ProfilePage = () => {
                
                <div className="grid grid-cols-2 gap-y-6 gap-x-4">
                   <StatItem label="อายุ" value={`${calculateAge(userData.birthDate)} ปี`} />
-                  <StatItem label="น้ำหนัก" value={`${userData.weight} kg`} />
-                  <StatItem label="ส่วนสูง" value={`${userData.height} cm`} />
+                  <StatItem label="น้ำหนัก" value={`${userData.weight} กก.`} />
+                  <StatItem label="ส่วนสูง" value={`${userData.height} ซม.`} />
                   <StatItem label="BMI" value={userData.bmi} />
                </div>
             </div>

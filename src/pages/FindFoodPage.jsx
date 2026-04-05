@@ -139,7 +139,7 @@ const foodItems = [
         </div>
 
         {/* Popular Items Header */}
-        <h2 className="font-bold text-slate-800 mb-4 text-base">รายการยอดนิยม</h2>
+        <h2 className="font-bold text-slate-800 mb-4 text-base">รายการอาหารที่แนะนำ</h2>
 
         {/* Food List */}
         <div className="space-y-4">

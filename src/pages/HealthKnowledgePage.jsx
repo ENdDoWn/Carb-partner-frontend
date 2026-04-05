@@ -38,12 +38,12 @@ const HealthKnowledgePage = () => {
         
         {/* Section 1: Diabetes Info */}
         <section>
-           <SectionHeader title="โรคเบาหวาน" />
+           <SectionHeader title="รู้ทันโรคเบาหวานชนิดที่ 2 ควบคุมได้" />
            <div className="space-y-3">
               <KnowledgeCard 
                 icon={<PlusSquare size={24} className="text-[#6CD2D9]" />}
                 iconBg="bg-cyan-50"
-                title="ชนิดของเบาหวาน"
+                title="ความหมาย สาเหตุ และปัจจัยเสี่ยง ภาวะแทรกซ้อน และการป้องกัน"
                 subtitle="ทำความเข้าใจเบาหวานประเภทต่างๆ"
                         onClick={() => openReader('diabetes-types')}
               />
@@ -59,7 +59,7 @@ const HealthKnowledgePage = () => {
 
         {/* Section 2: Food */}
         <section>
-           <SectionHeader title="อาหารที่ควรรับประทาน" />
+           <SectionHeader title="การนับคาร์โบไฮเดรต" />
            <div className="space-y-3">
               {/* <KnowledgeCard 
                 icon={<Utensils size={24} className="text-[#6CD2D9]" />}

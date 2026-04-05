@@ -95,6 +95,8 @@ const ScrollWheelPicker = ({ items, value, onChange, width = 'w-20' }) => {
 // Main Component
 const SubInfoPage = () => {
   const navigate = useNavigate();
+  const CURRENT_CE_YEAR = new Date().getFullYear();
+  const CURRENT_BE_YEAR = CURRENT_CE_YEAR + 543;
 
   // 1. State สำหรับควบคุม Step (1-6)
   const [currentStep, setCurrentStep] = useState(1);
@@ -341,7 +343,7 @@ const SubInfoPage = () => {
                     placeholder="กรอกน้ำหนักของคุณ"
                     className="w-full px-4 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-lg"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">kg</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">กก.</span>
                 </div>
               </div>
 
@@ -356,7 +358,7 @@ const SubInfoPage = () => {
                     placeholder="กรอกส่วนสูงของคุณ"
                     className="w-full px-4 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-lg"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">cm</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">ซม.</span>
                 </div>
               </div>
 
@@ -392,9 +394,9 @@ const SubInfoPage = () => {
                 width="w-20"
               />
               <ScrollWheelPicker
-                items={Array.from({ length: 80 }, (_, i) => 2025 - i)}
-                value={formData.birth_date.year ? parseInt(formData.birth_date.year) : 1999}
-                onChange={(val) => updateDate('year', val.toString())}
+                items={Array.from({ length: 80 }, (_, i) => CURRENT_BE_YEAR - i)}
+                value={formData.birth_date.year ? parseInt(formData.birth_date.year) + 543 : 1999 + 543}
+                onChange={(val) => updateDate('year', (parseInt(val, 10) - 543).toString())}
                 width="w-20"
               />
             </div>

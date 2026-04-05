@@ -169,7 +169,7 @@ const HomePage = () => {
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center relative overflow-hidden">
             <div className="z-10">
               <div className="flex items-center gap-2 mb-2">
-                 <span className="text-sm font-bold text-slate-600">น้ำตาลในเลือด</span>
+                 <span className="text-sm font-bold text-slate-600">ระดับน้ำตาลในเลือด</span>
               </div>
               <div className="flex items-baseline gap-2 mb-2">
                  <span className="text-3xl font-extrabold text-slate-900">{userData.bloodSugar}</span>
@@ -183,7 +183,7 @@ const HomePage = () => {
                 onClick={() => setShowBloodSugarModal(true)}
                 className="bg-[#55BCC3] text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm active:bg-[#4aaeb5]"
               >
-                บันทึกกลูโคส
+                บันทึกระดับน้ำตาลในเลือด
               </button>
             </div>
             <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-cyan-50 rounded-full flex items-center justify-center">
@@ -196,7 +196,7 @@ const HomePage = () => {
              <MealButton icon={<Coffee />} label="อาหารเช้า" />
              <MealButton icon={<Sun />} label="อาหารกลางวัน" />
              <MealButton icon={<Moon />} label="อาหารเย็น" />
-             <MealButton icon={<IceCream />} label="ของว่าง" />
+             <MealButton icon={<IceCream />} label="อาหารว่าง" />
           </div>
             <div className="bg-[#FFF8E1] p-5 rounded-2xl border border-yellow-100 mb-6">
              <div className="flex items-center gap-2 mb-3 text-[#B78829]">
@@ -228,8 +228,8 @@ const HomePage = () => {
       {showBloodSugarModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-6">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 className="text-xl font-bold text-slate-800 mb-1">น้ำตาลในเลือด</h3>
-            <p className="text-sm text-slate-400 mb-6">กรอกค่าน้ำตาลในเลือดปัจจุบันของคุณ</p>
+            <h3 className="text-xl font-bold text-slate-800 mb-1">ระดับน้ำตาลในเลือด</h3>
+            <p className="text-sm text-slate-400 mb-6">กรอกค่าระดับน้ำตาลในเลือดปัจจุบันของคุณ</p>
             
             <div className="relative mb-6">
               <input
