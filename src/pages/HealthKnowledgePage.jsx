@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   ChevronLeft, ChevronRight, PlusSquare, AlertCircle, 
-  Utensils, Calculator, Activity 
+  Utensils, Calculator, Activity, BookOpen
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,9 +41,11 @@ const HealthKnowledgePage = () => {
            <SectionHeader title="รู้ทันโรคเบาหวานชนิดที่ 2 ควบคุมได้" />
            <div className="space-y-3">
               <KnowledgeCard 
-                icon={<PlusSquare size={24} className="text-[#6CD2D9]" />}
+                icon={<div className="w-10 h-10 rounded-xl bg-cyan-50 text-[#55BCC3] flex items-center justify-center shrink-0">
+                                    <BookOpen size={18} />
+                                 </div>}
                 iconBg="bg-cyan-50"
-                title="ความหมาย สาเหตุ และปัจจัยเสี่ยง ภาวะแทรกซ้อน และการป้องกัน"
+                title="ความหมาย สาเหตุ ปัจจัยเสี่ยง ภาวะแทรกซ้อน และการป้องกัน"
                 subtitle="ทำความเข้าใจเบาหวานประเภทต่างๆ"
                         onClick={() => openReader('diabetes-types')}
               />

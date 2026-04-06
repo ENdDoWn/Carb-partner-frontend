@@ -6,7 +6,7 @@ import MobileLayout from '../components/MobileLayout';
 
 const TOPIC_CONFIG = {
 	'diabetes-types': {
-		title: 'ชนิดของเบาหวาน',
+		title: 'ความหมาย สาเหตุ ปัจจัยเสี่ยง ภาวะแทรกซ้อน และการป้องกัน',
 		subtitle: 'ทำความเข้าใจเบาหวานประเภทต่างๆ',
 		src: 'https://heyzine.com/flip-book/c69ba3ecf4.html',
 	},
