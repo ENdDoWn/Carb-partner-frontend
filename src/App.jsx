@@ -10,6 +10,7 @@ import HomePage from './pages/HomePage';
 import DailyPage from './pages/DailyPage';
 import StatsPage from './pages/StatisPage';
 import ProfilePage from './pages/ProfilePage';
+import WebAppGuidePage from './pages/WebAppGuidePage';
 import HealthKnowledgePage from './pages/HealthKnowledgePage';
 import HealthKnowledgeReaderPage from './pages/HealthKnowledgeReaderPage';
 import CarbExchangePage from './pages/CarbExchangePage';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/daily" element={<ProtectedRoute><DailyPage /></ProtectedRoute>} />
         <Route path="/stats" element={<ProtectedRoute><StatsPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="/webapp-guide" element={<ProtectedRoute><WebAppGuidePage /></ProtectedRoute>} />
         <Route path="/health" element={<ProtectedRoute><HealthKnowledgePage /></ProtectedRoute>} />
         <Route path="/exchange" element={<ProtectedRoute><CarbExchangePage /></ProtectedRoute>} />
         <Route path="/health/reader" element={<HealthKnowledgeReaderPage />} />

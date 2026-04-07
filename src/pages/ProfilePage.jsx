@@ -485,7 +485,11 @@ const ProfilePage = () => {
 
             {/* Menu Links */}
             <div className="space-y-3 mb-8">
-               <MenuItem icon={<HelpCircle size={20} />} label="วิธีใช้งานแอป" />
+              <MenuItem
+                icon={<HelpCircle size={20} />}
+                label="คู่มือการใช้งานเว็บแอปพลิเคชัน"
+                onClick={() => navigate('/webapp-guide', { state: { from: '/profile' } })}
+              />
                <MenuItem icon={<Mail size={20} />} label="ติดต่อเรา" />
             </div>
 
@@ -812,8 +816,12 @@ const StatItem = ({ label, value }) => (
    </div>
 );
 
-const MenuItem = ({ icon, label }) => (
-   <button className="w-full bg-white border border-slate-100 rounded-2xl p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+const MenuItem = ({ icon, label, onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="w-full bg-white border border-slate-100 rounded-2xl p-4 flex items-center justify-between hover:bg-slate-50 transition-colors"
+  >
       <div className="flex items-center gap-3">
          <div className="text-slate-500">{icon}</div>
          <span className="font-bold text-slate-700 text-sm">{label}</span>

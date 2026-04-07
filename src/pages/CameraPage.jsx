@@ -206,7 +206,7 @@ const CameraPage = () => {
       if (Number.isNaN(carbValue)) {
         throw new Error('รูปแบบข้อมูล carb ไม่ถูกต้อง');
       }
-
+      console.log('Scan result:', result);
       navigate('/scan-result', {
         state: {
           carb: carbValue,
