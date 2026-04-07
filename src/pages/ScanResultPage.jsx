@@ -1,24 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, Clock, ChevronDown 
+  ArrowLeft, Clock
 } from 'lucide-react';
 
 import MobileLayout from '../components/MobileLayout';
+import { saveScanResult } from '../Api/Food';
 
 const ScanResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const carbAmount = Number(location.state?.carb ?? 0);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+
+  const result = location.state?.scanResult || location.state?.result || {};
+  const carbAmount = Number(result?.carb ?? location.state?.carb ?? 0);
   const scannedImage = location.state?.image;
+  const foodName = result?.food_type || 'ไม่ทราบชื่ออาหาร';
   
   // เอาเวลาปัจจุบัน
   const now = new Date();
   const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} น.`;
 
+  const handleSave = async () => {
+    if (isSaving) return;
+
+    try {
+      setIsSaving(true);
+      setSaveError('');
+
+      await saveScanResult({
+        timestamp: new Date().toISOString(),
+        result,
+      });
+
+      navigate('/daily');
+    } catch (error) {
+      console.error('Save scan result failed:', error);
+      setSaveError('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleRescan = () => {
+    if (isSaving) return;
+    navigate('/camera', { replace: true });
+  };
+
   return (
     <MobileLayout>
-      <div className="relative h-full flex flex-col bg-white">
+      <div className="relative min-h-screen flex flex-col bg-white">
         
         {/* --- Header --- */}
         <div className="bg-white p-4 pt-safe-top flex items-center justify-between z-10 sticky top-0">
@@ -46,7 +78,7 @@ const ScanResultPage = () => {
 
           {/* Title & Subtitle */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-1">แอปเปิล</h2>
+            <h2 className="text-3xl font-extrabold text-slate-900 mb-1">{foodName}</h2>
             <p className="text-sm text-slate-500 font-medium">ต่อ 1 ผลกลาง (182 กรัม)</p>
           </div>
 
@@ -76,17 +108,8 @@ const ScanResultPage = () => {
 
           </div>
 
-          {/* --- Expand Details Toggle --- */}
-          <div className="flex justify-center mb-6">
-            <button className="flex items-center gap-1 text-xs font-bold text-[#6CD2D9] hover:text-[#5bc0c7] transition-colors">
-              <span>ดูรายละเอียดเพิ่มเติม</span>
-              <ChevronDown size={16} />
-            </button>
-          </div>
+          {/* <hr className="border-slate-100 mb-6" />
 
-          <hr className="border-slate-100 mb-6" />
-
-          {/* --- Nutrition Summary Grid --- */}
           <div className="grid grid-cols-3 gap-4 text-center mb-4">
             <div>
               <p className="text-[10px] font-bold text-slate-400 mb-1">กิโลแคลอรี่</p>
@@ -100,16 +123,25 @@ const ScanResultPage = () => {
               <p className="text-[10px] font-bold text-slate-400 mb-1">โปรตีน</p>
               <p className="text-lg font-extrabold text-slate-800">0.5 ก.</p>
             </div>
-          </div>
+          </div> */}
 
         </div>
 
         {/* --- Bottom Fixed Buttons --- */}
         <div className="absolute bottom-0 left-0 w-full p-6 pt-4 bg-white border-t border-slate-50 pb-safe-bottom z-10 flex flex-col gap-3">
-          <button className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white font-bold py-4 rounded-full shadow-lg transition duration-200 text-lg active:scale-[0.98]">
-            ยืนยันและบันทึก
+          {saveError && <p className="text-sm text-red-500 text-center">{saveError}</p>}
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] disabled:bg-slate-300 text-white font-bold py-4 rounded-full shadow-lg transition duration-200 text-lg active:scale-[0.98] disabled:active:scale-100"
+          >
+            {isSaving ? 'กำลังบันทึก...' : 'ยืนยันและบันทึก'}
           </button>
-          <button className="w-full bg-white text-[#6CD2D9] font-bold py-4 rounded-full transition duration-200 text-lg active:bg-slate-50">
+          <button
+            onClick={handleRescan}
+            disabled={isSaving}
+            className="w-full bg-white text-[#6CD2D9] disabled:text-slate-400 font-bold py-4 rounded-full transition duration-200 text-lg active:bg-slate-50"
+          >
             สแกนใหม่
           </button>
         </div>

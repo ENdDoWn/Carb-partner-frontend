@@ -20,8 +20,13 @@ const CameraPage = () => {
   const [flashOn, setFlashOn] = useState(false); // สถานะแฟลช
   const [facingMode, setFacingMode] = useState('environment'); // 'environment' = กล้องหลัง, 'user' = กล้องหน้า
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cameraError, setCameraError] = useState('');
   
   const TARGET_SIZE = 1024; // ขนาด output ที่ต้องการ
+
+  const showCameraError = (message) => {
+    setCameraError(message);
+  };
 
   // --- เปิดกล้อง ---
   useEffect(() => {
@@ -144,11 +149,11 @@ const CameraPage = () => {
             });
             setFlashOn(newFlashState);
           } else {
-            alert('อุปกรณ์นี้ไม่รองรับแฟลช');
+            showCameraError('อุปกรณ์นี้ไม่รองรับแฟลช');
           }
         } catch (err) {
           console.error('Error toggling flash:', err);
-          alert('ไม่สามารถเปิดแฟลชได้');
+          showCameraError('ไม่สามารถเปิดแฟลชได้');
         }
       }
     }
@@ -202,11 +207,10 @@ const CameraPage = () => {
       setIsSubmitting(true);
       const result = await ScanFood({ image_base64: capturedImage });
       const carbValue = Number(result?.carb);
-
+      console.log('ScanFood result:', result);
       if (Number.isNaN(carbValue)) {
         throw new Error('รูปแบบข้อมูล carb ไม่ถูกต้อง');
       }
-      console.log('Scan result:', result);
       navigate('/scan-result', {
         state: {
           carb: carbValue,
@@ -216,7 +220,7 @@ const CameraPage = () => {
       });
     } catch (error) {
       console.error('Scan food failed:', error);
-      alert('ไม่สามารถวิเคราะห์อาหารได้ กรุณาลองใหม่อีกครั้ง');
+      showCameraError('ไม่สามารถวิเคราะห์อาหารได้ กรุณาลองใหม่อีกครั้ง');
     } finally {
       setIsSubmitting(false);
     }
@@ -237,6 +241,22 @@ const CameraPage = () => {
           onChange={handleFileChange}
           className="hidden" 
         />
+
+        {cameraError && (
+          <div className="absolute top-0 left-0 right-0 z-[30] p-4 pt-safe-top">
+            <div className="bg-red-50 border border-red-200 text-red-600 rounded-2xl px-4 py-3 flex items-start justify-between gap-3 shadow-sm">
+              <p className="text-sm font-medium">{cameraError}</p>
+              <button
+                type="button"
+                onClick={() => setCameraError('')}
+                className="text-red-400 hover:text-red-600 transition-colors"
+                aria-label="ปิดข้อความแจ้งเตือน"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* =========================================
             STATE 1: โหมดกล้อง (ยังไม่ได้ถ่าย)

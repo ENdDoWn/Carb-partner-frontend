@@ -9,6 +9,36 @@ import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
 import { getUserInfo, updateBloodSugar, allBloodSugarHistory } from '../Api/User';
 
+const getBloodSugarMeta = (value) => {
+  const sugar = Number(value);
+
+  if (!Number.isFinite(sugar) || sugar <= 0) {
+    return {
+      status: 'ยังไม่มีข้อมูล',
+      badgeClass: 'bg-slate-100 text-slate-500',
+    };
+  }
+
+  if (sugar >= 70 && sugar <= 100) {
+    return {
+      status: 'คงที่',
+      badgeClass: 'bg-green-100 text-green-700',
+    };
+  }
+
+  if (sugar >= 101 && sugar <= 125) {
+    return {
+      status: 'เริ่มสูง',
+      badgeClass: 'bg-yellow-100 text-yellow-700',
+    };
+  }
+
+  return {
+    status: 'สูง',
+    badgeClass: 'bg-red-100 text-red-700',
+  };
+};
+
 const HomePage = () => {
   const navigate = useNavigate();
   const [showBloodSugarModal, setShowBloodSugarModal] = useState(false);
@@ -24,6 +54,7 @@ const HomePage = () => {
     lastCheck: '08:45 น.'
   };
   const [userData, setUserData] = useState(defaultUserData);
+  const bloodSugarMeta = getBloodSugarMeta(userData.bloodSugar);
   useEffect(() => {
     const fetchUserData = async () => {
       const data = await getUserInfo();
@@ -174,8 +205,8 @@ const HomePage = () => {
               <div className="flex items-baseline gap-2 mb-2">
                  <span className="text-3xl font-extrabold text-slate-900">{userData.bloodSugar}</span>
                  <span className="text-xs font-bold text-slate-400">มก./ดล.</span>
-                 <span className="px-2 py-1 rounded-md bg-green-100 text-green-700 text-[10px] font-bold">
-                   {userData.bloodSugarStatus}
+                 <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${bloodSugarMeta.badgeClass}`}>
+                   {bloodSugarMeta.status}
                  </span>
               </div>
               <p className="text-[10px] text-slate-400 mb-4">ล่าสุดเมื่อ {userData.lastCheck}</p>
