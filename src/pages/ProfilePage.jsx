@@ -22,10 +22,59 @@ const formatDateKey = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+const parseBirthDate = (dateString) => {
+  if (!dateString) return null;
+
+  if (typeof dateString === 'string' && dateString.includes('/')) {
+    const [dayRaw, monthRaw, yearRaw] = dateString.split('/');
+    const day = Number(dayRaw);
+    const month = Number(monthRaw);
+    const year = Number(yearRaw);
+
+    if (!Number.isFinite(day) || !Number.isFinite(month) || !Number.isFinite(year)) {
+      return null;
+    }
+
+    const gregorianYear = year > 2400 ? year - 543 : year;
+    const parsed = new Date(gregorianYear, month - 1, day);
+
+    if (
+      parsed.getFullYear() !== gregorianYear ||
+      parsed.getMonth() !== month - 1 ||
+      parsed.getDate() !== day
+    ) {
+      return null;
+    }
+
+    return parsed;
+  }
+
+  const parsed = new Date(dateString);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const formatBirthDateBE = (date) => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const beYear = date.getFullYear() + 543;
+  return `${day}/${month}/${beYear}`;
+};
+
+const normalizeBirthDateToIso = (dateString, fallbackValue = '') => {
+  const parsed = parseBirthDate(dateString);
+  return parsed ? formatDateKey(parsed) : fallbackValue;
+};
+
+const normalizeBirthDateToBE = (dateString, fallbackValue = null) => {
+  const parsed = parseBirthDate(dateString);
+  return parsed ? formatBirthDateBE(parsed) : fallbackValue;
+};
+
 // --- Format date for display in Thai ---
 const formatThaiDate = (dateString) => {
   if (!dateString) return 'เลือกวันเกิด';
-  const date = new Date(dateString);
+  const date = parseBirthDate(dateString);
+  if (!date) return 'เลือกวันเกิด';
   const day = date.getDate();
   const month = thaiFullMonths[date.getMonth()];
   const year = date.getFullYear() + 543;
@@ -34,7 +83,7 @@ const formatThaiDate = (dateString) => {
 
 // --- BirthDate Calendar Popup Component ---
 const BirthDateCalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate }) => {
-  const initialDate = selectedDate ? new Date(selectedDate) : new Date(2000, 0, 1);
+  const initialDate = parseBirthDate(selectedDate) || new Date(2000, 0, 1);
   const [viewDate, setViewDate] = useState(initialDate);
   const [viewMode, setViewMode] = useState('date'); // 'date' | 'month' | 'year'
   
@@ -43,6 +92,7 @@ const BirthDateCalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate })
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
   const today = new Date();
+  const normalizedSelectedDate = normalizeBirthDateToIso(selectedDate, '');
   
   // สร้าง year range (ย้อนหลัง 100 ปี ถึงปัจจุบัน)
   const startYear = today.getFullYear() - 100;
@@ -176,7 +226,7 @@ const BirthDateCalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate })
             
             const date = new Date(year, month, day);
             const dateKey = formatDateKey(date);
-            const isSelected = selectedDate === dateKey;
+            const isSelected = normalizedSelectedDate === dateKey;
             const isFuture = date > today;
             
             return (
@@ -217,22 +267,14 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false); // ควบคุมการเปิด/ปิดหน้า Edit
   
   // ข้อมูลผู้ใช้ (Shared State ระหว่างหน้าดูและหน้าแก้ไข)
-  const [userData, setUserData] = useState({
-    full_name: "John Doe",
-    email: "alex.johnson@example.com",
-    birthDate: '1992-01-01',
-    weight: 75,
-    height: 180,
-    bmi: 23.1,
-    active: "medium",
-    carbGoal: 150
-  });
+  const [userData, setUserData] = useState(null);
 
   // ฟังก์ชันคำนวณอายุจากวันเกิด
   const calculateAge = (birthDate) => {
     if (!birthDate) return 0;
     const today = new Date();
-    const birth = new Date(birthDate);
+    const birth = parseBirthDate(birthDate);
+    if (!birth) return 0;
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
@@ -242,7 +284,7 @@ const ProfilePage = () => {
   };
 
   // State สำหรับฟอร์มแก้ไข (Temp State)
-  const [editFormData, setEditFormData] = useState(userData);
+  const [editFormData, setEditFormData] = useState(null);
    const [saveError, setSaveError] = useState('');
    const [showBirthDateCalendar, setShowBirthDateCalendar] = useState(false);
    const [profileImage, setProfileImage] = useState(null);
@@ -312,23 +354,23 @@ const ProfilePage = () => {
          try {
             const data = await getUserInfo();
             console.log('API response for user info:', data);
-            const user = data?.user;
+            const user = data?.user ?? data;
             console.log('User data:', user);
             if (!user) {
+              setUserData(null);
+              setEditFormData(null);
                return;
             }
             const nextUserData = {
-               ...userData,
-               full_name: user.full_name || userData.full_name,
-               email: user.email || userData.email,
-               birthDate: user.birthDate || user.birth_date || userData.birthDate,
-               weight: user.weight ?? userData.weight,
-               height: user.height ?? userData.height,
-               bmi: user.bmi ?? userData.bmi,
-               active: user.active || userData.active,
-               carbGoal: user.carbGoal ?? userData.carbGoal
+              full_name: user.full_name ?? null,
+              email: user.email ?? null,
+               birth_date: normalizeBirthDateToBE(user.birth_date || user.birthDate, null),
+              weight: user.weight ?? null,
+              height: user.height ?? null,
+              bmi: user.bmi ?? null,
+              active: user.active ?? null,
+              carb_expect: user.carb_expect ?? user.carbGoal ?? null
             };
-            console.log('Loaded user data:', nextUserData);
             setUserData(nextUserData);
             setEditFormData(nextUserData);
          } catch (error) {
@@ -343,6 +385,9 @@ const ProfilePage = () => {
   
   // เปิดหน้า Edit
   const handleOpenEdit = () => {
+    if (!userData) {
+      return;
+    }
     setEditFormData(userData); // โหลดข้อมูลปัจจุบันไปใส่ฟอร์ม
     setIsEditing(true);
   };
@@ -354,20 +399,25 @@ const ProfilePage = () => {
 
    const handleLogout = () => {
       localStorage.removeItem('access_token');
+    localStorage.removeItem('userData');
       navigate('/signin');
    };
 
   // บันทึกข้อมูล
    const validateProfileData = (data) => {
+    if (!data) {
+      return 'ไม่พบข้อมูลผู้ใช้';
+    }
+
       if (!data.full_name || !data.full_name.trim()) {
          return 'กรุณากรอกชื่อผู้ใช้งาน';
       }
 
-      if (!data.birthDate) {
+    if (!data.birth_date) {
          return 'กรุณาเลือกวันเกิด';
       }
-      const birthDate = new Date(data.birthDate);
-      if (isNaN(birthDate.getTime()) || birthDate > new Date()) {
+    const birthDate = parseBirthDate(data.birth_date);
+    if (!birthDate || birthDate > new Date()) {
          return 'กรุณาเลือกวันเกิดให้ถูกต้อง';
       }
 
@@ -385,6 +435,11 @@ const ProfilePage = () => {
    };
 
    const handleSave = async () => {
+    if (!editFormData) {
+      setSaveError('ไม่พบข้อมูลที่ต้องบันทึก');
+      return;
+    }
+
       const errorMessage = validateProfileData(editFormData);
       if (errorMessage) {
          setSaveError(errorMessage);
@@ -396,14 +451,30 @@ const ProfilePage = () => {
       // คำนวณ BMI ใหม่แบบคร่าวๆ
       const heightInM = Number(editFormData.height) / 100;
       const newBMI = (Number(editFormData.weight) / (heightInM * heightInM)).toFixed(1);
-      // รักษา carbGoal จาก userData เดิม (ไม่ให้แก้ไข)
-      const nextUserData = { ...editFormData, bmi: newBMI, carbGoal: userData.carbGoal };
+      // รักษา carb_expect จาก userData เดิม (ไม่ให้แก้ไข)
+      const nextUserData = { ...editFormData, bmi: newBMI, carb_expect: userData?.carb_expect ?? null };
 
       try {
          console.log('Saving user data:', nextUserData);
          await updateUserInfo({ user: nextUserData });
-         setUserData(nextUserData);
-         setEditFormData(nextUserData);
+        const refreshed = await getUserInfo();
+        const refreshedUser = refreshed?.user ?? refreshed;
+        console.log('Refreshed user data:', refreshedUser, 'API response:', refreshed);
+        const refreshedUserData = refreshedUser
+          ? {
+              full_name: refreshedUser.full_name ?? null,
+              email: refreshedUser.email ?? null,
+              birth_date: normalizeBirthDateToBE(refreshedUser.birth_date || refreshedUser.birthDate, null),
+              weight: refreshedUser.weight ?? null,
+              height: refreshedUser.height ?? null,
+              bmi: refreshedUser.bmi ?? null,
+              active: refreshedUser.active ?? null,
+              carb_expect: refreshedUser.carb_expect ?? refreshedUser.carbGoal ?? null
+            }
+          : null;
+
+        setUserData(refreshedUserData);
+        setEditFormData(refreshedUserData);
          setIsEditing(false);
       } catch (error) {
          console.log('Failed to update user data', error);
@@ -414,7 +485,7 @@ const ProfilePage = () => {
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditFormData(prev => ({ ...prev, [name]: value }));
+    setEditFormData(prev => ({ ...(prev ?? {}), [name]: value }));
       if (saveError) {
          setSaveError('');
       }
@@ -459,7 +530,7 @@ const ProfilePage = () => {
                     <Pencil size={14} />
                  </button>
               </div>
-              <h2 className="text-xl font-bold text-slate-900">{userData.full_name}</h2>
+              <h2 className="text-xl font-bold text-slate-900">{userData?.full_name ?? '-'}</h2>
               <button 
                 onClick={handleOpenEdit}
                 className="text-sm text-[#6CD2D9] font-bold flex items-center gap-1 mt-1 hover:underline"
@@ -472,14 +543,14 @@ const ProfilePage = () => {
             <div className="bg-white rounded-3xl p-6 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] border border-slate-50 mb-6">
                <div className="text-center mb-6 pb-6 border-b border-slate-100">
                   <p className="text-xs text-slate-400 mb-1">ปริมาณคาร์บที่แนะนำต่อวัน</p>
-                  <p className="text-3xl font-bold text-[#6CD2D9]">{userData.carbGoal}g</p>
+                <p className="text-3xl font-bold text-[#6CD2D9]">{userData?.carb_expect ?? '-'}g</p>
                </div>
                
                <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                  <StatItem label="อายุ" value={`${calculateAge(userData.birthDate)} ปี`} />
-                  <StatItem label="น้ำหนัก" value={`${userData.weight} กก.`} />
-                  <StatItem label="ส่วนสูง" value={`${userData.height} ซม.`} />
-                  <StatItem label="BMI" value={userData.bmi} />
+                <StatItem label="อายุ" value={`${calculateAge(userData?.birth_date)} ปี`} />
+                  <StatItem label="น้ำหนัก" value={userData?.weight != null ? `${userData.weight} กก.` : '-'} />
+                  <StatItem label="ส่วนสูง" value={userData?.height != null ? `${userData.height} ซม.` : '-'} />
+                  <StatItem label="BMI" value={userData?.bmi ?? '-'} />
                </div>
             </div>
 
@@ -581,8 +652,8 @@ const ProfilePage = () => {
                       <Camera size={14} />
                    </button>
                 </div>
-                <h2 className="font-bold text-slate-900">{userData.full_name}</h2>
-                <p className="text-xs text-slate-400">{userData.email}</p>
+                <h2 className="font-bold text-slate-900">{userData?.full_name ?? '-'}</h2>
+                <p className="text-xs text-slate-400">{userData?.email ?? '-'}</p>
              </div>
 
              {/* Form Fields */}
@@ -594,7 +665,7 @@ const ProfilePage = () => {
                    <h3 className="text-xs font-bold text-slate-400 mb-2">ข้อมูลส่วนตัว</h3>
                    <input 
                       type="text" name="full_name"
-                      value={editFormData.full_name} onChange={handleChange}
+                   value={editFormData?.full_name ?? ''} onChange={handleChange}
                       className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-slate-700 font-medium"
                    />
                 </div>
@@ -606,7 +677,7 @@ const ProfilePage = () => {
                       onClick={() => setShowBirthDateCalendar(true)}
                       className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-slate-700 font-medium text-left flex items-center justify-between hover:bg-slate-50 transition-colors"
                    >
-                      <span>{formatThaiDate(editFormData.birthDate)}</span>
+                     <span>{formatThaiDate(editFormData?.birth_date ?? '')}</span>
                       <Calendar size={18} className="text-slate-400" />
                    </button>
                 </div>
@@ -619,7 +690,7 @@ const ProfilePage = () => {
                         <label className="text-xs font-bold text-slate-700 mb-1 block">น้ำหนัก (กก.)</label>
                         <input 
                            type="number" name="weight"
-                           value={editFormData.weight} onChange={handleChange}
+                          value={editFormData?.weight ?? ''} onChange={handleChange}
                            className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-slate-700 font-medium"
                         />
                      </div>
@@ -627,7 +698,7 @@ const ProfilePage = () => {
                         <label className="text-xs font-bold text-slate-700 mb-1 block">ส่วนสูง (ซม.)</label>
                         <input 
                            type="number" name="height"
-                           value={editFormData.height} onChange={handleChange}
+                          value={editFormData?.height ?? ''} onChange={handleChange}
                            className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-slate-700 font-medium"
                         />
                      </div>
@@ -640,9 +711,10 @@ const ProfilePage = () => {
                    <div className="relative">
                       <select 
                         name="active"
-                        value={editFormData.active} onChange={handleChange}
+                        value={editFormData?.active ?? ''} onChange={handleChange}
                         className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6CD2D9] text-slate-700 font-medium appearance-none bg-white"
                       >
+                         <option value="" disabled>เลือกระดับกิจกรรม</option>
                          <option value={"low"}>น้อยมาก</option>
                          <option value={"medium"}>ปานกลาง</option>
                          <option value={"high"}>หนัก</option>
@@ -657,7 +729,7 @@ const ProfilePage = () => {
                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                       <div className="flex justify-between items-center">
                          <span className="text-xs font-bold text-slate-500">ปริมาณคาร์บที่แนะนำต่อวัน</span>
-                         <span className="text-lg font-bold text-[#6CD2D9]">{userData.carbGoal} ก.</span>
+                       <span className="text-lg font-bold text-[#6CD2D9]">{userData?.carb_expect ?? '-'} ก.</span>
                       </div>
                       <p className="text-[10px] text-slate-400 mt-2">* คำนวณจากข้อมูลส่วนตัวของคุณ</p>
                    </div>
@@ -689,8 +761,8 @@ const ProfilePage = () => {
       <BirthDateCalendarPopup 
         isOpen={showBirthDateCalendar}
         onClose={() => setShowBirthDateCalendar(false)}
-        selectedDate={editFormData.birthDate}
-        onSelectDate={(date) => setEditFormData(prev => ({ ...prev, birthDate: date }))}
+        selectedDate={editFormData?.birth_date ?? ''}
+        onSelectDate={(date) => setEditFormData(prev => ({ ...(prev ?? {}), birth_date: normalizeBirthDateToBE(date, null) }))}
       />
       
       {/* Image Picker Modal */}

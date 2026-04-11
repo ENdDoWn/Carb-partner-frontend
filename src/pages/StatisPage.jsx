@@ -63,7 +63,7 @@ const getStatsViewModel = (activeTab, historyPayload) => {
     comparisonLabel: tabData.comparisonLabel ?? '',
     summaryCards: tabData.summaryCards ?? [],
     targetSuccess: tabData.targetSuccess ?? { percent: 0, trendText: '0%', isPositive: true },
-    carbGoal: tabData.carbGoal ?? { consumed: 0, goal: 0, unit: '' },
+    carb_expect: tabData.carb_expect ?? tabData.carbGoal ?? { consumed: 0, goal: 0, unit: '' },
     chart: {
       labels,
       yAxis,
@@ -180,7 +180,7 @@ const StatsPage = () => {
   //       },
   //       "summaryCards": [{ "id": "string", "title": "string", "value": number, "unit": "string", "trendText": "string", "isPositive": boolean }],
   //       "targetSuccess": { "percent": number, "trendText": "string", "isPositive": boolean },
-  //       "carbGoal": { "consumed": number, "goal": number, "unit": "string" }
+  //       "carb_expect": { "consumed": number, "goal": number, "unit": "string" }
   //     }
   //   }
   // }
@@ -190,8 +190,8 @@ const StatsPage = () => {
   const viewModel = useMemo(() => getStatsViewModel(activeTab, statsHistoryData), [activeTab, statsHistoryData]);
   const targetPercent = clamp(viewModel?.targetSuccess?.percent ?? 0, 0, 100);
   const targetDashOffset = 175 - (175 * targetPercent) / 100;
-  const carbConsumed = viewModel?.carbGoal?.consumed ?? 0;
-  const carbGoal = viewModel?.carbGoal?.goal ?? 0;
+  const carbConsumed = viewModel?.carb_expect?.consumed ?? 0;
+  const carbGoal = viewModel?.carb_expect?.goal ?? 0;
   const carbProgressPercent = carbGoal > 0 ? clamp((carbConsumed / carbGoal) * 100, 0, 100) : 0;
 
   const handleBack = () => {
@@ -296,8 +296,8 @@ const StatsPage = () => {
            <div className="flex justify-between items-end mb-2">
               <h3 className="font-bold text-slate-800">เป้าหมายคาร์บราย{activeTabLabel}</h3>
               <div className="text-xs">
-                <span className="font-bold text-slate-800">{carbConsumed}{viewModel?.carbGoal?.unit}</span>
-                <span className="text-slate-400"> / {carbGoal}{viewModel?.carbGoal?.unit}</span>
+                <span className="font-bold text-slate-800">{carbConsumed}{viewModel?.carb_expect?.unit}</span>
+                <span className="text-slate-400"> / {carbGoal}{viewModel?.carb_expect?.unit}</span>
               </div>
            </div>
            

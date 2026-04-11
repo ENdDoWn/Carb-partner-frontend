@@ -190,12 +190,13 @@ const DailyLogPage = () => {
 
   const summary = selectedRecord?.summary ?? {
     carbConsumed: 0,
-    carbGoal: 200,
+    carb_expect: 200,
     bloodSugarCurrent: 0,
     bloodSugarMax: 180,
   };
 
-  const carbRemaining = Math.max((summary.carbGoal ?? 0) - (summary.carbConsumed ?? 0), 0);
+  const carbExpect = summary.carb_expect ?? summary.carbGoal ?? 200;
+  const carbRemaining = Math.max(carbExpect - (summary.carbConsumed ?? 0), 0);
   const bloodSugarLogs = selectedRecord?.bloodSugarLogs ?? [];
   const mealMap = Object.fromEntries((selectedRecord?.meals ?? []).map((meal) => [meal.key, meal]));
   const mealSections = MEAL_SECTIONS.map((section) => {
@@ -290,7 +291,7 @@ const DailyLogPage = () => {
           <h2 className="font-bold text-slate-800 mb-4">ความคืบหน้าวันนี้</h2>
           <div className="flex justify-center mb-6">
             <CircularProgress 
-              value={summary.carbConsumed} max={summary.carbGoal || 200} color="#6CD2D9" 
+              value={summary.carbConsumed} max={carbExpect || 200} color="#6CD2D9" 
               unit="g" 
               subLabel={hasData ? 'ที่บริโภคแล้ว' : 'ยังไม่มีข้อมูล'}
               size={140} strokeWidth={14}
@@ -299,7 +300,7 @@ const DailyLogPage = () => {
           <div className="flex justify-between px-4">
             <div className="flex flex-col items-center">
               <span className="text-xs text-slate-400 mb-1">เป้าหมาย</span>
-              <span className="text-lg font-bold text-slate-800">{summary.carbGoal}g</span>
+              <span className="text-lg font-bold text-slate-800">{carbExpect}g</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-xs text-slate-400 mb-1">คงเหลือ</span>

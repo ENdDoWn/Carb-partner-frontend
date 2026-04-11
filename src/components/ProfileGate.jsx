@@ -12,14 +12,13 @@ const ProfileGate = () => {
     const loadUserInfo = async () => {
       try {
         const userInfo = await getUserInfo();
-        console.log('Fetched user info:', userInfo);
         if (!isActive) return;
-        
-        const nextPath = userInfo?.user?.has_profile ? '/home' : '/subinfo';
+
+        const user = userInfo?.user ?? userInfo;
+        const nextPath = user?.has_profile ? '/home' : '/subinfo';
         setTargetPath(nextPath);
       } catch (error) {
         if (!isActive) return;
-        console.error('Failed to load user info:', error);
         setHasError(true);
       }
     };

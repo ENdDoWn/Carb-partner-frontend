@@ -24,6 +24,7 @@ api.interceptors.response.use(
         if (error.response && error.response.status === 401) {
             console.error("Token หมดอายุ หรือ ไม่ถูกต้อง");
             localStorage.removeItem('access_token');
+            localStorage.removeItem('userData');
             window.location.href = '/signin'; 
         }
         return Promise.reject(error);

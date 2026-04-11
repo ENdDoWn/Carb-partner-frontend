@@ -44,36 +44,27 @@ const HomePage = () => {
   const [showBloodSugarModal, setShowBloodSugarModal] = useState(false);
   const [bloodSugarInput, setBloodSugarInput] = useState('');
   const [bloodSugarError, setBloodSugarError] = useState('');
-  const defaultUserData = {
-    full_name: '',
-    date: new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' }),
-    carbCurrent: 120,
-    carbTarget: 200,
-    bloodSugar: 0,
-    bloodSugarStatus: 'คงที่',
-    lastCheck: '08:45 น.'
-  };
-  const [userData, setUserData] = useState(defaultUserData);
-  const bloodSugarMeta = getBloodSugarMeta(userData.bloodSugar);
+  const [userData, setUserData] = useState(null);
+  const todayLabel = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' });
+  const bloodSugarMeta = getBloodSugarMeta(userData?.bloodSugar);
   useEffect(() => {
     const fetchUserData = async () => {
       const data = await getUserInfo();
       const bloodSugar = await allBloodSugarHistory();
-       const latestSugar = bloodSugar?.length ? bloodSugar[0] : null;
-       console.log('Latest blood sugar record:', latestSugar);
-      setUserData(prev => ({
-        ...prev,
-        bloodSugar: latestSugar?.sugar_level || prev.bloodSugar,
-        lastCheck: latestSugar?.created_at ? new Date(latestSugar.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric' }) : prev.lastCheck
-      }));
-      const user = data?.user;
-      if (user) {
-        const emailPrefix = user.email ? user.email.split('@')[0] : null;
-        setUserData(prev => ({
-          ...prev,
-          full_name: user.full_name || prev.full_name,
-        }));
-      }
+      const latestSugar = bloodSugar?.length ? bloodSugar[0] : null;
+      console.log('Latest blood sugar record:', latestSugar);
+
+      const user = data?.user ?? data;
+      setUserData({
+        full_name: user?.full_name ?? null,
+        carbCurrent: user?.carbCurrent ?? null,
+        carb_expect: user?.carb_expect ?? user?.carbGoal ?? null,
+        bloodSugar: latestSugar?.sugar_level ?? null,
+        lastCheck: latestSugar?.created_at
+          ? new Date(latestSugar.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric' })
+          : null,
+        date: todayLabel,
+      });
     };
     fetchUserData();
   }, []);
@@ -109,10 +100,21 @@ const HomePage = () => {
     try {
       console.log('Attempting to update blood sugar with payload:', payload);
       await updateBloodSugar(payload);
-      setUserData(prev => ({
-        ...prev,
-        bloodSugar: sugarValue
-      }));
+      const refreshedUserInfo = await getUserInfo();
+      const refreshedBloodSugar = await allBloodSugarHistory();
+      const refreshedLatestSugar = refreshedBloodSugar?.length ? refreshedBloodSugar[0] : null;
+      const refreshedUser = refreshedUserInfo?.user ?? refreshedUserInfo;
+
+      setUserData({
+        full_name: refreshedUser?.full_name ?? null,
+        carbCurrent: refreshedUser?.carbCurrent ?? null,
+        carb_expect: refreshedUser?.carb_expect ?? refreshedUser?.carbGoal ?? null,
+        bloodSugar: refreshedLatestSugar?.sugar_level ?? sugarValue,
+        lastCheck: refreshedLatestSugar?.created_at
+          ? new Date(refreshedLatestSugar.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric' })
+          : null,
+        date: todayLabel,
+      });
     } catch (error) {
       console.log('updateBloodSugar failed', error);
     } finally {
@@ -125,7 +127,9 @@ const HomePage = () => {
   // Logic คำนวณวงกลม
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
-  const progress = (userData.carbCurrent / userData.carbTarget) * 100;
+  const carbCurrent = Number(userData?.carbCurrent ?? 0);
+  const carbExpect = Number(userData?.carb_expect ?? 0);
+  const progress = carbExpect > 0 ? (carbCurrent / carbExpect) * 100 : 0;
   const dashOffset = circumference - (progress / 100) * circumference;
 
   return (
@@ -143,8 +147,8 @@ const HomePage = () => {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-slate-900 leading-tight">สวัสดีตอนเช้า,</h1>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">{userData.full_name}</h2>
-                <p className="text-xs text-slate-500 mt-1">{userData.date}</p>
+                <h2 className="text-lg font-bold text-slate-900 leading-tight">{userData?.full_name ?? 'ผู้ใช้งาน'}</h2>
+                <p className="text-xs text-slate-500 mt-1">{userData?.date ?? todayLabel}</p>
               </div>
             </div>
             <div className="flex gap-2 flex-col">
@@ -169,8 +173,8 @@ const HomePage = () => {
                 <circle cx="50%" cy="50%" r={radius} stroke="#6CD2D9" strokeWidth="12" fill="transparent" strokeDasharray={circumference} strokeDashoffset={dashOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
               </svg>
               <div className="absolute flex flex-col items-center">
-                <span className="text-4xl font-extrabold text-slate-800 tracking-tight">{userData.carbCurrent}ก.</span>
-                <span className="text-xs text-slate-400 font-medium mt-1">จากเป้าหมาย {userData.carbTarget}ก.</span>
+                <span className="text-4xl font-extrabold text-slate-800 tracking-tight">{carbCurrent}ก.</span>
+                <span className="text-xs text-slate-400 font-medium mt-1">จากเป้าหมาย {carbExpect || '-'}ก.</span>
               </div>
             </div>
           </div>
@@ -203,13 +207,13 @@ const HomePage = () => {
                  <span className="text-sm font-bold text-slate-600">ระดับน้ำตาลในเลือด</span>
               </div>
               <div className="flex items-baseline gap-2 mb-2">
-                 <span className="text-3xl font-extrabold text-slate-900">{userData.bloodSugar}</span>
+                  <span className="text-3xl font-extrabold text-slate-900">{userData?.bloodSugar ?? '-'}</span>
                  <span className="text-xs font-bold text-slate-400">มก./ดล.</span>
                  <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${bloodSugarMeta.badgeClass}`}>
                    {bloodSugarMeta.status}
                  </span>
               </div>
-              <p className="text-[10px] text-slate-400 mb-4">ล่าสุดเมื่อ {userData.lastCheck}</p>
+                <p className="text-[10px] text-slate-400 mb-4">ล่าสุดเมื่อ {userData?.lastCheck ?? '-'}</p>
               <button 
                 onClick={() => setShowBloodSugarModal(true)}
                 className="bg-[#55BCC3] text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm active:bg-[#4aaeb5]"
