@@ -7,7 +7,7 @@ import {
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
-import { getUserInfo, updateBloodSugar, allBloodSugarHistory } from '../Api/User';
+import { getUserInfo, updateBloodSugar, allBloodSugarHistory, getDailyCarbTotal } from '../Api/User';
 
 const getBloodSugarMeta = (value) => {
   const sugar = Number(value);
@@ -49,15 +49,19 @@ const HomePage = () => {
   const bloodSugarMeta = getBloodSugarMeta(userData?.bloodSugar);
   useEffect(() => {
     const fetchUserData = async () => {
-      const data = await getUserInfo();
-      const bloodSugar = await allBloodSugarHistory();
+      const [data, bloodSugar, dailyCarb] = await Promise.all([
+        getUserInfo(),
+        allBloodSugarHistory(),
+        getDailyCarbTotal(),
+      ]);
       const latestSugar = bloodSugar?.length ? bloodSugar[0] : null;
+      const dailyTotalCarb = Number(dailyCarb?.totalCarb);
       console.log('Latest blood sugar record:', latestSugar);
 
       const user = data?.user ?? data;
       setUserData({
         full_name: user?.full_name ?? null,
-        carbCurrent: user?.carbCurrent ?? null,
+        carbCurrent: Number.isFinite(dailyTotalCarb) ? dailyTotalCarb : (user?.carbCurrent ?? 0),
         carb_expect: user?.carb_expect ?? user?.carbGoal ?? null,
         bloodSugar: latestSugar?.sugar_level ?? null,
         lastCheck: latestSugar?.created_at
@@ -100,14 +104,18 @@ const HomePage = () => {
     try {
       console.log('Attempting to update blood sugar with payload:', payload);
       await updateBloodSugar(payload);
-      const refreshedUserInfo = await getUserInfo();
-      const refreshedBloodSugar = await allBloodSugarHistory();
+      const [refreshedUserInfo, refreshedBloodSugar, refreshedDailyCarb] = await Promise.all([
+        getUserInfo(),
+        allBloodSugarHistory(),
+        getDailyCarbTotal(),
+      ]);
       const refreshedLatestSugar = refreshedBloodSugar?.length ? refreshedBloodSugar[0] : null;
+      const refreshedDailyTotalCarb = Number(refreshedDailyCarb?.totalCarb);
       const refreshedUser = refreshedUserInfo?.user ?? refreshedUserInfo;
 
       setUserData({
         full_name: refreshedUser?.full_name ?? null,
-        carbCurrent: refreshedUser?.carbCurrent ?? null,
+        carbCurrent: Number.isFinite(refreshedDailyTotalCarb) ? refreshedDailyTotalCarb : (refreshedUser?.carbCurrent ?? 0),
         carb_expect: refreshedUser?.carb_expect ?? refreshedUser?.carbGoal ?? null,
         bloodSugar: refreshedLatestSugar?.sugar_level ?? sugarValue,
         lastCheck: refreshedLatestSugar?.created_at

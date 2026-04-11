@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { 
    ChevronLeft, Search, ArrowUpDown
 } from 'lucide-react';
@@ -7,15 +7,42 @@ import { useNavigate } from 'react-router-dom';
 // Import Shared Components
 import MobileLayout from '../components/MobileLayout';
 import Navigation from '../components/Navigation';
+import { getUserInfo, getDailyCarbTotal } from '../Api/User';
+
+const GRAMS_PER_CARB = 15;
 
 const CarbExchangePage = () => {
    const navigate = useNavigate();
 
-   // TODO: Replace with real API data, e.g. from /daily-carb endpoint.
-   const dailyCarbFromApi = null;
-   const mockDailyCarb = { used: 12, limit: 20 };
-   const dailyCarb = dailyCarbFromApi ?? mockDailyCarb;
+   const [dailyCarb, setDailyCarb] = useState({ used: 0, limit: 0 });
+
+   useEffect(() => {
+      const fetchDailyCarb = async () => {
+         try {
+            const [userInfo, dailyCarbTotal] = await Promise.all([
+               getUserInfo(),
+               getDailyCarbTotal(),
+            ]);
+
+            const user = userInfo?.user ?? userInfo;
+            const carbExpectGram = Number(user?.carb_expect ?? user?.carbGoal ?? 0);
+            const carbCurrentGram = Number(dailyCarbTotal?.totalCarb ?? 0);
+
+            setDailyCarb({
+               used: carbCurrentGram > 0 ? carbCurrentGram / GRAMS_PER_CARB : 0,
+               limit: carbExpectGram > 0 ? carbExpectGram / GRAMS_PER_CARB : 0,
+            });
+         } catch (error) {
+            console.log('Failed to fetch carb exchange data', error);
+            setDailyCarb({ used: 0, limit: 0 });
+         }
+      };
+
+      fetchDailyCarb();
+   }, []);
+
    const remainingCarb = Math.max(dailyCarb.limit - dailyCarb.used, 0);
+   const progressPercent = dailyCarb.limit > 0 ? Math.min((dailyCarb.used / dailyCarb.limit) * 100, 100) : 0;
 
    const foodItems = [
       { id: 1, name: 'ข้าวซ้อมมือ / ข้าวขาว', detail: '55 กรัม (1 ทัพพี)', carb: 1, emoji: '🍚', type: 'rice_grain_flour', bg: 'bg-orange-100' },
@@ -131,14 +158,14 @@ const CarbExchangePage = () => {
         <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-50">
            <div className="flex justify-between items-baseline mb-2">
               <h2 className="font-bold text-slate-800">ภาพรวมคาร์บประจำวัน</h2>
-              <span className="text-xs font-bold text-[#6CD2D9] bg-cyan-50 px-2 py-1 rounded-lg">{dailyCarb.used} / {dailyCarb.limit} คาร์บ</span>
+              <span className="text-xs font-bold text-[#6CD2D9] bg-cyan-50 px-2 py-1 rounded-lg">{dailyCarb.used.toFixed(1)} / {dailyCarb.limit.toFixed(1)} คาร์บ</span>
            </div>
            
            {/* Progress Bar */}
            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden mb-4">
               <div
                  className="h-full bg-[#6CD2D9] rounded-full"
-                 style={{ width: `${Math.min((dailyCarb.used / dailyCarb.limit) * 100, 100)}%` }}
+                 style={{ width: `${progressPercent}%` }}
               ></div>
            </div>
 

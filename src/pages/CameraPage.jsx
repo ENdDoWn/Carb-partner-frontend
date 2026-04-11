@@ -205,8 +205,9 @@ const CameraPage = () => {
 
     try {
       setIsSubmitting(true);
-      const result = await ScanFood({ image_base64: capturedImage });
-      const carbValue = Number(result?.carb);
+      const res = await ScanFood({ image_base64: capturedImage });
+      const result = res?.result;
+      const carbValue = Number(result?.carbs_estimate_g);
       console.log('ScanFood result:', result);
       if (Number.isNaN(carbValue)) {
         throw new Error('รูปแบบข้อมูล carb ไม่ถูกต้อง');

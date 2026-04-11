@@ -156,6 +156,11 @@ export const allBloodSugarHistory = async () => {
   return res.data
 }
 
+export const getDailyCarbTotal = async () => {
+  const res = await api.get('/daily_carb_total')
+  return res.data
+}
+
 export const updateBloodSugar = async (data) => {
   const res = await api.post('/add_sugars', data)
   console.log('Blood sugar update response:', res);

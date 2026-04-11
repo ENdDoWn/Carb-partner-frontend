@@ -29,12 +29,14 @@ const ScanResultPage = () => {
       setIsSaving(true);
       setSaveError('');
 
+      console.log('Saving scan result with data:', {
+        result: result,
+      });
       await saveScanResult({
-        timestamp: new Date().toISOString(),
-        result,
+        result: result,
       });
 
-      navigate('/daily');
+      navigate('/home', { replace: true });
     } catch (error) {
       console.error('Save scan result failed:', error);
       setSaveError('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
@@ -79,7 +81,6 @@ const ScanResultPage = () => {
           {/* Title & Subtitle */}
           <div className="text-center mb-8">
             <h2 className="text-3xl font-extrabold text-slate-900 mb-1">{foodName}</h2>
-            <p className="text-sm text-slate-500 font-medium">ต่อ 1 ผลกลาง (182 กรัม)</p>
           </div>
 
           {/* --- Form Inputs --- */}
