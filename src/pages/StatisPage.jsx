@@ -1,19 +1,27 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ChevronLeft, TrendingUp, TrendingDown
 } from 'lucide-react';
+import { getStatsHistory } from '../Api/History';
 
 // Import Components ที่แยกไว้
 import MobileLayout from '../components/MobileLayout';
 import Navigation from '../components/Navigation';
-import statsHistoryMock from '../mock/stats-history.mock.json';
 
 const TAB_OPTIONS = [
   { key: 'day', label: 'วัน' },
   { key: 'week', label: 'สัปดาห์' },
   { key: 'month', label: 'เดือน' },
 ];
+
+const getCurrentAnchorDate = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -164,27 +172,30 @@ const CustomLineChart = ({ chartModel }) => {
 const StatsPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('week');
+  const [statsHistoryData, setStatsHistoryData] = useState({ tabs: {} });
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [statsError, setStatsError] = useState('');
 
-  // Backend note:
-  // 1) Put API response into statsHistoryData variable.
-  // 2) JSON shape required:
-  // {
-  //   "tabs": {
-  //     "day|week|month|year": {
-  //       "comparisonLabel": "string",
-  //       "chart": {
-  //         "yAxis": { "min": number, "max": number, "unit": "string" },
-  //         "labels": ["string"],
-  //         "series": [{ "key": "string", "label": "string", "color": "#RRGGBB", "points": [{ "x": "string", "value": number }] }],
-  //         "highlight": { "seriesKey": "string", "index": number }
-  //       },
-  //       "summaryCards": [{ "id": "string", "title": "string", "value": number, "unit": "string", "trendText": "string", "isPositive": boolean }],
-  //       "targetSuccess": { "percent": number, "trendText": "string", "isPositive": boolean },
-  //       "carb_expect": { "consumed": number, "goal": number, "unit": "string" }
-  //     }
-  //   }
-  // }
-  const statsHistoryData = statsHistoryMock;
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoadingStats(true);
+      setStatsError('');
+
+      try {
+        const periods = TAB_OPTIONS.map((tab) => tab.key);
+        const historyData = await getStatsHistory(periods, getCurrentAnchorDate());
+        console.log(historyData);
+        setStatsHistoryData(historyData);
+      } catch (error) {
+        console.error('Failed to fetch stats data:', error);
+        setStatsError('ไม่สามารถโหลดข้อมูลสถิติได้ กรุณาลองใหม่อีกครั้ง');
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const activeTabLabel = TAB_OPTIONS.find((tab) => tab.key === activeTab)?.label ?? 'สัปดาห์';
   const viewModel = useMemo(() => getStatsViewModel(activeTab, statsHistoryData), [activeTab, statsHistoryData]);
@@ -233,6 +244,17 @@ const StatsPage = () => {
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto px-5 pb-32 space-y-4 pt-2 no-scrollbar bg-[#F8FAFC]">
+        {isLoadingStats && (
+          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-sm text-slate-500">
+            กำลังโหลดข้อมูลสถิติ...
+          </div>
+        )}
+
+        {statsError && (
+          <div className="bg-red-50 p-4 rounded-2xl border border-red-100 text-sm text-red-600">
+            {statsError}
+          </div>
+        )}
         
         {/* 1. Main Chart Card */}
         <div className="bg-white p-5 rounded-3xl shadow-sm">

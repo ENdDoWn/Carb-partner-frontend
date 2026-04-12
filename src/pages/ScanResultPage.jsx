@@ -28,10 +28,6 @@ const ScanResultPage = () => {
     try {
       setIsSaving(true);
       setSaveError('');
-
-      console.log('Saving scan result with data:', {
-        result: result,
-      });
       await saveScanResult({
         result: result,
       });

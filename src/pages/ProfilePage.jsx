@@ -353,9 +353,7 @@ const ProfilePage = () => {
       const loadUserData = async () => {
          try {
             const data = await getUserInfo();
-            console.log('API response for user info:', data);
             const user = data?.user ?? data;
-            console.log('User data:', user);
             if (!user) {
               setUserData(null);
               setEditFormData(null);
@@ -455,11 +453,9 @@ const ProfilePage = () => {
       const nextUserData = { ...editFormData, bmi: newBMI, carb_expect: userData?.carb_expect ?? null };
 
       try {
-         console.log('Saving user data:', nextUserData);
          await updateUserInfo({ user: nextUserData });
         const refreshed = await getUserInfo();
         const refreshedUser = refreshed?.user ?? refreshed;
-        console.log('Refreshed user data:', refreshedUser, 'API response:', refreshed);
         const refreshedUserData = refreshedUser
           ? {
               full_name: refreshedUser.full_name ?? null,

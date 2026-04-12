@@ -52,7 +52,6 @@ const CameraPage = () => {
         }
         setHasPermission(true);
       } catch (err) {
-        console.error("Error accessing the camera:", err);
         setHasPermission(false);
       }
     };
@@ -121,7 +120,6 @@ const CameraPage = () => {
       // แปลง Canvas เป็น Base64 Image (JPEG คุณภาพ 90%)
       const imageUrl = canvas.toDataURL('image/jpeg', 0.9);
       setCapturedImage(imageUrl);
-      console.log('Cropped from frame: 1024x1024, Base64 length:', imageUrl.length);
     }
   };
 
@@ -152,7 +150,6 @@ const CameraPage = () => {
             showCameraError('อุปกรณ์นี้ไม่รองรับแฟลช');
           }
         } catch (err) {
-          console.error('Error toggling flash:', err);
           showCameraError('ไม่สามารถเปิดแฟลชได้');
         }
       }
@@ -191,7 +188,6 @@ const CameraPage = () => {
           
           const croppedImage = tempCanvas.toDataURL('image/jpeg', 0.9);
           setCapturedImage(croppedImage);
-          console.log('Cropped picked image: 1024x1024, Base64 length:', croppedImage.length);
         };
         img.src = event.target.result;
       };
@@ -208,7 +204,6 @@ const CameraPage = () => {
       const res = await ScanFood({ image_base64: capturedImage });
       const result = res?.result;
       const carbValue = Number(result?.carbs_estimate_g);
-      console.log('ScanFood result:', result);
       if (Number.isNaN(carbValue)) {
         throw new Error('รูปแบบข้อมูล carb ไม่ถูกต้อง');
       }
@@ -220,7 +215,6 @@ const CameraPage = () => {
         },
       });
     } catch (error) {
-      console.error('Scan food failed:', error);
       showCameraError('ไม่สามารถวิเคราะห์อาหารได้ กรุณาลองใหม่อีกครั้ง');
     } finally {
       setIsSubmitting(false);

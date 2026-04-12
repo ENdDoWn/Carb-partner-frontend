@@ -33,7 +33,6 @@ const CarbExchangePage = () => {
                limit: carbExpectGram > 0 ? carbExpectGram / GRAMS_PER_CARB : 0,
             });
          } catch (error) {
-            console.log('Failed to fetch carb exchange data', error);
             setDailyCarb({ used: 0, limit: 0 });
          }
       };

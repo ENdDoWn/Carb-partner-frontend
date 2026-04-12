@@ -143,8 +143,6 @@ const SubInfoPage = () => {
       } else {
         navigate('/signin');
       }
-      // Logic for going back to previous page (e.g., Login)
-      console.log("Back to previous page");
     }
   };
 
@@ -165,14 +163,10 @@ const SubInfoPage = () => {
       setAlertMessage(validationMessage);
       return;
     }
-
-    // 🔥 ส่งข้อมูลไป Backend ตรงนี้
-    console.log("Ready to submit:", formData);
     const formattedData = {
       ...formData,
       birth_date: formatThaiDate(formData.birth_date) // Format as dd-mm-yyyy
     }
-    console.log("Formatted Data:", formattedData);
     const res = await saveUserQuestionnaire(formattedData);
     navigate('/home');
   };

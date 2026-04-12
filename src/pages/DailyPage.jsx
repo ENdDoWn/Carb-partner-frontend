@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
-import dailyHistoryMock from '../mock/daily-history.mock.json';
+import { getDailyTotalsByDate } from '../Api/History';
 
 // --- Thai month names ---
 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
@@ -28,6 +28,14 @@ const formatDateKey = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+const isFutureDate = (date) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const compareDate = new Date(date);
+  compareDate.setHours(0, 0, 0, 0);
+  return compareDate > today;
+};
+
 // --- Check if today ---
 const isToday = (date) => {
   const today = new Date();
@@ -42,8 +50,9 @@ const isRecordHasData = (record) => {
   const hasMealItems = (record.meals ?? []).some((meal) => (meal.items ?? []).length > 0);
   const hasBloodSugarLogs = (record.bloodSugarLogs ?? []).length > 0;
   const hasCarbProgress = (record.summary?.carbConsumed ?? 0) > 0;
+  const hasBloodSugarProgress = (record.summary?.bloodSugarCurrent ?? 0) > 0;
 
-  return hasMealItems || hasBloodSugarLogs || hasCarbProgress;
+  return hasMealItems || hasBloodSugarLogs || hasCarbProgress || hasBloodSugarProgress;
 };
 
 // --- Calendar Popup Component ---
@@ -105,17 +114,20 @@ const CalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate, datesWithD
             const hasData = datesWithData.includes(dateKey);
             const isSelected = formatDateKey(selectedDate) === dateKey;
             const isTodayDate = isToday(date);
+            const isFuture = isFutureDate(date);
             
             return (
               <button
                 key={i}
                 onClick={() => {
+                  if (isFuture) return;
                   onSelectDate(date);
                   onClose();
                 }}
+                disabled={isFuture}
                 className={`
                   relative h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors
-                  ${isSelected ? 'bg-[#6CD2D9] text-white' : isTodayDate ? 'bg-cyan-50 text-[#6CD2D9]' : 'text-slate-700 hover:bg-slate-100'}
+                  ${isFuture ? 'text-slate-300 cursor-not-allowed' : isSelected ? 'bg-[#6CD2D9] text-white' : isTodayDate ? 'bg-cyan-50 text-[#6CD2D9]' : 'text-slate-700 hover:bg-slate-100'}
                 `}
               >
                 {day}
@@ -177,12 +189,63 @@ const DailyLogPage = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const [dailyHistoryData, setDailyHistoryData] = useState({ days: [] });
+  const [isLoadingDaily, setIsLoadingDaily] = useState(true);
+  const [dailyError, setDailyError] = useState('');
   const selectedDateKey = formatDateKey(selectedDate);
 
-  // Backend note:
-  // Replace dailyHistoryData with API response using the same shape as src/mock/daily-history.mock.json
-  // Expected root: { "days": [{ "date", "summary", "bloodSugarLogs", "meals" }] }
-  const dailyHistoryData = dailyHistoryMock;
+  const toDailyRecord = (payload, dateKey) => ({
+    date: dateKey,
+    summary: {
+      carbConsumed: payload?.totalCarb ?? 0,
+      carb_expect: 200,
+      bloodSugarCurrent: payload?.totalBloodSugar ?? 0,
+      bloodSugarMax: 180,
+    },
+    bloodSugarLogs: [],
+    meals: [],
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchDaily = async () => {
+      setIsLoadingDaily(true);
+      setDailyError('');
+
+      try {
+        const data = await getDailyTotalsByDate(selectedDate);
+        console.log('Fetched daily totals:', data);
+        if (!isMounted) return;
+
+        setDailyHistoryData((prev) => {
+          const nextRecord = toDailyRecord(data, selectedDateKey);
+          const filtered = (prev?.days ?? []).filter((day) => day.date !== selectedDateKey);
+          return {
+            days: [...filtered, nextRecord],
+          };
+        });
+      } catch (error) {
+        console.error('Failed to fetch daily totals:', error);
+        if (isMounted) {
+          setDailyError('ไม่สามารถโหลดข้อมูลรายวันได้ กรุณาลองใหม่อีกครั้ง');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingDaily(false);
+        }
+      }
+    };
+
+    fetchDaily();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedDate, selectedDateKey]);
+
+  // TODO(backend): เพิ่มรายการอาหารรายมื้อใน response เพื่อแสดง meals และ items บนหน้านี้
+
   const dailyHistoryList = dailyHistoryData?.days ?? [];
   const datesWithData = dailyHistoryList.filter(isRecordHasData).map((day) => day.date);
   const selectedRecord = dailyHistoryList.find((day) => day.date === selectedDateKey) ?? null;
@@ -236,8 +299,15 @@ const DailyLogPage = () => {
   };
 
   const nextDay = () => {
+    if (isToday(selectedDate)) {
+      return;
+    }
+
     const newDate = new Date(selectedDate);
     newDate.setDate(newDate.getDate() + 1);
+    if (isFutureDate(newDate)) {
+      return;
+    }
     setSelectedDate(newDate);
   };
 
@@ -285,6 +355,17 @@ const DailyLogPage = () => {
 
       {/* --- Scrollable Content --- */}
       <div className="flex-1 overflow-y-auto px-5 pb-32 space-y-4">
+        {isLoadingDaily && (
+          <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 text-sm text-slate-500">
+            กำลังโหลดข้อมูลรายวัน...
+          </div>
+        )}
+
+        {dailyError && (
+          <div className="bg-red-50 p-4 rounded-2xl border border-red-100 text-sm text-red-600">
+            {dailyError}
+          </div>
+        )}
         
         {/* Card 1: Carb Progress */}
         <div className="bg-white rounded-3xl p-6 shadow-sm">

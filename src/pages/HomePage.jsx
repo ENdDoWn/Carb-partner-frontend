@@ -56,7 +56,6 @@ const HomePage = () => {
       ]);
       const latestSugar = bloodSugar?.length ? bloodSugar[0] : null;
       const dailyTotalCarb = Number(dailyCarb?.totalCarb);
-      console.log('Latest blood sugar record:', latestSugar);
 
       const user = data?.user ?? data;
       setUserData({
@@ -102,7 +101,6 @@ const HomePage = () => {
     const payload = buildBloodSugarPayload(sugarValue);
 
     try {
-      console.log('Attempting to update blood sugar with payload:', payload);
       await updateBloodSugar(payload);
       const [refreshedUserInfo, refreshedBloodSugar, refreshedDailyCarb] = await Promise.all([
         getUserInfo(),
@@ -124,7 +122,6 @@ const HomePage = () => {
         date: todayLabel,
       });
     } catch (error) {
-      console.log('updateBloodSugar failed', error);
     } finally {
       setShowBloodSugarModal(false);
       setBloodSugarInput('');
