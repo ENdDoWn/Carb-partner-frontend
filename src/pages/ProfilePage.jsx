@@ -451,7 +451,6 @@ const ProfilePage = () => {
       const newBMI = (Number(editFormData.weight) / (heightInM * heightInM)).toFixed(1);
       // รักษา carb_expect จาก userData เดิม (ไม่ให้แก้ไข)
       const nextUserData = { ...editFormData, bmi: newBMI, carb_expect: userData?.carb_expect ?? null };
-
       try {
          await updateUserInfo({ user: nextUserData });
         const refreshed = await getUserInfo();
