@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ChevronLeft, ChevronRight, Calendar, Clock, Utensils, Coffee, Sun, Moon, IceCream
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
@@ -53,6 +53,58 @@ const isRecordHasData = (record) => {
   const hasBloodSugarProgress = (record.summary?.bloodSugarCurrent ?? 0) > 0;
 
   return hasMealItems || hasBloodSugarLogs || hasCarbProgress || hasBloodSugarProgress;
+};
+
+const formatToTwoDecimals = (value) => {
+  if (!Number.isFinite(value)) return '-';
+  return Number(value.toFixed(2)).toString();
+};
+
+const formatBloodSugarTime = (rawTime) => {
+  if (!rawTime) return '-';
+  const parsed = new Date(rawTime);
+  if (Number.isNaN(parsed.getTime())) {
+    return String(rawTime);
+  }
+  return parsed.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+};
+
+const toBloodSugarLogs = (payload, dateKey) => {
+  const rawLogs = payload?.bloodSugarLogs
+    ?? payload?.blood_sugar_logs
+    ?? payload?.bloodSugarHistory
+    ?? payload?.blood_sugar_report
+    ?? [];
+
+  if (Array.isArray(rawLogs) && rawLogs.length > 0) {
+    return rawLogs
+      .map((log, index) => {
+        const value = Number(log?.value ?? log?.sugar_level ?? log?.bloodSugar ?? log?.blood_sugar);
+        if (!Number.isFinite(value) || value <= 0) return null;
+
+        return {
+          id: log?.id ?? `${dateKey}-bg-${index}`,
+          label: log?.label ?? log?.title ?? 'บันทึกระดับน้ำตาล',
+          time: log?.time ?? formatBloodSugarTime(log?.created_at ?? log?.timestamp),
+          value,
+          unit: log?.unit ?? 'mg/dL',
+        };
+      })
+      .filter(Boolean);
+  }
+
+  const summaryValue = Number(payload?.totalBloodSugar ?? payload?.bloodSugarCurrent ?? payload?.blood_sugar_current);
+  if (Number.isFinite(summaryValue) && summaryValue > 0) {
+    return [{
+      id: `${dateKey}-bg-summary`,
+      label: 'บันทึกล่าสุด',
+      time: '-',
+      value: summaryValue,
+      unit: 'mg/dL',
+    }];
+  }
+
+  return [];
 };
 
 // --- Calendar Popup Component ---
@@ -187,22 +239,24 @@ const CircularProgress = ({ value, max, color, size = 120, strokeWidth = 10, lab
 // --- Main Page Component ---
 const DailyLogPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [dailyHistoryData, setDailyHistoryData] = useState({ days: [] });
   const [isLoadingDaily, setIsLoadingDaily] = useState(true);
   const [dailyError, setDailyError] = useState('');
   const selectedDateKey = formatDateKey(selectedDate);
+  const carbExpectFromHome = location.state?.carb_expect ?? location.state?.carbGoal ?? null;
 
   const toDailyRecord = (payload, dateKey) => ({
     date: dateKey,
     summary: {
       carbConsumed: payload?.totalCarb ?? 0,
-      carb_expect: 200,
+      carb_expect: carbExpectFromHome,
       bloodSugarCurrent: payload?.totalBloodSugar ?? 0,
       bloodSugarMax: 180,
     },
-    bloodSugarLogs: [],
+    bloodSugarLogs: toBloodSugarLogs(payload, dateKey),
     meals: [],
   });
 
@@ -242,7 +296,7 @@ const DailyLogPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [selectedDate, selectedDateKey]);
+  }, [selectedDate, selectedDateKey, carbExpectFromHome]);
 
   // TODO(backend): เพิ่มรายการอาหารรายมื้อใน response เพื่อแสดง meals และ items บนหน้านี้
 
@@ -253,13 +307,13 @@ const DailyLogPage = () => {
 
   const summary = selectedRecord?.summary ?? {
     carbConsumed: 0,
-    carb_expect: 200,
+    carb_expect: carbExpectFromHome,
     bloodSugarCurrent: 0,
     bloodSugarMax: 180,
   };
 
-  const carbExpect = summary.carb_expect ?? summary.carbGoal ?? 200;
-  const carbRemaining = Math.max(carbExpect - (summary.carbConsumed ?? 0), 0);
+  const carbExpect = summary.carb_expect ?? summary.carbGoal ?? carbExpectFromHome ?? null;
+  const carbRemaining = carbExpect != null ? Math.max(carbExpect - (summary.carbConsumed ?? 0), 0) : null;
   const bloodSugarLogs = selectedRecord?.bloodSugarLogs ?? [];
   const mealMap = Object.fromEntries((selectedRecord?.meals ?? []).map((meal) => [meal.key, meal]));
   const mealSections = MEAL_SECTIONS.map((section) => {
@@ -381,11 +435,11 @@ const DailyLogPage = () => {
           <div className="flex justify-between px-4">
             <div className="flex flex-col items-center">
               <span className="text-xs text-slate-400 mb-1">เป้าหมาย</span>
-              <span className="text-lg font-bold text-slate-800">{carbExpect}g</span>
+              <span className="text-lg font-bold text-slate-800">{carbExpect != null ? `${carbExpect}g` : '-'}</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-xs text-slate-400 mb-1">คงเหลือ</span>
-              <span className="text-lg font-bold text-slate-800">{hasData ? `${carbRemaining}g` : '-'}</span>
+              <span className="text-lg font-bold text-slate-800">{hasData && carbRemaining != null ? `${formatToTwoDecimals(carbRemaining)}g` : '-'}</span>
             </div>
           </div>
         </div>
@@ -404,7 +458,7 @@ const DailyLogPage = () => {
           {bloodSugarLogs.length > 0 ? (
             <div className="space-y-4">
               {bloodSugarLogs.map((log, index) => (
-                <div key={log.id} className={`flex items-center justify-between ${index !== bloodSugarLogs.length - 1 ? 'border-b border-slate-50 pb-3' : ''}`}>
+                <div key={log.id ?? `${selectedDateKey}-bg-${index}`} className={`flex items-center justify-between ${index !== bloodSugarLogs.length - 1 ? 'border-b border-slate-50 pb-3' : ''}`}>
                   <div className="flex items-start gap-3">
                     <Clock size={16} className="text-slate-400 mt-1" />
                     <div>

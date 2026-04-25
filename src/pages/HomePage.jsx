@@ -58,6 +58,7 @@ const HomePage = () => {
       const dailyTotalCarb = Number(dailyCarb?.totalCarb);
 
       const user = data?.user ?? data;
+      console.log(user);
       setUserData({
         full_name: user?.full_name ?? null,
         carbCurrent: Number.isFinite(dailyTotalCarb) ? dailyTotalCarb : (user?.carbCurrent ?? 0),
@@ -312,7 +313,10 @@ const HomePage = () => {
       )}
         
       {/* เรียกใช้ Nav Bar โดยส่ง prop activePage="home" */}
-      <Navigation activePage="home" />
+      <Navigation 
+        activePage="home"
+        historyState={{ carb_expect: userData?.carb_expect ?? null }}
+      />
 
     </MobileLayout>
   );

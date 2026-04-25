@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, BarChart2, ScanLine, History, ArrowRightLeft } from 'lucide-react';
 
-const Navigation = ({ activePage }) => {
+const Navigation = ({ activePage, historyState }) => {
   const navigate = useNavigate();
   
   // Helper เช็คสีปุ่ม Active
@@ -40,7 +40,7 @@ const Navigation = ({ activePage }) => {
         </div>
 
         {/* History */}
-        <button className={getItemClass('history')} onClick={() => navigate('/daily')}>
+        <button className={getItemClass('history')} onClick={() => navigate('/daily', { state: historyState })}>
           <History size={24} strokeWidth={activePage === 'history' ? 2.5 : 2} />
           <span>ประวัติ</span>
         </button>
