@@ -166,3 +166,13 @@ export const updateBloodSugar = async (data) => {
   console.log('Blood sugar update response:', res);
   return true
 }
+
+export const verifyEmail = async (email, code) => {
+  const res = await api.post('/verify_email', { email, code })
+  return res.data
+}
+
+export const resendVerificationCode = async (email) => {
+  const res = await api.post('/resend_verification', { email })
+  return res.data
+}

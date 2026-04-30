@@ -50,7 +50,7 @@ const SignUpPage = () => {
           password: formData.password,
           confirm_password: formData.confirmPassword
       });
-      navigate('/signin');
+      navigate('/verify-email', { state: { email: formData.email } });
 
     } catch (error) {
       console.error("Register Error:", error);

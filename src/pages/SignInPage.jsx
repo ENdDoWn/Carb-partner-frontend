@@ -47,8 +47,15 @@ const SignInPage = () => {
 
     } catch (error) {
       console.error("Login Error:", error);
-      const msg = error.response?.data?.detail || "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง";
-      setErrorMessage(msg);
+      const errorDetail = error.response?.data?.detail || "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง";
+      
+      // Check if email is not verified
+      if (errorDetail.includes("not verified") || errorDetail.includes("Email not verified")) {
+        navigate('/verify-email', { state: { email: formData.usernameOrEmail } });
+        return;
+      }
+      
+      setErrorMessage(errorDetail);
     }
   };
 
