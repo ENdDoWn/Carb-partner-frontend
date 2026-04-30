@@ -108,6 +108,44 @@ const toBloodSugarLogs = (payload, dateKey) => {
   return [];
 };
 
+const toMealSections = (payload, dateKey) => {
+  const rawLogs = payload?.carbLogs
+    ?? payload?.carb_logs
+    ?? payload?.carbHistory
+    ?? payload?.carb_history
+    ?? [];
+
+  if (!Array.isArray(rawLogs) || rawLogs.length === 0) return [];
+
+  const grouped = rawLogs.reduce((acc, log, index) => {
+    const mealKey = log?.meal_key ?? log?.mealKey;
+    if (!mealKey) return acc;
+
+    const carbValue = Number(log?.carb ?? log?.carb_amount ?? log?.carbAmount);
+    if (!Number.isFinite(carbValue)) return acc;
+
+    const amount = Number(log?.amount ?? 1);
+    const portion = Number.isFinite(amount) && amount > 0 ? `${amount} ที่` : '-';
+
+    const item = {
+      id: log?.id ?? `${dateKey}-meal-${mealKey}-${index}`,
+      name: log?.food_type ?? log?.foodType ?? 'รายการอาหาร',
+      portion,
+      carb: carbValue,
+    };
+
+    if (!acc[mealKey]) {
+      acc[mealKey] = { key: mealKey, items: [], totalCarb: 0 };
+    }
+
+    acc[mealKey].items.push(item);
+    acc[mealKey].totalCarb = Number((acc[mealKey].totalCarb + carbValue).toFixed(2));
+    return acc;
+  }, {});
+
+  return Object.values(grouped);
+};
+
 // --- Calendar Popup Component ---
 const CalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate, datesWithData }) => {
   const [viewDate, setViewDate] = useState(new Date(selectedDate));
@@ -261,7 +299,7 @@ const DailyLogPage = () => {
       bloodSugarMax: 180,
     },
     bloodSugarLogs: toBloodSugarLogs(payload, dateKey),
-    meals: [],
+    meals: toMealSections(payload, dateKey),
   });
 
   useEffect(() => {
@@ -272,17 +310,16 @@ const DailyLogPage = () => {
       setDailyError('');
 
       try {
-        const [data, userInfo, dailyCarb] = await Promise.all([
+        const [data, userInfo] = await Promise.all([
           getDailyTotalsByDate(selectedDate),
           getUserInfo(),
-          getDailyCarbTotal(),
         ]);
         console.log('Fetched daily totals:', data);
         if (!isMounted) return;
 
         const user = userInfo?.user ?? userInfo;
         const userCarbExpect = user?.carb_expect ?? user?.carbGoal ?? null;
-        const dailyTotalCarb = Number(dailyCarb?.totalCarb);
+        const dailyTotalCarb = Number(data?.totalCarb);
         setCarbExpectFromUser(userCarbExpect);
         setDailyCarbTotal(Number.isFinite(dailyTotalCarb) ? dailyTotalCarb : null);
 
