@@ -105,9 +105,9 @@ const HealthKnowledgePage = () => {
 const SectionHeader = ({ title }) => (
   <div className="flex justify-between items-end mb-3 px-1">
      <h2 className="font-bold text-slate-800 text-base">{title}</h2>
-     <button className="text-xs font-bold text-[#6CD2D9] flex items-center hover:underline">
+     {/* <button className="text-xs font-bold text-[#6CD2D9] flex items-center hover:underline">
         ดูเพิ่มเติม <ChevronRight size={14} />
-     </button>
+     </button> */}
   </div>
 );
 

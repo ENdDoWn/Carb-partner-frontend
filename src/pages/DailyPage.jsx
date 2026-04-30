@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import MobileLayout from '../components/MobileLayout';
 import { getDailyTotalsByDate } from '../Api/History';
+import { getDailyCarbTotal, getUserInfo } from '../Api/User';
 
 // --- Thai month names ---
 const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
@@ -248,11 +249,14 @@ const DailyLogPage = () => {
   const selectedDateKey = formatDateKey(selectedDate);
   const carbExpectFromHome = location.state?.carb_expect ?? location.state?.carbGoal ?? null;
 
-  const toDailyRecord = (payload, dateKey) => ({
+  const [carbExpectFromUser, setCarbExpectFromUser] = useState(null);
+  const [dailyCarbTotal, setDailyCarbTotal] = useState(null);
+
+  const toDailyRecord = (payload, dateKey, userCarbExpect, dailyTotalCarb) => ({
     date: dateKey,
     summary: {
-      carbConsumed: payload?.totalCarb ?? 0,
-      carb_expect: carbExpectFromHome,
+      carbConsumed: Number.isFinite(dailyTotalCarb) ? dailyTotalCarb : (payload?.totalCarb ?? 0),
+      carb_expect: userCarbExpect ?? carbExpectFromHome,
       bloodSugarCurrent: payload?.totalBloodSugar ?? 0,
       bloodSugarMax: 180,
     },
@@ -268,12 +272,22 @@ const DailyLogPage = () => {
       setDailyError('');
 
       try {
-        const data = await getDailyTotalsByDate(selectedDate);
+        const [data, userInfo, dailyCarb] = await Promise.all([
+          getDailyTotalsByDate(selectedDate),
+          getUserInfo(),
+          getDailyCarbTotal(),
+        ]);
         console.log('Fetched daily totals:', data);
         if (!isMounted) return;
 
+        const user = userInfo?.user ?? userInfo;
+        const userCarbExpect = user?.carb_expect ?? user?.carbGoal ?? null;
+        const dailyTotalCarb = Number(dailyCarb?.totalCarb);
+        setCarbExpectFromUser(userCarbExpect);
+        setDailyCarbTotal(Number.isFinite(dailyTotalCarb) ? dailyTotalCarb : null);
+
         setDailyHistoryData((prev) => {
-          const nextRecord = toDailyRecord(data, selectedDateKey);
+          const nextRecord = toDailyRecord(data, selectedDateKey, userCarbExpect, dailyTotalCarb);
           const filtered = (prev?.days ?? []).filter((day) => day.date !== selectedDateKey);
           return {
             days: [...filtered, nextRecord],
@@ -306,8 +320,8 @@ const DailyLogPage = () => {
   const hasData = isRecordHasData(selectedRecord);
 
   const summary = selectedRecord?.summary ?? {
-    carbConsumed: 0,
-    carb_expect: carbExpectFromHome,
+    carbConsumed: dailyCarbTotal ?? 0,
+    carb_expect: carbExpectFromUser ?? carbExpectFromHome,
     bloodSugarCurrent: 0,
     bloodSugarMax: 180,
   };

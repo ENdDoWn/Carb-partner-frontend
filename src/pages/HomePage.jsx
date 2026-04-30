@@ -19,17 +19,24 @@ const getBloodSugarMeta = (value) => {
     };
   }
 
-  if (sugar >= 70 && sugar <= 100) {
+  if (sugar < 70) {
     return {
-      status: 'คงที่',
-      badgeClass: 'bg-green-100 text-green-700',
+      status: 'ต่ำ',
+      badgeClass: 'bg-red-100 text-red-700',
     };
   }
 
-  if (sugar >= 101 && sugar <= 125) {
+  if (sugar >= 70 && sugar <= 79) {
     return {
-      status: 'เริ่มสูง',
+      status: 'เริ่มต่ำ',
       badgeClass: 'bg-yellow-100 text-yellow-700',
+    };
+  }
+
+  if (sugar >= 80 && sugar <= 130) {
+    return {
+      status: 'ควบคุมได้ดี',
+      badgeClass: 'bg-green-100 text-green-700',
     };
   }
 
@@ -44,9 +51,14 @@ const HomePage = () => {
   const [showBloodSugarModal, setShowBloodSugarModal] = useState(false);
   const [bloodSugarInput, setBloodSugarInput] = useState('');
   const [bloodSugarError, setBloodSugarError] = useState('');
+  const [showLowSugarAdvice, setShowLowSugarAdvice] = useState(false);
+  const [showHighSugarAdvice, setShowHighSugarAdvice] = useState(false);
   const [userData, setUserData] = useState(null);
   const todayLabel = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' });
   const bloodSugarMeta = getBloodSugarMeta(userData?.bloodSugar);
+  const bloodSugarValue = Number(userData?.bloodSugar);
+  const isLowBloodSugar = Number.isFinite(bloodSugarValue) && bloodSugarValue < 70;
+  const isHighBloodSugar = Number.isFinite(bloodSugarValue) && bloodSugarValue > 130;
   useEffect(() => {
     const fetchUserData = async () => {
       const [data, bloodSugar, dailyCarb] = await Promise.all([
@@ -84,6 +96,18 @@ const HomePage = () => {
       document.body.style.overflow = 'auto';
     };
   }, [showBloodSugarModal]);
+
+  useEffect(() => {
+    if (!isLowBloodSugar) {
+      setShowLowSugarAdvice(false);
+    }
+  }, [isLowBloodSugar]);
+
+  useEffect(() => {
+    if (!isHighBloodSugar) {
+      setShowHighSugarAdvice(false);
+    }
+  }, [isHighBloodSugar]);
 
   const buildBloodSugarPayload = (value) => ({
     timestamp: new Date().toISOString(),
@@ -231,6 +255,68 @@ const HomePage = () => {
                <Droplet size={40} className="text-[#6CD2D9] opacity-40 mb-2 mr-2" fill="currentColor" />
             </div>
           </div>
+          {isLowBloodSugar && (
+            <div className="bg-red-50 border border-red-100 rounded-2xl p-4">
+              <p className="text-sm font-bold text-red-700">คุณมีภาวะน้ำตาลในเลือดต่ำ</p>
+              <p className="text-xs text-red-600 mt-1">
+                หากมีอาการ ใจสั่น หน้าซีด เหงื่อออกมาก ให้ปฏิบัติดังต่อไปนี้
+              </p>
+              <button
+                onClick={() => setShowLowSugarAdvice((prev) => !prev)}
+                className="mt-3 text-xs font-bold text-red-700 underline"
+              >
+                {showLowSugarAdvice ? 'ย่อ' : 'อ่านต่อ'}
+              </button>
+              {showLowSugarAdvice && (
+                <div className="mt-3 text-xs text-slate-700 space-y-2">
+                  <p className="font-bold text-slate-800">เพิ่มคำแนะนำหลังแจ้งเตือน</p>
+                  <p>น้ำตาลต่ำ &lt;70 - รับประทานน้ำหวาน - น้ำตาลเชิงเดี่ยวที่มีคาร์โบไฮเดรต 15 กรัม เช่น</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>น้ำหวานเฮลซ์บูลบอย 2 ช้อนโต๊ะ</li>
+                    <li>น้ำผลไม้ 1 กล่องเล็ก (ประมาณ 200 มล.)</li>
+                    <li>น้ำผึ้ง 1 ช้อนโต๊ะ</li>
+                    <li>ลูกอม 3-5 เม็ด</li>
+                  </ul>
+                  <p>เจาะเลือดปลายนิ้วอีกครั้ง โดยให้เวลาห่างจากแก้ปัญหา 15 นาที</p>
+                </div>
+              )}
+            </div>
+          )}
+          {isHighBloodSugar && (
+            <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+              <p className="text-sm font-bold text-amber-700">คุณมีภาวะน้ำตาลในเลือดสูง</p>
+              <p className="text-xs text-amber-700/90 mt-1">
+                หากมีอาการกระหายน้ำบ่อย ปัสสาวะบ่อย (โดยเฉพาะกลางคืน) อ่อนเพลีย สายตาพร่ามัว
+              </p>
+              <button
+                onClick={() => setShowHighSugarAdvice((prev) => !prev)}
+                className="mt-3 text-xs font-bold text-amber-700 underline"
+              >
+                {showHighSugarAdvice ? 'ย่อ' : 'แสดงเพิ่มเติม'}
+              </button>
+              {showHighSugarAdvice && (
+                <div className="mt-3 text-xs text-slate-700 space-y-2">
+                  <p className="font-bold text-slate-800">กรณีระดับน้ำตาลในเลือดสูง (Hyperglycemia)</p>
+                  <p>
+                    เกณฑ์: ระดับน้ำตาลในเลือดก่อนอาหาร &gt; 130 mg/dL หรือหลังอาหาร &gt; 180 mg/dL
+                    (หรือตามแผนการรักษา)
+                  </p>
+                  <p>
+                    หากมีอาการหายใจหอบลึก (Kussmaul breathing), ลมหายใจมีกลิ่นผลไม้, ปวดท้อง,
+                    หรือซึมลงหรือไม่
+                  </p>
+                  <p>
+                    การดูแลเสริม กระตุ้นให้ดื่มน้ำเปล่า (หากไม่มีข้อห้ามเรื่องการจำกัดน้ำ) เพื่อลด
+                    ภาวะขาดน้ำและงดอาหารว่างที่มีน้ำตาลสูง
+                  </p>
+                  <p>
+                    ติดตามผล เจาะน้ำตาลซ้ำตามรอบการรักษา (ทุก 4-6 ชั่วโมง หรือก่อนอาหารมื้อถัดไป)
+                    และเฝ้าระวังระดับสัญญาณชีพ
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Meal Grid */}
           <div className="grid grid-cols-2 gap-3">
@@ -242,15 +328,15 @@ const HomePage = () => {
             <div className="bg-[#FFF8E1] p-5 rounded-2xl border border-yellow-100 mb-6">
              <div className="flex items-center gap-2 mb-3 text-[#B78829]">
                 <Utensils size={18} fill="#B78829" />
-                <span className="font-bold text-sm">ความรู้และเคล็ดลับ</span>
+                <span className="font-bold text-sm">ความรู้คู่เบาหวาน</span>
              </div>
              
-             <div className="bg-white/80 p-4 rounded-xl mb-3 border border-yellow-50">
+             {/* <div className="bg-white/80 p-4 rounded-xl mb-3 border border-yellow-50">
                 <h4 className="font-bold text-sm text-slate-800 mb-1">💡 เคล็ดลับประจำวัน</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                    การดื่มน้ำให้เพียงพอช่วยควบคุมระดับน้ำตาลในเลือดได้ดีขึ้น ลองตั้งเป้าดื่มให้ครบ 8 แก้วดูนะ!
                 </p>
-             </div>
+             </div> */}
              
              <button 
                 onClick={() => navigate('/health')}

@@ -16,7 +16,6 @@ const SignInPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
-  const [isPrivacyAccepted, setIsPrivacyAccepted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
@@ -30,11 +29,6 @@ const SignInPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
-
-    if (!isPrivacyAccepted) {
-        setErrorMessage("กรุณายอมรับนโยบายความเป็นส่วนตัวก่อนเข้าสู่ระบบ");
-        return;
-    }
 
     try {
       const res = await api.post('/signin', { 
@@ -127,34 +121,11 @@ const SignInPage = () => {
           </Link>
         </div>
 
-        <div className="flex items-start">
-            <div className="flex items-center h-5">
-                <input
-                    id="privacy-checkbox"
-                    type="checkbox"
-                    checked={isPrivacyAccepted}
-                    onChange={(e) => setIsPrivacyAccepted(e.target.checked)}
-                    className="w-4 h-4 text-[#6CD2D9] border-slate-300 rounded focus:ring-[#6CD2D9] cursor-pointer"
-                />
-            </div>
-            <div className="ml-2 text-sm leading-5">
-                <label htmlFor="privacy-checkbox" className="text-slate-600 cursor-pointer">
-                    ฉันยอมรับให้เก็บรวบรวมข้อมูล เพื่อยืนยันตัวตนตาม
-                </label>
-                <button 
-                    type="button"
-                    onClick={() => setShowPrivacy(true)}
-                    className="text-[#6CD2D9] font-bold hover:underline ml-1 focus:outline-none"
-                >
-                    นโยบายความเป็นส่วนตัว
-                </button>
-            </div>
-        </div>
 
         {/* Submit Button */}
         <button
           type="submit"
-          className={`w-full font-bold py-3 rounded-full shadow-sm transition duration-200 ${isPrivacyAccepted ? 'bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+          className="w-full font-bold py-3 rounded-full shadow-sm transition duration-200 bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white"
         >
           เข้าสู่ระบบ
         </button>

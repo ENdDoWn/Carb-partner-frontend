@@ -42,8 +42,8 @@ function App() {
         <Route path="/health/reader" element={<HealthKnowledgeReaderPage />} />
         <Route path="/line/callback" element={<LineCallbackPage />} />
         <Route path="/camera" element={<ProtectedRoute><CameraPage /></ProtectedRoute>} />
-        <Route path="/find-food" element={<FindFoodPage />} />
-        <Route path="/food-details" element={<FoodDetailsPage />} />
+        <Route path="/find-food" element={<ProtectedRoute><FindFoodPage /></ProtectedRoute>} />
+        <Route path="/food-details" element={<ProtectedRoute><FoodDetailsPage /></ProtectedRoute>} />
         <Route path="/scan-result" element={<ProtectedRoute><ScanResultPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
