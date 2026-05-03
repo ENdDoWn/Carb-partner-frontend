@@ -246,7 +246,8 @@ const CalendarPopup = ({ isOpen, onClose, selectedDate, onSelectDate, datesWithD
 const CircularProgress = ({ value, max, color, size = 120, strokeWidth = 10, label, subLabel, unit }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const progress = (value / max) * 100;
+  const progressRaw = max > 0 ? (value / max) * 100 : 0;
+  const progress = Math.min(progressRaw, 100);
   const dashOffset = circumference - (progress / 100) * circumference;
 
   return (
@@ -365,6 +366,8 @@ const DailyLogPage = () => {
 
   const carbExpect = summary.carb_expect ?? summary.carbGoal ?? carbExpectFromHome ?? null;
   const carbRemaining = carbExpect != null ? Math.max(carbExpect - (summary.carbConsumed ?? 0), 0) : null;
+  const isCarbOver = carbExpect != null && (summary.carbConsumed ?? 0) > carbExpect;
+  const carbRingColor = isCarbOver ? '#F97316' : '#6CD2D9';
   const bloodSugarLogs = selectedRecord?.bloodSugarLogs ?? [];
   const mealMap = Object.fromEntries((selectedRecord?.meals ?? []).map((meal) => [meal.key, meal]));
   const mealSections = MEAL_SECTIONS.map((section) => {
@@ -475,13 +478,16 @@ const DailyLogPage = () => {
         {/* Card 1: Carb Progress */}
         <div className="bg-white rounded-3xl p-6 shadow-sm">
           <h2 className="font-bold text-slate-800 mb-4">ความคืบหน้าวันนี้</h2>
-          <div className="flex justify-center mb-6">
+          <div className="flex flex-col items-center mb-6">
             <CircularProgress 
-              value={summary.carbConsumed} max={carbExpect || 200} color="#6CD2D9" 
+              value={summary.carbConsumed} max={carbExpect || 200} color={carbRingColor}
               unit="g" 
               subLabel={hasData ? 'ที่บริโภคแล้ว' : 'ยังไม่มีข้อมูล'}
               size={140} strokeWidth={14}
             />
+            {isCarbOver && (
+              <span className="mt-2 text-xs font-semibold text-orange-600">คาร์บเกินแล้ว</span>
+            )}
           </div>
           <div className="flex justify-between px-4">
             <div className="flex flex-col items-center">

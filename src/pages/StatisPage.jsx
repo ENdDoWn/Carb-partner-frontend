@@ -52,12 +52,28 @@ const getStatsViewModel = (activeTab, historyPayload) => {
   const tabData = historyPayload?.tabs?.[activeTab];
   if (!tabData) return null;
 
-  const yAxis = tabData.chart?.yAxis ?? { min: 0, max: 200, unit: '' };
+  const rawYAxis = tabData.chart?.yAxis ?? { min: 0, max: 200, unit: '' };
+  const allValues = (tabData.chart?.series ?? []).flatMap((series) =>
+    (series.points ?? []).map((point) => point.value)
+  );
+  const minValue = allValues.length ? Math.min(...allValues) : rawYAxis.min;
+  const maxValue = allValues.length ? Math.max(...allValues) : rawYAxis.max;
+  const yAxis = {
+    ...rawYAxis,
+    min: Math.min(rawYAxis.min ?? 0, minValue),
+    max: Math.max(rawYAxis.max ?? 0, maxValue),
+  };
   const labels = tabData.chart?.labels ?? [];
+  const defaultSeriesColors = {
+    sugar: '#EF4444',
+    carb: '#55BCC3',
+  };
+
   const chartSeries = (tabData.chart?.series ?? []).map((series) => {
     const points = getChartCoordinates(series.points ?? [], 340, 120, yAxis.min, yAxis.max);
     return {
       ...series,
+      color: series.color ?? defaultSeriesColors[series.key] ?? '#94A3B8',
       points,
       path: buildLinePath(points),
     };
@@ -65,7 +81,8 @@ const getStatsViewModel = (activeTab, historyPayload) => {
 
   const highlight = tabData.chart?.highlight ?? { seriesKey: chartSeries[0]?.key, index: 0 };
   const highlightedSeries = chartSeries.find((series) => series.key === highlight.seriesKey) ?? chartSeries[0];
-  const highlightedPoint = highlightedSeries?.points?.[highlight.index] ?? highlightedSeries?.points?.[0] ?? null;
+  const highlightIndex = Number.isFinite(highlight.index) ? highlight.index : 0;
+  const highlightedPoint = highlightedSeries?.points?.[highlightIndex] ?? highlightedSeries?.points?.[0] ?? null;
 
   return {
     comparisonLabel: tabData.comparisonLabel ?? '',
@@ -77,6 +94,7 @@ const getStatsViewModel = (activeTab, historyPayload) => {
       yAxis,
       series: chartSeries,
       highlightedPoint,
+      highlightIndex,
       highlightedColor: highlightedSeries?.color ?? '#EF4444',
     },
   };
@@ -120,13 +138,49 @@ const CustomLineChart = ({ chartModel }) => {
   if (!chartModel) return null;
 
   const labelStepX = chartModel.labels.length > 1 ? (340 - 20) / (chartModel.labels.length - 1) : 0;
-  const tooltipValue = chartModel.highlightedPoint
-    ? `${chartModel.highlightedPoint.value.toFixed(0)} ${chartModel.yAxis.unit === 'mg/dL' ? 'มก./ดล.' : chartModel.yAxis.unit}`
-    : '';
+  const [hoverIndex, setHoverIndex] = useState(null);
+  const activeIndex = hoverIndex ?? chartModel.highlightIndex ?? 0;
+  const safeIndex = clamp(activeIndex, 0, Math.max(chartModel.labels.length - 1, 0));
+  const activePoints = chartModel.series
+    .map((series) => ({
+      key: series.key,
+      label: series.label,
+      color: series.color,
+      point: series.points?.[safeIndex],
+    }))
+    .filter((entry) => entry.point);
+  const tooltipX = activePoints[0]?.point?.x ?? 10;
+  const tooltipY = Math.min(...activePoints.map((entry) => entry.point.y)) - 44;
+  const tooltipLabel = chartModel.labels[safeIndex] ?? '';
+
+  const formatUnit = (seriesKey) => {
+    if (seriesKey === 'carb') return 'ก.';
+    if (chartModel.yAxis.unit === 'mg/dL') return 'มก./ดล.';
+    return chartModel.yAxis.unit || '';
+  };
+
+  const handleMouseMove = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const localX = event.clientX - bounds.left;
+    const ratio = bounds.width > 0 ? localX / bounds.width : 0;
+    const svgX = ratio * 350;
+    if (chartModel.labels.length <= 1) {
+      setHoverIndex(0);
+      return;
+    }
+    const clampedX = clamp(svgX, 10, 340);
+    const index = Math.round((clampedX - 10) / labelStepX);
+    setHoverIndex(clamp(index, 0, chartModel.labels.length - 1));
+  };
 
   return (
     <div className="w-full h-48 relative mt-4">
-      <svg viewBox="0 0 350 180" className="w-full h-full overflow-visible">
+      <svg
+        viewBox="0 0 350 180"
+        className="w-full h-full overflow-visible"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHoverIndex(null)}
+      >
         {/* Grid Lines (เส้นบรรทัดจางๆ) */}
         <line x1="0" y1="40" x2="350" y2="40" stroke="#F1F5F9" strokeWidth="1" />
         <line x1="0" y1="90" x2="350" y2="90" stroke="#F1F5F9" strokeWidth="1" />
@@ -144,16 +198,37 @@ const CustomLineChart = ({ chartModel }) => {
           />
         ))}
 
-        {/* Tooltip Dot & Label (จุดแดงและป้ายกำกับ) */}
-        {chartModel.highlightedPoint && (
+        {activePoints.length > 0 && (
           <>
-            <circle cx={chartModel.highlightedPoint.x} cy={chartModel.highlightedPoint.y} r="4" fill={chartModel.highlightedColor} stroke="white" strokeWidth="2" />
-            <g transform={`translate(${chartModel.highlightedPoint.x - 35}, ${chartModel.highlightedPoint.y - 30})`}>
-          <rect x="0" y="0" width="70" height="22" rx="6" fill="#EF4444" />
-              <text x="35" y="15" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">{tooltipValue}</text>
-          {/* Triangle pointing down */}
-          <path d="M30,22 L35,27 L40,22 Z" fill="#EF4444" />
-        </g>
+            <line x1={tooltipX} y1="30" x2={tooltipX} y2="140" stroke="#CBD5F5" strokeDasharray="4 4" />
+            {activePoints.map((entry) => (
+              <circle
+                key={`${entry.key}-active`}
+                cx={entry.point.x}
+                cy={entry.point.y}
+                r="4"
+                fill={entry.color}
+                stroke="white"
+                strokeWidth="2"
+              />
+            ))}
+            <g transform={`translate(${tooltipX - 52}, ${Math.max(6, tooltipY)})`}>
+              <rect x="0" y="0" width="104" height="38" rx="12" fill="#EF4444" />
+              <text x="52" y="13" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold">{tooltipLabel}</text>
+              {activePoints.map((entry, index) => (
+                <text
+                  key={`${entry.key}-value`}
+                  x="52"
+                  y={26 + index * 10}
+                  textAnchor="middle"
+                  fill="white"
+                  fontSize="9"
+                  fontWeight="bold"
+                >
+                  {`${entry.label}: ${entry.point.value.toFixed(0)} ${formatUnit(entry.key)}`}
+                </text>
+              ))}
+            </g>
           </>
         )}
 

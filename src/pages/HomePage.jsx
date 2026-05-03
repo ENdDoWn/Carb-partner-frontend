@@ -159,8 +159,11 @@ const HomePage = () => {
   const circumference = 2 * Math.PI * radius;
   const carbCurrent = Number(userData?.carbCurrent ?? 0);
   const carbExpect = Number(userData?.carb_expect ?? 0);
-  const progress = carbExpect > 0 ? (carbCurrent / carbExpect) * 100 : 0;
+  const progressRaw = carbExpect > 0 ? (carbCurrent / carbExpect) * 100 : 0;
+  const progress = Math.min(progressRaw, 100);
   const dashOffset = circumference - (progress / 100) * circumference;
+  const isCarbOver = carbExpect > 0 && carbCurrent > carbExpect;
+  const ringColor = isCarbOver ? '#F97316' : '#6CD2D9';
 
   return (
     <MobileLayout>
@@ -200,11 +203,14 @@ const HomePage = () => {
             <div className="relative w- h-48 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90">
                 <circle cx="50%" cy="50%" r={radius} stroke="#E2E8F0" strokeWidth="12" fill="transparent" strokeLinecap="round" />
-                <circle cx="50%" cy="50%" r={radius} stroke="#6CD2D9" strokeWidth="12" fill="transparent" strokeDasharray={circumference} strokeDashoffset={dashOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+                <circle cx="50%" cy="50%" r={radius} stroke={ringColor} strokeWidth="12" fill="transparent" strokeDasharray={circumference} strokeDashoffset={dashOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
               </svg>
               <div className="absolute flex flex-col items-center">
                 <span className="text-4xl font-extrabold text-slate-800 tracking-tight">{carbCurrent}ก.</span>
                 <span className="text-xs text-slate-400 font-medium mt-1">จากเป้าหมาย {carbExpect || '-'}ก.</span>
+                {isCarbOver && (
+                  <span className="text-xs font-semibold text-orange-600 mt-1">คาร์บเกินแล้ว</span>
+                )}
               </div>
             </div>
           </div>
@@ -319,12 +325,12 @@ const HomePage = () => {
           )}
 
           {/* Meal Grid */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* <div className="grid grid-cols-2 gap-3">
              <MealButton icon={<Coffee />} label="อาหารเช้า" />
              <MealButton icon={<Sun />} label="อาหารกลางวัน" />
              <MealButton icon={<Moon />} label="อาหารเย็น" />
              <MealButton icon={<IceCream />} label="อาหารว่าง" />
-          </div>
+          </div> */}
             <div className="bg-[#FFF8E1] p-5 rounded-2xl border border-yellow-100 mb-6">
              <div className="flex items-center gap-2 mb-3 text-[#B78829]">
                 <Utensils size={18} fill="#B78829" />

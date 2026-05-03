@@ -11,6 +11,9 @@ const FoodDetailsPage = () => {
    const location = useLocation();
    const [isSaving, setIsSaving] = useState(false);
    const [saveError, setSaveError] = useState('');
+   const [quantity, setQuantity] = useState(1);
+   const [quantityError, setQuantityError] = useState('');
+   const maxQuantity = 10;
    const defaultFoodDetails = {
       name: 'Apple',
       carbs_value: '14g',
@@ -41,6 +44,17 @@ const FoodDetailsPage = () => {
    const handleSave = async () => {
       if (isSaving) return;
 
+      const normalizedQuantity = Number.parseInt(String(quantity), 10);
+      if (!Number.isFinite(normalizedQuantity) || normalizedQuantity < 1) {
+         setQuantityError('กรุณาระบุจำนวนชิ้นอย่างน้อย 1');
+         return;
+      }
+      if (normalizedQuantity > maxQuantity) {
+         setQuantityError(`จำนวนชิ้นต้องไม่เกิน ${maxQuantity}`);
+         return;
+      }
+      setQuantityError('');
+
       const carbValue = Number.parseFloat(
          String(foodDetails.carbs_value ?? '').replace(/[^0-9.]/g, '')
       );
@@ -48,12 +62,16 @@ const FoodDetailsPage = () => {
       try {
          setIsSaving(true);
          setSaveError('');
-         await saveScanResult({
+         const payload = {
             result: {
                carbs_estimate_g: Number.isFinite(carbValue) ? carbValue : 0,
                food_type: foodDetails.name,
             },
-         });
+         };
+
+         for (let index = 0; index < normalizedQuantity; index += 1) {
+            await saveScanResult(payload);
+         }
 
          navigate('/home', { replace: true });
       } catch (error) {
@@ -155,6 +173,26 @@ const FoodDetailsPage = () => {
 
       {/* Add Button */}
       <div className="px-6 pb-safe-bottom pb-2 pt-4 bg-white">
+         <div className="mb-3">
+            <label className="block text-sm font-medium text-slate-700 mb-2" htmlFor="food-quantity">
+               จำนวนชิ้นที่รับประทาน
+            </label>
+            <div className="flex items-center gap-3">
+               <input
+                  id="food-quantity"
+                  type="number"
+                  min={1}
+                  max={maxQuantity}
+                  step={1}
+                  value={quantity}
+                  onChange={(event) => setQuantity(event.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-base text-slate-800 shadow-sm focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-100"
+               />
+               <span className="text-sm text-slate-500">ชิ้น</span>
+            </div>
+            {quantityError && <p className="mt-2 text-sm text-red-500">{quantityError}</p>}
+            <p className="mt-1 text-xs text-slate-400">จำนวนชิ้นต้องไม่เกิน {maxQuantity}</p>
+         </div>
          {saveError && <p className="text-sm text-red-500 text-center mb-3">{saveError}</p>}
          <button
             onClick={handleSave}
