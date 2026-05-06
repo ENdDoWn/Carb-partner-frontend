@@ -10,7 +10,7 @@ import CarbIcon from '../assets/images/carb-icon.png';
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
     confirmPassword: '',
   });
@@ -46,11 +46,11 @@ const SignUpPage = () => {
 
     try {
       const res = await api.post('/signup', { 
-          email: formData.email,
+          username: formData.username,
           password: formData.password,
           confirm_password: formData.confirmPassword
       });
-      navigate('/verify-email', { state: { email: formData.email } });
+      navigate('/signin');
 
     } catch (error) {
       console.error("Register Error:", error);
@@ -80,21 +80,19 @@ const SignUpPage = () => {
             </div>
         )}
 
-        {/* Email */}
+        {/* Username */}
         <div className="space-y-1">
-          <label className="text-sm font-semibold text-slate-700">อีเมล</label>
+          <label className="text-sm font-semibold text-slate-700">ชื่อผู้ใช้</label>
           <input
-            type="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
-            placeholder="example@email.com"
+            placeholder="เช่น carbpartner01"
             className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent text-slate-600"
             required
           />
         </div>
-
-        {/* ❌ ตัดช่อง Username ออกไปแล้วครับ */}
 
         {/* Password */}
         <div className="space-y-1 relative">

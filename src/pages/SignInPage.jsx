@@ -10,7 +10,7 @@ import CarbIcon from '../assets/images/carb-icon.png';
 const SignInPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    usernameOrEmail: '',
+    username: '',
     password: '',
   });
 
@@ -32,7 +32,7 @@ const SignInPage = () => {
 
     try {
       const res = await api.post('/signin', { 
-          email: formData.usernameOrEmail,
+          username: formData.username,
           password: formData.password
       });
       
@@ -41,14 +41,7 @@ const SignInPage = () => {
 
     } catch (error) {
       console.error("Login Error:", error);
-      const errorDetail = error.response?.data?.detail || "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง";
-      
-      // Check if email is not verified
-      if (errorDetail.includes("not verified") || errorDetail.includes("Email not verified")) {
-        navigate('/verify-email', { state: { email: formData.usernameOrEmail } });
-        return;
-      }
-      
+      const errorDetail = error.response?.data?.detail || "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
       setErrorMessage(errorDetail);
     }
   };
@@ -77,15 +70,15 @@ const SignInPage = () => {
             </div>
         )}
 
-        {/* Username / Email */}
+        {/* Username */}
         <div className="space-y-1">
-          <label className="text-sm font-semibold text-slate-700">อีเมลหรือชื่อผู้ใช้</label>
+          <label className="text-sm font-semibold text-slate-700">ชื่อผู้ใช้</label>
           <input
             type="text"
-            name="usernameOrEmail"
-            value={formData.usernameOrEmail}
+            name="username"
+            value={formData.username}
             onChange={handleChange}
-            placeholder="ระบุอีเมลหรือชื่อผู้ใช้ของคุณ"
+            placeholder="ระบุชื่อผู้ใช้"
             className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent text-slate-600"
             required
           />
