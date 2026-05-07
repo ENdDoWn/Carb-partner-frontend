@@ -163,6 +163,5 @@ export const getDailyCarbTotal = async () => {
 
 export const updateBloodSugar = async (data) => {
   const res = await api.post('/add_sugars', data)
-  console.log('Blood sugar update response:', res);
   return true
 }

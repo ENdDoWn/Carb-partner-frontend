@@ -46,6 +46,57 @@ const getBloodSugarMeta = (value) => {
   };
 };
 
+const formatThaiDate = (date) =>
+  date.toLocaleDateString('th-TH', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'Asia/Bangkok',
+  });
+
+const formatThaiDateTime = (date) =>
+  date.toLocaleTimeString('th-TH', {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Asia/Bangkok',
+  });
+
+const parseAssumedUtc = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  if (/[zZ]|[+-]\d{2}:\d{2}$/.test(value)) {
+    return new Date(value);
+  }
+
+  const match = value.match(
+    /^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2}):(\d{2})(\.\d+)?$/
+  );
+
+  if (!match) {
+    return new Date(value);
+  }
+
+  const [, year, month, day, hour, minute, second, fraction] = match;
+  const milliseconds = fraction ? Math.round(Number(fraction) * 1000) : 0;
+
+  return new Date(
+    Date.UTC(
+      Number(year),
+      Number(month) - 1,
+      Number(day),
+      Number(hour),
+      Number(minute),
+      Number(second),
+      milliseconds
+    )
+  );
+};
+
 const HomePage = () => {
   const navigate = useNavigate();
   const [showBloodSugarModal, setShowBloodSugarModal] = useState(false);
@@ -54,7 +105,7 @@ const HomePage = () => {
   const [showLowSugarAdvice, setShowLowSugarAdvice] = useState(false);
   const [showHighSugarAdvice, setShowHighSugarAdvice] = useState(false);
   const [userData, setUserData] = useState(null);
-  const todayLabel = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' });
+  const todayLabel = formatThaiDate(new Date());
   const bloodSugarMeta = getBloodSugarMeta(userData?.bloodSugar);
   const bloodSugarValue = Number(userData?.bloodSugar);
   const isLowBloodSugar = Number.isFinite(bloodSugarValue) && bloodSugarValue < 70;
@@ -77,7 +128,7 @@ const HomePage = () => {
         carb_expect: user?.carb_expect ?? user?.carbGoal ?? null,
         bloodSugar: latestSugar?.sugar_level ?? null,
         lastCheck: latestSugar?.created_at
-          ? new Date(latestSugar.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric' })
+          ? formatThaiDateTime(parseAssumedUtc(latestSugar.created_at))
           : null,
         date: todayLabel,
       });
@@ -133,6 +184,7 @@ const HomePage = () => {
         getDailyCarbTotal(),
       ]);
       const refreshedLatestSugar = refreshedBloodSugar?.length ? refreshedBloodSugar[0] : null;
+      console.log(refreshedLatestSugar);
       const refreshedDailyTotalCarb = Number(refreshedDailyCarb?.totalCarb);
       const refreshedUser = refreshedUserInfo?.user ?? refreshedUserInfo;
 
@@ -142,7 +194,7 @@ const HomePage = () => {
         carb_expect: refreshedUser?.carb_expect ?? refreshedUser?.carbGoal ?? null,
         bloodSugar: refreshedLatestSugar?.sugar_level ?? sugarValue,
         lastCheck: refreshedLatestSugar?.created_at
-          ? new Date(refreshedLatestSugar.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'long', year: 'numeric' })
+          ? formatThaiDateTime(parseAssumedUtc(refreshedLatestSugar.created_at))
           : null,
         date: todayLabel,
       });
