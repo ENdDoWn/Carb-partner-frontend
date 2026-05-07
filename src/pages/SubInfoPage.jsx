@@ -97,10 +97,15 @@ const SubInfoPage = () => {
   const navigate = useNavigate();
   const CURRENT_CE_YEAR = new Date().getFullYear();
   const CURRENT_BE_YEAR = CURRENT_CE_YEAR + 543;
+  const chronicConditionOptions = [
+    { key: 'diabetes', label: 'โรคเบาหวาน' },
+    { key: 'hypertension', label: 'โรคความดันโลหิตสูง' },
+    { key: 'hyperlipidemia', label: 'โรคไขมันในเลือดสูง' }
+  ];
 
-  // 1. State สำหรับควบคุม Step (1-6)
+  // 1. State สำหรับควบคุม Step (1-7)
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 6;
+  const totalSteps = 7;
   const [alertMessage, setAlertMessage] = useState('');
 
   // 2. State สำหรับเก็บข้อมูลทั้งหมด
@@ -109,7 +114,14 @@ const SubInfoPage = () => {
     active: '', // 'low' | 'medium' | 'high'
     weight: '',
     height: '',
-    birth_date: { day: '', month: '', year: '' }
+    birth_date: { day: '', month: '', year: '' },
+    chronic_conditions: {
+      diabetes: { selected: false, duration: '' },
+      hypertension: { selected: false, duration: '' },
+      hyperlipidemia: { selected: false, duration: '' },
+      other: { selected: false, diseases: [{ name: '', duration: '' }] },
+      none: false
+    }
   });
 
   useEffect(() => {
@@ -201,7 +213,147 @@ const SubInfoPage = () => {
       return 'กรุณาเลือกวันเกิดของคุณ';
     }
 
+    if (step === 5 || validateAll) {
+      const conditions = data.chronic_conditions;
+      if (!conditions.none) {
+        const selectedMainConditions = chronicConditionOptions
+          .map((option) => conditions[option.key])
+          .filter((condition) => condition.selected);
+
+        const hasMissingDuration = selectedMainConditions.some((condition) => {
+          const durationNumber = Number(condition.duration);
+          return !condition.duration || Number.isNaN(durationNumber) || durationNumber <= 0;
+        });
+
+        if (hasMissingDuration) {
+          return 'กรุณากรอกระยะเวลาของโรคประจำตัวให้ครบถ้วน';
+        }
+
+        if (conditions.other.selected) {
+          if (!conditions.other.diseases.length) {
+            return 'กรุณาระบุโรคอื่น ๆ อย่างน้อย 1 รายการ';
+          }
+
+          const hasInvalidOther = conditions.other.diseases.some((disease) => {
+            const diseaseDuration = Number(disease.duration);
+            return (
+              !disease.name.trim() ||
+              !disease.duration ||
+              Number.isNaN(diseaseDuration) ||
+              diseaseDuration <= 0
+            );
+          });
+
+          if (hasInvalidOther) {
+            return 'กรุณากรอกชื่อและระยะเวลาของโรคอื่น ๆ ให้ครบถ้วน';
+          }
+        }
+      }
+    }
+
     return '';
+  };
+
+  const toggleCondition = (key) => {
+    setFormData((prev) => ({
+      ...prev,
+      chronic_conditions: {
+        ...prev.chronic_conditions,
+        none: false,
+        [key]: {
+          ...prev.chronic_conditions[key],
+          selected: !prev.chronic_conditions[key].selected
+        }
+      }
+    }));
+  };
+
+  const updateConditionDuration = (key, value) => {
+    const cleanedValue = value.replace(/[^\d]/g, '');
+    setFormData((prev) => ({
+      ...prev,
+      chronic_conditions: {
+        ...prev.chronic_conditions,
+        [key]: {
+          ...prev.chronic_conditions[key],
+          duration: cleanedValue
+        }
+      }
+    }));
+  };
+
+  const toggleNoCondition = () => {
+    setFormData((prev) => {
+      const nextNone = !prev.chronic_conditions.none;
+      if (nextNone) {
+        return {
+          ...prev,
+          chronic_conditions: {
+            diabetes: { selected: false, duration: '' },
+            hypertension: { selected: false, duration: '' },
+            hyperlipidemia: { selected: false, duration: '' },
+            other: { selected: false, diseases: [{ name: '', duration: '' }] },
+            none: true
+          }
+        };
+      }
+
+      return {
+        ...prev,
+        chronic_conditions: {
+          ...prev.chronic_conditions,
+          none: false
+        }
+      };
+    });
+  };
+
+  const updateOtherCondition = (index, field, value) => {
+    const normalizedValue = field === 'duration' ? value.replace(/[^\d]/g, '') : value;
+    setFormData((prev) => ({
+      ...prev,
+      chronic_conditions: {
+        ...prev.chronic_conditions,
+        none: false,
+        other: {
+          ...prev.chronic_conditions.other,
+          diseases: prev.chronic_conditions.other.diseases.map((disease, rowIndex) => (
+            rowIndex === index ? { ...disease, [field]: normalizedValue } : disease
+          ))
+        }
+      }
+    }));
+  };
+
+  const addOtherDiseaseRow = () => {
+    setFormData((prev) => ({
+      ...prev,
+      chronic_conditions: {
+        ...prev.chronic_conditions,
+        none: false,
+        other: {
+          ...prev.chronic_conditions.other,
+          selected: true,
+          diseases: [...prev.chronic_conditions.other.diseases, { name: '', duration: '' }]
+        }
+      }
+    }));
+  };
+
+  const removeOtherDiseaseRow = (index) => {
+    setFormData((prev) => {
+      const diseases = prev.chronic_conditions.other.diseases.filter((_, rowIndex) => rowIndex !== index);
+      return {
+        ...prev,
+        chronic_conditions: {
+          ...prev.chronic_conditions,
+          other: {
+            ...prev.chronic_conditions.other,
+            diseases: diseases.length ? diseases : [{ name: '', duration: '' }]
+          }
+        }
+      };
+    });
   };
 
   const formatThaiDate = (birth_date) => {
@@ -219,7 +371,7 @@ const SubInfoPage = () => {
 
   return (
     <MobileLayout>
-    <div className="min-h-screen bg-white font-sans text-slate-800 flex flex-col relative overflow-hidden">
+    <div className="h-[100dvh] bg-white font-sans text-slate-800 flex flex-col overflow-hidden">
       {alertMessage && (
         <AlertModal
           message={alertMessage}
@@ -227,8 +379,8 @@ const SubInfoPage = () => {
         />
       )}
       
-      {/* --- Header & Progress Bar (Hidden on Step 6) --- */}
-      {currentStep !== 6 && (
+      {/* --- Header & Progress Bar (Hidden on Step 7) --- */}
+      {currentStep !== 7 && (
       <div className="pt-6 pb-4 px-4 bg-white z-10">
         {/* Top Nav */}
         <div className="flex items-center mb-4">
@@ -236,7 +388,7 @@ const SubInfoPage = () => {
             <ArrowLeft size={24} className="text-slate-700" />
           </button>
           <span className="ml-2 font-bold text-lg text-slate-800">
-            {currentStep === 4 || currentStep === 5 ? '' : 'บอกเราเกี่ยวกับตัวคุณหน่อย'}
+            {currentStep === 4 || currentStep === 6 ? '' : 'บอกเราเกี่ยวกับตัวคุณหน่อย'}
           </span>
         </div>
 
@@ -256,7 +408,7 @@ const SubInfoPage = () => {
       )}
 
       {/* --- Body Content (Switches based on Step) --- */}
-      <div className={`flex-1 overflow-y-auto px-6 py-4 pb-24 ${currentStep === 6 ? 'flex items-center justify-center' : ''}`}>
+      <div className={`flex-1 overflow-y-auto px-6 py-4 ${currentStep === 6 || currentStep === 7 ? 'flex items-center justify-center' : ''}`}>
         
         {/* STEP 1: GENDER */}
         {currentStep === 1 && (
@@ -397,8 +549,152 @@ const SubInfoPage = () => {
           </div>
         )}
 
-        {/* STEP 5: NOTIFICATIONS */}
+        {/* STEP 5: CHRONIC CONDITIONS */}
         {currentStep === 5 && (
+          <div className="animate-fade-in space-y-6">
+            <div className="mt-2">
+              <h2 className="text-2xl font-bold mb-2">โรคประจำตัว</h2>
+              <p className="text-slate-500">เลือกโรคที่คุณมี และระบุระยะเวลาเพื่อช่วยให้คำแนะนำแม่นยำขึ้น</p>
+            </div>
+
+            <div className="space-y-4">
+              {chronicConditionOptions.map((condition) => {
+                const conditionData = formData.chronic_conditions[condition.key];
+                const isSelected = conditionData.selected;
+
+                return (
+                  <div
+                    key={condition.key}
+                    className={`p-4 rounded-2xl border-2 transition-all duration-200 ${
+                      isSelected ? 'border-[#6CD2D9] bg-cyan-50' : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <span className="font-bold text-slate-900">{condition.label}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleCondition(condition.key)}
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                          isSelected ? 'border-[#6CD2D9]' : 'border-slate-300'
+                        }`}
+                        aria-label={`เลือก ${condition.label}`}
+                      >
+                        {isSelected && <div className="w-3 h-3 rounded-full bg-[#6CD2D9]" />}
+                      </button>
+                    </div>
+
+                    <div className="mt-3 flex items-center gap-2 text-slate-700">
+                      <span className="font-semibold">ระยะเวลา</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={conditionData.duration}
+                        onChange={(e) => updateConditionDuration(condition.key, e.target.value)}
+                        placeholder=""
+                        className="w-20 border-b-2 border-slate-300 bg-transparent px-1 text-center focus:outline-none focus:border-[#6CD2D9]"
+                      />
+                      <span className="font-semibold">ปี</span>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div
+                className={`p-4 rounded-2xl border-2 transition-all duration-200 ${
+                  formData.chronic_conditions.other.selected
+                    ? 'border-[#6CD2D9] bg-cyan-50'
+                    : 'border-slate-200 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-bold text-slate-900">โรคอื่น ๆ</span>
+                  <button
+                    type="button"
+                    onClick={() => toggleCondition('other')}
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                      formData.chronic_conditions.other.selected ? 'border-[#6CD2D9]' : 'border-slate-300'
+                    }`}
+                    aria-label="เลือกระบุโรคอื่น ๆ"
+                  >
+                    {formData.chronic_conditions.other.selected && (
+                      <div className="w-3 h-3 rounded-full bg-[#6CD2D9]" />
+                    )}
+                  </button>
+                </div>
+
+                <div className="mt-3 space-y-3">
+                  {formData.chronic_conditions.other.diseases.map((disease, index) => (
+                    <div key={index} className="rounded-xl border border-slate-200 p-3 space-y-3">
+                      <div className="flex items-center gap-2 text-slate-700">
+                        <span className="font-semibold">ชื่อโรค</span>
+                        <input
+                          type="text"
+                          value={disease.name}
+                          onChange={(e) => updateOtherCondition(index, 'name', e.target.value)}
+                          placeholder="ระบุโรค"
+                          className="flex-1 border-b-2 border-slate-300 bg-transparent px-1 pb-1 focus:outline-none focus:border-[#6CD2D9]"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 text-slate-700">
+                        <span className="font-semibold">ระยะเวลา</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={disease.duration}
+                          onChange={(e) => updateOtherCondition(index, 'duration', e.target.value)}
+                          placeholder=""
+                          className="w-20 border-b-2 border-slate-300 bg-transparent px-1 text-center focus:outline-none focus:border-[#6CD2D9]"
+                        />
+                        <span className="font-semibold">ปี</span>
+                        {formData.chronic_conditions.other.diseases.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeOtherDiseaseRow(index)}
+                            className="ml-auto text-sm text-rose-500 hover:text-rose-600"
+                          >
+                            ลบ
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addOtherDiseaseRow}
+                    className="w-full rounded-xl border-2 border-dashed border-slate-300 py-2 text-sm font-semibold text-slate-600 hover:border-[#6CD2D9] hover:text-[#6CD2D9] transition-colors"
+                  >
+                    + เพิ่มโรคอื่น ๆ
+                  </button>
+                </div>
+              </div>
+
+              <div
+                className={`p-4 rounded-2xl border-2 transition-all duration-200 ${
+                  formData.chronic_conditions.none ? 'border-[#6CD2D9] bg-cyan-50' : 'border-slate-200 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-bold text-slate-900">ไม่มีโรคประจำตัว</span>
+                  <button
+                    type="button"
+                    onClick={toggleNoCondition}
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                      formData.chronic_conditions.none ? 'border-[#6CD2D9]' : 'border-slate-300'
+                    }`}
+                    aria-label="เลือกไม่มีโรคประจำตัว"
+                  >
+                    {formData.chronic_conditions.none && <div className="w-3 h-3 rounded-full bg-[#6CD2D9]" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 6: NOTIFICATIONS */}
+        {currentStep === 6 && (
           <div className="animate-fade-in flex flex-col items-center justify-center text-center pt-12">
             {/* Icon Circle */}
             <div className="w-24 h-24 bg-cyan-50 rounded-full flex items-center justify-center mb-8">
@@ -415,8 +711,8 @@ const SubInfoPage = () => {
           </div>
         )}
 
-        {/* STEP 6: ALL SET - CELEBRATION */}
-        {currentStep === 6 && (
+        {/* STEP 7: ALL SET - CELEBRATION */}
+        {currentStep === 7 && (
           <div className="animate-fade-in flex flex-col items-center justify-center text-center pt-12 relative">
             {/* Confetti Animation */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -450,15 +746,15 @@ const SubInfoPage = () => {
       </div>
 
       {/* --- Footer (Fixed Bottom) --- */}
-      <div className={`absolute bottom-0 left-0 w-full p-4 bg-white ${currentStep !== 6 ? 'border-t border-slate-100' : ''}`}>
-        {currentStep === 6 ? (
+      <div className={`w-full p-4 bg-white ${currentStep !== 7 ? 'border-t border-slate-100' : ''}`}>
+        {currentStep === 7 ? (
           <button
             onClick={handleSubmit}
             className="w-full bg-[#6CD2D9] hover:bg-[#5bc0c7] text-white font-bold py-4 rounded-full shadow-lg transition duration-200 text-lg"
           >
             เริ่มใช้งาน Carb Partner
           </button>
-        ) : currentStep === 5 ? (
+        ) : currentStep === 6 ? (
           <div className="space-y-3">
             <button
               onClick={handleNext}
