@@ -231,7 +231,7 @@ const HomePage = () => {
                  <User size={24} />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-slate-900 leading-tight">สวัสดีตอนเช้า,</h1>
+                {/* <h1 className="text-lg font-bold text-slate-900 leading-tight">สวัสดีตอนเช้า,</h1> */}
                 <h2 className="text-lg font-bold text-slate-900 leading-tight">{userData?.full_name ?? 'ผู้ใช้งาน'}</h2>
                 <p className="text-xs text-slate-500 mt-1">{userData?.date ?? todayLabel}</p>
               </div>
