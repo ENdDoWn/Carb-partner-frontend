@@ -11,7 +11,7 @@ const ProfileGate = () => {
 
     const loadUserInfo = async () => {
       try {
-        const userInfo = await getUserInfo();
+        const userInfo = await getUserInfo({ forceRefresh: true });
         if (!isActive) return;
 
         const user = userInfo?.user ?? userInfo;

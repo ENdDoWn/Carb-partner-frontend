@@ -109,10 +109,13 @@ const writeCachedUserData = (data) => {
   window.localStorage.setItem(USER_DATA_CACHE_KEY, JSON.stringify(normalized));
 };
 
-export const getUserInfo = async () => {
-  const cached = readCachedUserData();
-  if (cached) {
-    return cached;
+export const getUserInfo = async (options = {}) => {
+  const { forceRefresh = false } = options;
+  if (!forceRefresh) {
+    const cached = readCachedUserData();
+    if (cached) {
+      return cached;
+    }
   }
 
   const res = await api.get('/users/me/');

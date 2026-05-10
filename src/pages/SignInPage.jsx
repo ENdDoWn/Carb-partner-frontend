@@ -31,6 +31,8 @@ const SignInPage = () => {
     setErrorMessage('');
 
     try {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('userData');
       const res = await api.post('/signin', { 
           username: formData.username,
           password: formData.password
