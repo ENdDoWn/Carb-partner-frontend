@@ -18,6 +18,9 @@ import FindFoodPage from './pages/FindFoodPage';
 import FoodDetailsPage from './pages/FoodDetailsPage';
 import CameraPage from './pages/CameraPage';
 import ScanResultPage from './pages/ScanResultPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
+import AdminProtectedRoute from './components/AdminProtectedRoute';
 
 
 function App() {
@@ -43,6 +46,8 @@ function App() {
         <Route path="/find-food" element={<ProtectedRoute><FindFoodPage /></ProtectedRoute>} />
         <Route path="/food-details" element={<ProtectedRoute><FoodDetailsPage /></ProtectedRoute>} />
         <Route path="/scan-result" element={<ProtectedRoute><ScanResultPage /></ProtectedRoute>} />
+        <Route path="/admin-login" element={<AdminLoginPage />} />
+        <Route path="/admin-dashboard" element={<AdminProtectedRoute><AdminDashboardPage /></AdminProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )
