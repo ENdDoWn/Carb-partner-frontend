@@ -237,30 +237,29 @@ const buildHourlySeries = (logs, fromDate, toDate, totalDays = 8) => {
 
   const points = Array.from(perDayLatest.values()).sort((a, b) => a.rawDate - b.rawDate);
   const rangeDates = buildDateRange(fromDate, toDate);
-  const baseDates = rangeDates.length
-    ? rangeDates
-    : points.map((point) => new Date(point.rawDate));
+  const startDate = rangeDates[0];
+  const endDate = rangeDates[rangeDates.length - 1];
+  const fallbackStart = points[0]?.rawDate ? new Date(points[0].rawDate) : null;
+  const fallbackEnd = points[points.length - 1]?.rawDate ? new Date(points[points.length - 1].rawDate) : null;
 
-  const filledDates = [];
-  for (let i = 0; i < totalDays; i += 1) {
-    const date = baseDates[i];
-    if (date instanceof Date) {
-      filledDates.push({
-        dayKey: formatBangkokDayKey(date),
-        dateLabel: formatBangkokDate(date),
-      });
-    } else {
-      filledDates.push({ dayKey: null, dateLabel: '-' });
-    }
-  }
+  const daySlots = [
+    {
+      key: formatBangkokDayKey(startDate ?? fallbackStart),
+      label: formatBangkokDate(startDate ?? fallbackStart) ?? '-'
+    },
+    {
+      key: formatBangkokDayKey(endDate ?? fallbackEnd),
+      label: formatBangkokDate(endDate ?? fallbackEnd) ?? '-'
+    },
+  ];
 
-  return filledDates.map((entry, index) => {
-    const point = points.find((item) => item.dayKey === entry.dayKey);
+  return daySlots.map((entry, index) => {
+    const point = points.find((item) => item.dayKey === entry.key);
     return {
       time: point?.time ?? null,
-      label: point?.label ?? entry.dateLabel,
+      label: point?.label ?? entry.label,
       value: point?.value ?? 0,
-      dayLabel: `day${index + 1}`,
+      dayLabel: index === 0 ? 'day1' : `day${totalDays}`,
     };
   });
 };
@@ -485,12 +484,13 @@ const AdminDashboardPage = () => {
         </div>
         <div className="mt-6 h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={sugarSeries} margin={{ left: 8, right: 24, top: 10, bottom: 0 }}>
+            <LineChart data={sugarSeries} margin={{ left: 24, right: 24, top: 10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="6 6" stroke="#E2E8F0" />
               <XAxis
                 dataKey="dayLabel"
                 tick={{ fill: '#64748B', fontSize: 11 }}
                 interval="preserveStartEnd"
+                padding={{ left: 170, right: 170 }}
               />
               <YAxis tick={{ fill: '#64748B', fontSize: 11 }} />
               <Tooltip
