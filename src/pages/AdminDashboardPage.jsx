@@ -274,8 +274,37 @@ const buildProfileRows = (profile) => {
     { label: 'Age', value: age ?? profile.age ?? profile.user_age ?? '-' },
     { label: 'Weight', value: profile.weight ? `${profile.weight} kg` : '-' },
     { label: 'Height', value: profile.height ? `${profile.height} cm` : '-' },
+    { label: 'BMI', value: profile.bmi ? Number(profile.bmi).toFixed(2) : '-' },
+    { label: 'Activity', value: profile.active ?? '-' },
+    { label: 'Sex', value: profile.sex ?? '-' },
     { label: 'Last Active', value: formatBangkokDateTime(profile.last_active ?? profile.last_login) ?? '-' },
   ];
+};
+
+const buildConditionRows = (conditions) => {
+  if (!conditions || typeof conditions !== 'object') return [];
+  const labels = {
+    diabetes: 'Diabetes',
+    hypertension: 'Hypertension',
+    hyperlipidemia: 'Hyperlipidemia',
+  };
+  const rows = [];
+  Object.entries(labels).forEach(([key, label]) => {
+    const entry = conditions[key];
+    if (!entry || !entry.selected) return;
+    const years = entry.duration != null ? `${entry.duration} years` : 'N/A';
+    rows.push({ label, value: years });
+  });
+  const other = conditions.other;
+  if (other?.selected && Array.isArray(other.diseases)) {
+    other.diseases.forEach((disease) => {
+      const name = disease?.name;
+      if (!name) return;
+      const years = disease?.duration != null ? `${disease.duration} years` : 'N/A';
+      rows.push({ label: name, value: years });
+    });
+  }
+  return rows;
 };
 
 const AdminDashboardPage = () => {
@@ -303,6 +332,10 @@ const AdminDashboardPage = () => {
   const dailyCarbSeries = useMemo(
     () => buildDailyCarbSeries(carbLogs, range.from, range.to, 8),
     [carbLogs, range.from, range.to]
+  );
+  const conditionRows = useMemo(
+    () => buildConditionRows(data?.profile?.chronic_conditions ?? data?.user_profile?.chronic_conditions),
+    [data]
   );
   const profileRows = useMemo(() => buildProfileRows(data?.profile ?? data?.user_profile), [data]);
 
@@ -437,6 +470,23 @@ const AdminDashboardPage = () => {
                 <div className="mt-1 text-sm font-semibold text-slate-800">{row.value}</div>
               </div>
             ))}
+          </div>
+          <div className="mt-6">
+            <div className="text-xs uppercase tracking-[0.3em] text-cyan-600">Conditions</div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {conditionRows.length ? (
+                conditionRows.map((row, index) => (
+                  <div key={`${row.label}-${index}`} className="rounded-2xl border border-slate-100 bg-white px-4 py-3">
+                    <div className="text-xs text-slate-500">{row.label}</div>
+                    <div className="mt-1 text-sm font-semibold text-slate-800">{row.value}</div>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-2xl border border-slate-100 bg-white px-4 py-3 text-sm text-slate-500">
+                  No chronic conditions reported
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
