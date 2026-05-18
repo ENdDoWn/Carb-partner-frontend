@@ -42,6 +42,7 @@ const foodItems = [
     "fat_value": "12g",
     "protein_value": "28g",
     "emoji": "🍜",
+    "img": "/images/บะหมี่น้ำหมูลูกชิ้น.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -56,6 +57,7 @@ const foodItems = [
     "fat_value": "24g",
     "protein_value": "22g",
     "emoji": "🍝",
+    "img": "/images/ผัดซีอิ๊วหมูใส่ไข่.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -70,6 +72,7 @@ const foodItems = [
     "fat_value": "12g",
     "protein_value": "28g",
     "emoji": "🍲",
+    "img": "/images/ราดหน้าเส้นใหญ่หมู.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -84,6 +87,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "25g",
     "emoji": "🍜",
+    "img": "/images/ก๋วยเตี๋ยวเส้นหมี่ไก่มะระ.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -98,6 +102,7 @@ const foodItems = [
     "fat_value": "4g",
     "protein_value": "22g",
     "emoji": "🍲",
+    "img": "/images/สุกี้ทะเล.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -112,6 +117,7 @@ const foodItems = [
     "fat_value": "32g",
     "protein_value": "18g",
     "emoji": "🍝",
+    "img": "/images/ผัดไทยใส่ไข่.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -126,6 +132,7 @@ const foodItems = [
     "fat_value": "18g",
     "protein_value": "26g",
     "emoji": "🍛",
+    "img": "/images/ข้าวหมกไก่.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -140,6 +147,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "12g",
     "emoji": "🍝",
+    "img": "/images/ขนมจีนน้ำยา.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -154,6 +162,7 @@ const foodItems = [
     "fat_value": "12g",
     "protein_value": "18g",
     "emoji": "🍛",
+    "img": "/images/ข้าวหมูแดง.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -168,6 +177,7 @@ const foodItems = [
     "fat_value": "16g",
     "protein_value": "18g",
     "emoji": "🍛",
+    "img": "/images/ข้าวมันไก่.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -182,6 +192,7 @@ const foodItems = [
     "fat_value": "22g",
     "protein_value": "24g",
     "emoji": "🍛",
+    "img": "/images/ข้าวผัดหมูใส่ไข่.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -196,6 +207,7 @@ const foodItems = [
     "fat_value": "25g",
     "protein_value": "26g",
     "emoji": "🍛",
+    "img": "/images/ข้าวกะเพราหมูสับใส่ไข่ดาว.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -210,6 +222,7 @@ const foodItems = [
     "fat_value": "26g",
     "protein_value": "18g",
     "emoji": "🍛",
+    "img": "/images/ข้าวขาหมู.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -224,6 +237,7 @@ const foodItems = [
     "fat_value": "18g",
     "protein_value": "12g",
     "emoji": "🍝",
+    "img": "/images/สปาเก็ตตี้คาโบนาร่า.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -238,6 +252,7 @@ const foodItems = [
     "fat_value": "20g",
     "protein_value": "28g",
     "emoji": "🍜",
+    "img": "/images/ก๋วยจั๊บ.jpg",
     "type": "single_dish",
     "bg": "bg-yellow-100"
   },
@@ -252,6 +267,7 @@ const foodItems = [
     "fat_value": "4g",
     "protein_value": "1g",
     "emoji": "🍌",
+    "img": "/images/กล้วยแขก.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -266,6 +282,7 @@ const foodItems = [
     "fat_value": "2g",
     "protein_value": "1g",
     "emoji": "🍌",
+    "img": "/images/ขนมกล้วย.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -280,6 +297,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "2g",
     "emoji": "🥞",
+    "img": "/images/ขนมครก.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -294,6 +312,7 @@ const foodItems = [
     "fat_value": "2g",
     "protein_value": "1g",
     "emoji": "🍮",
+    "img": "/images/ขนมชั้น.png",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -308,6 +327,7 @@ const foodItems = [
     "fat_value": "1.5g",
     "protein_value": "1g",
     "emoji": "🥮",
+    "img": "/images/ขนมตาล.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -322,6 +342,7 @@ const foodItems = [
     "fat_value": "10g",
     "protein_value": "4g",
     "emoji": "🥞",
+    "img": "/images/ขนมถังแตก.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -336,6 +357,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "2g",
     "emoji": "🥣",
+    "img": "/images/ขนมบัวลอยเผือก.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -350,6 +372,7 @@ const foodItems = [
     "fat_value": "10g",
     "protein_value": "3g",
     "emoji": "🥞",
+    "img": "/images/ขนมบ้าบิ่น.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -364,6 +387,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "2g",
     "emoji": "🌮",
+    "img": "/images/ขนมเบื้องครีมไส้เค็ม.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -378,6 +402,7 @@ const foodItems = [
     "fat_value": "4g",
     "protein_value": "3g",
     "emoji": "🥟",
+    "img": "/images/ขนมปากหม้อ.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -392,6 +417,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "1g",
     "emoji": "🍧",
+    "img": "/images/ขนมลอดช่องน้ำกะทิ.JPG",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -406,6 +432,7 @@ const foodItems = [
     "fat_value": "1g",
     "protein_value": "3g",
     "emoji": "🍡",
+    "img": "/images/ขนมลูกชุบ.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -420,6 +447,7 @@ const foodItems = [
     "fat_value": "4g",
     "protein_value": "3g",
     "emoji": "🥟",
+    "img": "/images/ขนมสาคูไส้หมู.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -434,6 +462,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "1g",
     "emoji": "🫔",
+    "img": "/images/ขนมใส่ไส้.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -448,6 +477,7 @@ const foodItems = [
     "fat_value": "7g",
     "protein_value": "3g",
     "emoji": "🫔",
+    "img": "/images/ข้าวต้มมัดไส้กล้วย.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -462,6 +492,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "3g",
     "emoji": "🫔",
+    "img": "/images/ข้าวเหนียวปิ้งไส้กล้วย.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -476,6 +507,7 @@ const foodItems = [
     "fat_value": "2g",
     "protein_value": "1g",
     "emoji": "🍚",
+    "img": "/images/ข้าวเหนียวมูล.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -490,6 +522,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍧",
+    "img": "/images/เฉาก๊วยในน้ำเชื่อม.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -504,6 +537,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "1g",
     "emoji": "🍧",
+    "img": "/images/ซาหริ่ม.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -518,6 +552,7 @@ const foodItems = [
     "fat_value": "1g",
     "protein_value": "4g",
     "emoji": "🥣",
+    "img": "/images/เต้าทึง.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -532,6 +567,7 @@ const foodItems = [
     "fat_value": "5g",
     "protein_value": "1g",
     "emoji": "🫔",
+    "img": "/images/ทองม้วน.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -546,6 +582,7 @@ const foodItems = [
     "fat_value": "10g",
     "protein_value": "2g",
     "emoji": "🍘",
+    "img": "/images/ทุเรียนทอดอบกรอบ.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -560,6 +597,7 @@ const foodItems = [
     "fat_value": "15g",
     "protein_value": "12g",
     "emoji": "🍙",
+    "img": "/images/บะจ่าง.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -574,6 +612,7 @@ const foodItems = [
     "fat_value": "5g",
     "protein_value": "2g",
     "emoji": "🥣",
+    "img": "/images/บัวลอยน้ำขิง.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -588,6 +627,7 @@ const foodItems = [
     "fat_value": "4g",
     "protein_value": "1g",
     "emoji": "🥖",
+    "img": "/images/ปาท่องโก๋.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -602,6 +642,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "2g",
     "emoji": "🍞",
+    "img": "/images/ขนมปังกรอบ (เนย+น้ำตาล).jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -616,6 +657,7 @@ const foodItems = [
     "fat_value": "5g",
     "protein_value": "3g",
     "emoji": "🥖",
+    "img": "/images/ขนมปังขาไก่รสต่างๆ.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -630,6 +672,7 @@ const foodItems = [
     "fat_value": "10g",
     "protein_value": "4g",
     "emoji": "🍞",
+    "img": "/images/ขนมปังเนยสด.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -644,6 +687,7 @@ const foodItems = [
     "fat_value": "10g",
     "protein_value": "3g",
     "emoji": "🧁",
+    "img": "/images/คัพเค้ก.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -658,6 +702,7 @@ const foodItems = [
     "fat_value": "5g",
     "protein_value": "1g",
     "emoji": "🍪",
+    "img": "/images/คุกกี้เนย.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -672,6 +717,7 @@ const foodItems = [
     "fat_value": "10g",
     "protein_value": "2g",
     "emoji": "🍪",
+    "img": "/images/คุกกี้ผสมช็อกโกแลตชิพ.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -686,6 +732,7 @@ const foodItems = [
     "fat_value": "9g",
     "protein_value": "3g",
     "emoji": "🍰",
+    "img": "/images/เค้กกล้วยหอม.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -700,6 +747,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "3g",
     "emoji": "🍰",
+    "img": "/images/เค้กชิฟฟอน.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -714,6 +762,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "2g",
     "emoji": "🍰",
+    "img": "/images/เค้กเนย.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -728,6 +777,7 @@ const foodItems = [
     "fat_value": "5g",
     "protein_value": "2g",
     "emoji": "🍰",
+    "img": "/images/เค้กผลไม้.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -742,6 +792,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "3g",
     "emoji": "🍰",
+    "img": "/images/เค้กไม่เคลือบน้ำตาล.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -756,6 +807,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍮",
+    "img": "/images/เจลาติน.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -770,6 +822,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "4g",
     "emoji": "🥟",
+    "img": "/images/ซาลาเปาไส้ครีม.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -784,6 +837,7 @@ const foodItems = [
     "fat_value": "5g",
     "protein_value": "7g",
     "emoji": "🥟",
+    "img": "/images/ซาลาเปาไส้หมูสับ.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -798,6 +852,7 @@ const foodItems = [
     "fat_value": "16g",
     "protein_value": "5g",
     "emoji": "🥐",
+    "img": "/images/เดนิส.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -812,6 +867,7 @@ const foodItems = [
     "fat_value": "9g",
     "protein_value": "1g",
     "emoji": "🍩",
+    "img": "/images/โดนัทพอนเดอริงเกรช.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -826,6 +882,7 @@ const foodItems = [
     "fat_value": "7g",
     "protein_value": "2g",
     "emoji": "🥮",
+    "img": "/images/บราวนี่.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -840,6 +897,7 @@ const foodItems = [
     "fat_value": "12g",
     "protein_value": "6g",
     "emoji": "🥧",
+    "img": "/images/พายไก่.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -854,6 +912,7 @@ const foodItems = [
     "fat_value": "10g",
     "protein_value": "2g",
     "emoji": "🥧",
+    "img": "/images/พายผลไม้.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -868,6 +927,7 @@ const foodItems = [
     "fat_value": "4g",
     "protein_value": "3g",
     "emoji": "🥞",
+    "img": "/images/แพนเค้ก.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -882,6 +942,7 @@ const foodItems = [
     "fat_value": "3g",
     "protein_value": "1g",
     "emoji": "🍩",
+    "img": "/images/มัชกิ้นโดนัท.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -896,6 +957,7 @@ const foodItems = [
     "fat_value": "7g",
     "protein_value": "3g",
     "emoji": "🧇",
+    "img": "/images/วาฟเฟิล.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -910,6 +972,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "3g",
     "emoji": "🥮",
+    "img": "/images/เอแคร์.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -924,6 +987,7 @@ const foodItems = [
     "fat_value": "7g",
     "protein_value": "2g",
     "emoji": "🍪",
+    "img": "/images/โอริโอสอดไส้ครีม.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -938,6 +1002,7 @@ const foodItems = [
     "fat_value": "7g",
     "protein_value": "2g",
     "emoji": "🍦",
+    "img": "/images/ไอศกรีม.jpg",
     "type": "dessert_bakery",
     "bg": "bg-pink-100"
   },
@@ -952,6 +1017,7 @@ const foodItems = [
     "fat_value": "2.5g",
     "protein_value": "4g",
     "emoji": "🥛",
+    "img": "/images/นมข้นจืดไขมัน.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -966,6 +1032,7 @@ const foodItems = [
     "fat_value": "2.4g",
     "protein_value": "8g",
     "emoji": "🥛",
+    "img": "/images/นมไขมัน.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -980,6 +1047,7 @@ const foodItems = [
     "fat_value": "4.8g",
     "protein_value": "8g",
     "emoji": "🥛",
+    "img": "/images/นมไขมัน.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -994,6 +1062,7 @@ const foodItems = [
     "fat_value": "4g",
     "protein_value": "8g",
     "emoji": "🥛",
+    "img": "/images/นมไขมันพร่องเนย.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1022,6 +1091,7 @@ const foodItems = [
     "fat_value": "7g",
     "protein_value": "6g",
     "emoji": "🧃",
+    "img": "/images/UHT.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1036,6 +1106,7 @@ const foodItems = [
     "fat_value": "6g",
     "protein_value": "5g",
     "emoji": "🧃",
+    "img": "/images/UHT.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1050,6 +1121,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "6g",
     "emoji": "🧃",
+    "img": "/images/UHT.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1064,6 +1136,7 @@ const foodItems = [
     "fat_value": "1.7g",
     "protein_value": "1.5g",
     "emoji": "🥫",
+    "img": "/images/นมข้นหวาน.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1078,6 +1151,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "7g",
     "emoji": "🥄",
+    "img": "/images/นมผง.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1092,6 +1166,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "10g",
     "emoji": "🥄",
+    "img": "/images/นมผง.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1106,6 +1181,7 @@ const foodItems = [
     "fat_value": "3g",
     "protein_value": "9g",
     "emoji": "🥄",
+    "img": "/images/นมผง.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1121,6 +1197,7 @@ const foodItems = [
     "protein_value": "8g",
     "emoji": "🥫",
     "type": "dairy",
+    "img": "/images/นมข้นจืดไขมัน.jpg",
     "bg": "bg-blue-100"
   },
   {
@@ -1134,6 +1211,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "7g",
     "emoji": "🥛",
+    "img": "/images/นมข้นจืดไขมัน.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1148,6 +1226,7 @@ const foodItems = [
     "fat_value": "8g",
     "protein_value": "8g",
     "emoji": "🥛",
+    "img": "/images/นมข้นจืดไขมัน.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1163,6 +1242,7 @@ const foodItems = [
     "protein_value": "8g",
     "emoji": "🥛",
     "type": "dairy",
+    "img": "/images/นมข้นจืดไขมัน.jpg",
     "bg": "bg-blue-100"
   },
   {
@@ -1176,6 +1256,7 @@ const foodItems = [
     "fat_value": "5g",
     "protein_value": "4g",
     "emoji": "🥫",
+    "img": "/images/นมข้นจืดไขมัน.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1190,6 +1271,7 @@ const foodItems = [
     "fat_value": "2g",
     "protein_value": "4g",
     "emoji": "🥫",
+    "img": "/images/โยเกิร์ต.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1204,6 +1286,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "4g",
     "emoji": "🥣",
+    "img": "/images/โยเกิร์ต.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1218,6 +1301,7 @@ const foodItems = [
     "fat_value": "1.5g",
     "protein_value": "4g",
     "emoji": "🥣",
+    "img": "/images/โยเกิร์ต.jpg",
     "type": "dairy",
     "bg": "bg-blue-100"
   },
@@ -1232,6 +1316,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🌿",
+    "img": "/images/หน่อไม้ฝรั่ง.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1246,6 +1331,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🫘",
+    "img": "/images/สะตอ.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1260,6 +1346,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🥦",
+    "img": "/images/ดอกกะหล่ำ.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1274,6 +1361,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🥕",
+    "img": "/images/แครอท.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1288,6 +1376,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🫛",
+    "img": "/images/ถั่วลันเตา.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1302,6 +1391,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🌱",
+    "img": "/images/ถั่วงอกหัวโต.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1316,6 +1406,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍆",
+    "img": "/images/มะเขือเปราะ.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1330,6 +1421,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🫘",
+    "img": "/images/ถั่วฝักยาว.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1344,6 +1436,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🥦",
+    "img": "/images/บร็อคโคลี.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1358,6 +1451,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🥬",
+    "img": "/images/กะหล่ำปลี.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1372,6 +1466,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🥗",
+    "img": "/images/มะละกอดิบ.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1386,6 +1481,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🌽",
+    "img": "/images/ข้าวโพดอ่อน.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1400,6 +1496,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🥬",
+    "img": "/images/ผักคะน้า.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1414,6 +1511,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🥬",
+    "img": "/images/แขนงคะน้า.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1428,6 +1526,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🌼",
+    "img": "/images/ดอกแค.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1442,6 +1541,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "2g",
     "emoji": "🥬",
+    "img": "/images/คะน้าฮ่องกง.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1456,6 +1556,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🥒",
+    "img": "/images/กระเจี๊ยบ.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1470,6 +1571,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🥒",
+    "img": "/images/มะระ.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1484,6 +1586,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🌺",
+    "img": "/images/หัวปลี.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1498,6 +1601,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍈",
+    "img": "/images/ขนุนอ่อน.jpg",
     "type": "vegetable",
     "bg": "bg-teal-100"
   },
@@ -1513,11 +1617,12 @@ const foodItems = [
     "protein_value": "1g",
     "emoji": "🍌",
     "type": "fruit",
+    "img": "/images/กล้วยน้ำว้า.jpg",
     "bg": "bg-green-100"
   },
   {
     "id": 107,
-    "name": "กล้วยหอม ขนาด 9 นิ้ว",
+    "name": "กล้วยหอม",
     "detail": "50 กรัม (1/2 ผลกลาง)",
     "carb": 1,
     "description": "กล้วยหอมทองกลิ่นหอมฟุ้ง เนื้อนุ่มเนียน เป็นของว่างเติมพลังงานชั้นดีสำหรับนักกีฬาหรือก่อนออกกำลังกาย",
@@ -1527,6 +1632,7 @@ const foodItems = [
     "protein_value": "1g",
     "emoji": "🍌",
     "type": "fruit",
+    "img": "/images/กล้วยหอม.jpg",
     "bg": "bg-green-100"
   },
   {
@@ -1541,6 +1647,7 @@ const foodItems = [
     "protein_value": "1g",
     "emoji": "🥝",
     "type": "fruit",
+    "img": "/images/กีวี.jpg",
     "bg": "bg-green-100"
   },
   {
@@ -1555,6 +1662,7 @@ const foodItems = [
     "protein_value": "1g",
     "emoji": "🍉",
     "type": "fruit",
+    "img": "/images/แก้วมังกร.jpg",
     "bg": "bg-green-100"
   },
   {
@@ -1568,6 +1676,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍈",
+    "img": "/images/ขนุนอ่อน.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1582,6 +1691,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍈",
+    "img": "/images/แคนตาลูป.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1596,6 +1706,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍒",
+    "img": "/images/เงาะ.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1610,6 +1721,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍎",
+    "img": "/images/ชมพู่เมืองเพชร.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1624,6 +1736,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍒",
+    "img": "/images/เชอรี่.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1638,6 +1751,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍈",
+    "img": "/images/แตงไทย.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1652,6 +1766,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍉",
+    "img": "/images/แตงโม.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1666,6 +1781,7 @@ const foodItems = [
     "fat_value": "2g",
     "protein_value": "1g",
     "emoji": "🍈",
+    "img": "/images/ทุเรียน.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1680,6 +1796,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍏",
+    "img": "/images/น้อยหน่า.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1694,6 +1811,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍐",
+    "img": "/images/ฝรั่ง.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1708,6 +1826,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🫐",
+    "img": "/images/พรุน.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1722,6 +1841,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍑",
+    "img": "/images/พีชสด.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1736,6 +1856,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🍏",
+    "img": "/images/พุทราไทย.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1750,6 +1871,7 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🫒",
+    "img": "/images/มะกอกฝรั่ง.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
   },
@@ -1778,1128 +1900,9 @@ const foodItems = [
     "fat_value": "0g",
     "protein_value": "1g",
     "emoji": "🫘",
+    "img": "/images/มะขามหวาน.jpg",
     "type": "fruit",
     "bg": "bg-green-100"
-  },
-  {
-    "id": 126,
-    "name": "มะปราง",
-    "detail": "120 กรัม (2 ผลกลาง)",
-    "carb": 1,
-    "description": "ผลไม้หน้าร้อนสีเหลืองทอง เนื้อนุ่ม รสหวานอมเปรี้ยว กลิ่นหอม ทานแล้วให้ความรู้สึกสดชื่นคลายร้อน",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥭",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 127,
-    "name": "มะเฟือง",
-    "detail": "170 กรัม (1 ผล)",
-    "carb": 1,
-    "description": "ผลไม้รูปดาวห้าแฉกสีเหลืองสวยงาม ฉ่ำน้ำ รสชาติเปรี้ยวอมหวาน หั่นเป็นชิ้นประดับจานหรือทานสดก็อร่อย",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍋",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 128,
-    "name": "มะไฟ",
-    "detail": "145 กรัม (15 ผล)",
-    "carb": 1,
-    "description": "ผลไม้เปลือกสีเหลืองอ่อน เนื้อในสีขาวขุ่นแบ่งเป็นซีก รสชาติเปรี้ยวอมหวานโดดเด่น ทานเพลินแก้ง่วง",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍒",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 129,
-    "name": "มะม่วงดิบ",
-    "detail": "135 กรัม (1/2 ผลกลาง)",
-    "carb": 1,
-    "description": "มะม่วงเนื้อแข็งกรอบ รสชาติเปรี้ยวจี๊ดถึงใจ เป็นของว่างยอดฮิตเมื่อจับคู่กับน้ำปลาหวานหรือพริกเกลือ",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥭",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 130,
-    "name": "มะม่วงสุก",
-    "detail": "80 กรัม (1/2 ผลเล็ก)",
-    "carb": 1,
-    "description": "เนื้อมะม่วงสีเหลืองทองสุกงอม หอมหวานชื่นใจ ทานเปล่าๆ ก็อร่อย หรือจะทานคู่กับข้าวเหนียวมูนก็เข้ากันสุดๆ",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥭",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 131,
-    "name": "มะยงชิด",
-    "detail": "100 กรัม (2 ผล)",
-    "carb": 1,
-    "description": "ผลไม้ลูกโตสีเหลืองส้ม เปลือกบางทานได้ เนื้อเยอะ รสหวานอมเปรี้ยวชื่นใจ นิยมนำไปลอยแก้วใส่น้ำแข็ง",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥭",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 132,
-    "name": "มะละกอสุก",
-    "detail": "115 กรัม (8 ชิ้นคำ)",
-    "carb": 1,
-    "description": "ผลไม้เนื้อนุ่มสีส้มแดง หวานอร่อย ทานง่าย ย่อยง่าย เป็นตัวช่วยชั้นยอดสำหรับผู้ที่มีปัญหาเรื่องระบบขับถ่าย",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥭",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 133,
-    "name": "มังคุด",
-    "detail": "75 กรัม (4 ผล)",
-    "carb": 1,
-    "description": "ราชินีผลไม้ไทย เนื้อสีขาวฟูนุ่มแบ่งเป็นกลีบ รสชาติหวานอมเปรี้ยวละมุนลิ้น ช่วยดับความร้อนในร่างกายได้ดี",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🫐",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 134,
-    "name": "ระกำ",
-    "detail": "110 กรัม (6 ผล)",
-    "carb": 1,
-    "description": "ผลไม้เปลือกมีหนามเล็กๆ เนื้อในสีเหลืองส้ม กลิ่นหอมแรง รสเปรี้ยวจัด นิยมนำไปปรุงรสในต้มยำหรือทำน้ำพริก",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍓",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 135,
-    "name": "ลองกอง",
-    "detail": "90 กรัม (6 - 8 ผล)",
-    "carb": 1,
-    "description": "ผลไม้เป็นพวง เปลือกบางลอกง่าย เนื้อใส รสชาติหวานชื่นใจ มียางน้อย ทานเพลินจนหยุดไม่อยู่",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍇",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 136,
-    "name": "ละมุด",
-    "detail": "70 กรัม (1 ผล)",
-    "carb": 1,
-    "description": "ผลไม้เปลือกสีน้ำตาล เนื้อละเอียดเนียนนุ่ม หวานจัดและมีกลิ่นหอมเฉพาะตัว ให้พลังงานอย่างรวดเร็ว",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥔",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 137,
-    "name": "ลางสาด",
-    "detail": "100 กรัม (6 - 8 ผล)",
-    "carb": 1,
-    "description": "คล้ายลองกองแต่เปลือกมียางและบางกว่า รสชาติเปรี้ยวอมหวาน เนื้อฉ่ำน้ำ เป็นผลไม้พื้นบ้านที่หาทานได้ตามฤดูกาล",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍇",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 138,
-    "name": "ลำไย",
-    "detail": "80 กรัม (5 - 6 ผล)",
-    "carb": 1,
-    "description": "เนื้อใส หวานกรอบ หอมอร่อย ทานสดก็ชื่นใจ หรือนำไปทำน้ำลำไยและของหวานอย่างข้าวเหนียวเปียกก็เลิศ",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍇",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 139,
-    "name": "ลิ้นจี่ (ผลเล็ก)",
-    "detail": "95 กรัม (6 ผล)",
-    "carb": 1,
-    "description": "ผลไม้เปลือกสีแดงสด เนื้อสีขาวขุ่นฉ่ำน้ำ รสชาติหวานอมเปรี้ยว มีกลิ่นหอมละมุนที่เป็นเอกลักษณ์ชวนหลงใหล",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍒",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 140,
-    "name": "ลิ้นจี่จักรพรรดิ",
-    "detail": "100 กรัม (3 ผล)",
-    "carb": 1,
-    "description": "ลิ้นจี่ลูกโตไซส์พรีเมียม เนื้อหนา เมล็ดเล็ก หวานฉ่ำเต็มคำ กัดแล้วได้ความสดชื่นแบบเต็มพิกัด",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍒",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 141,
-    "name": "ลูกเกด",
-    "detail": "20 กรัม (2 ช้อนโต๊ะ)",
-    "carb": 1,
-    "description": "องุ่นตากแห้งเม็ดเล็ก รสชาติหวานเข้มข้น นำไปใส่ในเบเกอรี่ สลัด หรือทานเล่นเป็นของว่างให้พลังงานสูง",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍇",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 142,
-    "name": "ลูกตาลสด",
-    "detail": "155 กรัม (3 ผล)",
-    "carb": 1,
-    "description": "เนื้อลูกตาลสีขาวใส นุ่มลื่นกรุบกรอบอ่อนๆ หวานหอมชื่นใจ นิยมนำไปทำลูกตาลลอยแก้วใส่น้ำแข็งป่น",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥥",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 143,
-    "name": "ลูกพลับ",
-    "detail": "120 กรัม (1/2 ผลใหญ่)",
-    "carb": 1,
-    "description": "ผลไม้สีส้มสวยสด เนื้อกรอบหวาน (พลับกรอบ) หรือเนื้อนิ่มละมุน (พลับนิ่ม) อุดมด้วยใยอาหารและวิตามินเอ",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍑",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 144,
-    "name": "ลูกหว้า",
-    "detail": "110 กรัม (1 ถ้วยตวง)",
-    "carb": 1,
-    "description": "ผลไม้ลูกรีสีม่วงเข้มจนดำ รสชาติฝาดอมเปรี้ยวหวาน ทานแล้วลิ้นเปลี่ยนเป็นสีม่วง เสน่ห์แห่งผลไม้พื้นบ้านไทย",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍇",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 145,
-    "name": "สตรอเบอรี",
-    "detail": "175 กรัม (8 - 10 ผลเล็ก)",
-    "carb": 1,
-    "description": "ผลไม้สีแดงสดใสทรงหัวใจ รสเปรี้ยวอมหวาน หอมกลิ่นเบอร์รี่ อุดมด้วยวิตามินซี เหมาะทำสมูทตี้หรือแต่งหน้าเค้ก",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍓",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 146,
-    "name": "ส้มเขียวหวาน",
-    "detail": "150 กรัม (2 ผลกลาง)",
-    "carb": 1,
-    "description": "ส้มเปลือกสีเขียวอมส้ม แกะง่าย รสชาติหวานเปรี้ยวกลมกล่อม ทานสดหรือคั้นเป็นน้ำส้มก็ได้ประโยชน์ครบถ้วน",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍊",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 147,
-    "name": "ส้มเช้ง",
-    "detail": "120 กรัม (1 ผลใหญ่)",
-    "carb": 1,
-    "description": "ส้มเปลือกหนาสีเขียวอมเหลือง เนื้อในสีทอง รสชาติหวานหอมชื่นใจ นิยมใช้ในพิธีมงคลและนำไปไหว้เจ้า",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍊",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 148,
-    "name": "ส้มสายน้ำผึ้ง",
-    "detail": "125 กรัม (2 ผลเล็ก)",
-    "carb": 1,
-    "description": "ส้มสายพันธุ์ยอดฮิต เปลือกสีส้มสวยงาม รสหวานนำเปรี้ยวตาม เนื้อฉ่ำน้ำ ซื้อเป็นของฝากก็ถูกใจผู้รับ",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍊",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 149,
-    "name": "ส้มโอทองดี",
-    "detail": "120 กรัม (2 - 3 กลีบกลาง)",
-    "carb": 1,
-    "description": "ส้มโอเนื้อสีชมพูเรื่อๆ กลีบใหญ่ รสชาติหวานฉ่ำ ไม่ขม เปลือกบาง ทานสดหรือนำไปทำยำส้มโอก็อร่อยเด็ด",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍊",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 150,
-    "name": "สละ",
-    "detail": "110 กรัม (6 ผล)",
-    "carb": 1,
-    "description": "คล้ายระกำแต่ลูกยาวกว่า เนื้อแน่นสีเหลืองนวล รสชาติหวานหอมชื่นใจ ไม่เปรี้ยวจัด นิยมทานสดหรือทำสละลอยแก้ว",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍓",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 151,
-    "name": "สับปะรดสด",
-    "detail": "125 กรัม (8 ชิ้นคำ)",
-    "carb": 1,
-    "description": "ผลไม้สีเหลืองทอง รสเปรี้ยวอมหวาน ฉ่ำน้ำ มีเอนไซม์ช่วยย่อยอาหาร ทานหลังมื้ออาหารช่วยให้สบายท้อง",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍍",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 152,
-    "name": "สาลี่หอม",
-    "detail": "110 กรัม (1 ผล)",
-    "carb": 1,
-    "description": "ผลไม้เนื้อกรอบสีขาว รสหวานอ่อนๆ ฉ่ำน้ำ กลิ่นหอมละมุน ทานแล้วเย็นชื่นใจ ช่วยดับกระหายแก้ร้อนใน",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍐",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 153,
-    "name": "องุ่นแดง (นอก)",
-    "detail": "100 กรัม (17 ผลเล็ก หรือ 6 ผลใหญ่)",
-    "carb": 1,
-    "description": "องุ่นผลโตสีแดงเข้ม เปลือกบาง เนื้อกรอบ หวานฉ่ำ ไม่มีเมล็ดให้กวนใจ เคี้ยวเพลินได้คุณค่าจากสารแอนโทไซยานิน",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍇",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 154,
-    "name": "อินทผลัมแห้ง",
-    "detail": "20 กรัม (3 ผล)",
-    "carb": 1,
-    "description": "ผลไม้อบแห้งสีน้ำตาล หวานจัดแบบธรรมชาติ ให้พลังงานสูง ช่วยคลายความอ่อนล้าได้ดี นิยมทานช่วงถือศีลอด",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🫘",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 155,
-    "name": "แอปเปิ้ล",
-    "detail": "100 กรัม (1 ผลเล็ก)",
-    "carb": 1,
-    "description": "ผลไม้กรอบอร่อยยอดฮิต เปลือกสีแดงหรือเขียว หวานอมเปรี้ยว อุดมด้วยใยอาหารสูง ช่วยให้อิ่มท้องนาน",
-    "calories_value": "60 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍎",
-    "type": "fruit",
-    "bg": "bg-green-100"
-  },
-  {
-    "id": 156,
-    "name": "ข้าวซ้อมมือ (สวย) / ข้าวขาว (สวย)",
-    "detail": "55 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "ข้าวสวยหุงสุกร้อนๆ แหล่งคาร์โบไฮเดรตหลักที่ขาดไม่ได้ในมื้ออาหาร ให้พลังงานเพื่อเริ่มวันใหม่ได้อย่างเต็มที่",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "2g",
-    "emoji": "🍚",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 157,
-    "name": "ข้าวเหนียว",
-    "detail": "35 กรัม (1/2 ทัพพี)",
-    "carb": 1,
-    "description": "ข้าวเหนียวนึ่งสุกเมล็ดเรียงตัวสวย เหนียวนุ่มหนึบหนับ ทานคู่กับส้มตำไก่ย่าง หรือของหวานอย่างข้าวเหนียวมะม่วง",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "2g",
-    "emoji": "🍚",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 158,
-    "name": "ข้าวต้ม",
-    "detail": "150 - 170 กรัม (2 ทัพพี)",
-    "carb": 1,
-    "description": "ข้าวต้มน้ำเยอะซดคล่องคอ เมนูเบาสบายท้อง เหมาะสำหรับมื้อเช้าหรือเวลาที่ต้องการอาหารย่อยง่าย",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "2g",
-    "emoji": "🍚",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 159,
-    "name": "โจ๊ก",
-    "detail": "135 กรัม (2 ทัพพี)",
-    "carb": 1,
-    "description": "ปลายข้าวต้มจนเนื้อเนียนละเอียดเป็นเนื้อครีม อร่อยกลมกล่อม ทานง่ายและอบอุ่นร่างกายได้ดีในมื้อเช้า",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "2g",
-    "emoji": "🥣",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 160,
-    "name": "ควินัวสุก",
-    "detail": "70 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "ซูเปอร์ฟู้ดเม็ดจิ๋ว อุดมด้วยโปรตีน ไฟเบอร์ และกรดอะมิโนที่จำเป็น เคี้ยวกรุบๆ สู้ฟัน นิยมนำไปโรยสลัดหรือผสมข้าว",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1g",
-    "protein_value": "3g",
-    "emoji": "🥣",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 161,
-    "name": "ข้าวโอ๊ต",
-    "detail": "110 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "ข้าวโอ๊ตต้มสุกเนื้อเนียนนุ่ม อุดมไปด้วยไฟเบอร์ชนิดละลายน้ำ ช่วยให้อิ่มท้องนานและดีต่อระบบหัวใจ",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1.5g",
-    "protein_value": "3g",
-    "emoji": "🥣",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 162,
-    "name": "ลูกเดือยสุก",
-    "detail": "65 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "ธัญพืชเม็ดกลมสีขาว เคี้ยวหนึบหนับ นิยมใส่ในเต้าทึงหรือน้ำเต้าหู้ ให้คุณค่าทางอาหารสูงและย่อยง่าย",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2g",
-    "emoji": "🥣",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 163,
-    "name": "มุสลี",
-    "detail": "4 ช้อนโต๊ะ",
-    "carb": 1,
-    "description": "ส่วนผสมของข้าวโอ๊ตดิบ ถั่ว และผลไม้อบแห้ง แหล่งคาร์โบไฮเดรตเชิงซ้อนชั้นเยี่ยม ทานคู่นมหรือโยเกิร์ต",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1.5g",
-    "protein_value": "2g",
-    "emoji": "🥣",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 164,
-    "name": "เส้นหมี่สุก / เส้นก๋วยเตี๋ยวสุก",
-    "detail": "70 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เส้นก๋วยเตี๋ยวสีขาวเส้นเล็กเรียว ลวกสุกพร้อมทาน เข้ากันได้ดีกับน้ำซุปร้อนๆ หรือนำไปผัดซีอิ๊วก็อร่อย",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1.5g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 165,
-    "name": "วุ้นเส้นลวก",
-    "detail": "80 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เส้นใสทำจากถั่วเขียว เหนียวนุ่มลื่นคอ แคลอรีต่ำ นิยมนำไปทำยำวุ้นเส้นรสแซ่บหรืออบหม้อดิน",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "0g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 166,
-    "name": "เส้นใหญ่ (ลวก)",
-    "detail": "60 - 70 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "แผ่นแป้งข้าวเจ้าตัดเป็นเส้นกว้าง นุ่มลื่นเคี้ยวเพลิน ขาดไม่ได้ในเมนูราดหน้าและก๋วยเตี๋ยวคั่วไก่",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "1.5g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 167,
-    "name": "เส้นขนมจีน",
-    "detail": "75 กรัม (1 จับ)",
-    "carb": 1,
-    "description": "เส้นก๋วยเตี๋ยวแป้งหมักสีขาว จับเป็นก้อนสวยงาม ทานเข้าคู่กับน้ำยาป่า น้ำเงี้ยว หรือส้มตำได้อย่างลงตัว",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 168,
-    "name": "เส้นก๋วยจั๊บสุก",
-    "detail": "90 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "แป้งแผ่นสามเหลี่ยมม้วนตัวเป็นหลอดเมื่อต้มสุก ซับน้ำซุปพะโล้หรือน้ำใสได้ดีเยี่ยม เหนียวนุ่มเต็มคำ",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 169,
-    "name": "เส้นก๋วยจั๊บญวนสุก",
-    "detail": "65 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เส้นแป้งเหนียวหนึบสไตล์ญวน เมื่อต้มจะทำให้น้ำซุปมีความข้นเหนียว ทานร้อนๆ โรยหอมเจียวหอมกรุ่น",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 170,
-    "name": "บะหมี่ (1/2 ก้อน) หรือ บะหมี่กึ่งสำเร็จรูป*",
-    "detail": "40 - 50 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เส้นบะหมี่สีเหลืองหยัก ไม่ว่าจะต้มหรือลวกก็ให้รสสัมผัสที่คุ้นเคย แหล่งคาร์บจานด่วนที่ทำง่ายและรวดเร็ว",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "2g",
-    "protein_value": "2g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 171,
-    "name": "บะหมี่ญี่ปุ่น (อุด้ง)",
-    "detail": "75 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เส้นอวบอ้วนสีขาวสไตล์ญี่ปุ่น เนื้อสัมผัสนุ่มเด้งสู้ฟัน เหมาะสำหรับซุปใสหรือผัดซอสยากิอุด้ง",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "2g",
-    "emoji": "🍜",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 172,
-    "name": "พาสต้า",
-    "detail": "70 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เส้นสปาเก็ตตี้ต้มสุกแบบอัลเดนเต้ แป้งสาลีคุณภาพดีที่ให้พลังงานคงที่ พร้อมคลุกเคล้าซอสหลากสไตล์",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2.5g",
-    "emoji": "🍝",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 173,
-    "name": "มักกะโรนี (สุก)",
-    "detail": "70 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "พาสต้าเส้นสั้นรูปหลอดโค้ง ทานง่าย พอดีคำ เมนูโปรดของเด็กๆ มักนำไปผัดซอสมะเขือเทศหรือต้มซุป",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2.5g",
-    "emoji": "🍝",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 174,
-    "name": "เผือก (ต้ม) / มัน (ต้ม)",
-    "detail": "65 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "พืชหัวต้มสุกเนื้อซุย หอมกลิ่นเฉพาะตัว ให้คาร์โบไฮเดรตเชิงซ้อนและใยอาหารสูง อยู่ท้องได้นาน",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🍠",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 175,
-    "name": "สาคูเม็ดเล็ก (สุก)",
-    "detail": "100 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เม็ดแป้งกลมจิ๋วใสๆ เหนียวนุ่มลื่นคอ ตัวเอกในขนมหวานไทยอย่างสาคูเปียกข้าวโพดหรือกะทิสด",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "0g",
-    "emoji": "🧋",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 176,
-    "name": "สาคูเม็ดใหญ่ (สุก)",
-    "detail": "75 กรัม (5 ช้อนโต๊ะ)",
-    "carb": 1,
-    "description": "ไข่มุกเม็ดโตเคี้ยวหนึบหนับ ของท็อปปิ้งสุดฮิตในชานมไข่มุกที่เพิ่มอรรถรสในการดื่มได้อย่างดีเยี่ยม",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "0g",
-    "emoji": "🧋",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 177,
-    "name": "ฟักทอง (สุก)",
-    "detail": "70 - 100 กรัม (1 ทัพพี)",
-    "carb": 1,
-    "description": "เนื้อฟักทองสีเหลืองทอง นึ่งหรือต้มจนนุ่ม หวานมันเป็นธรรมชาติ อุดมด้วยเบต้าแคโรทีนบำรุงสายตา",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🎃",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 178,
-    "name": "มันฝรั่งทั้งเปลือก (ปิ้ง / เผา)",
-    "detail": "90 กรัม (1/4 หัวใหญ่)",
-    "carb": 1,
-    "description": "มันฝรั่งเผาร้อนๆ ผิวตึงเนื้อในนุ่มฟู การทานทั้งเปลือกช่วยเพิ่มไฟเบอร์และรักษาวิตามินไว้ได้อย่างดี",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "2g",
-    "emoji": "🥔",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 179,
-    "name": "มันฝรั่งบด",
-    "detail": "100 กรัม (1/2 ถ้วยตวง)",
-    "carb": 1,
-    "description": "มันฝรั่งต้มบดละเอียดจนเป็นเนื้อครีมเนียนนุ่ม มักผสมเนยและนมเล็กน้อย เป็นเครื่องเคียงสเต็กที่อร่อยลงตัว",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "2g",
-    "protein_value": "2g",
-    "emoji": "🥔",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 180,
-    "name": "มันแกว",
-    "detail": "195 กรัม (4 หัวเล็ก)",
-    "carb": 1,
-    "description": "พืชหัวสีขาวกรอบ ฉ่ำน้ำ รสจืดอมหวาน ทานสดเป็นผลไม้คลายร้อนหรือใส่ในไส้ปอเปี๊ยะก็เพิ่มความกรุบกรอบ",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🌰",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 181,
-    "name": "แห้ว (สุก)",
-    "detail": "100 กรัม (1/2 ถ้วยตวง)",
-    "carb": 1,
-    "description": "หัวแห้วต้มสุก กรอบอร่อยไม่ว่าจะร้อนหรือเย็น นิยมนำไปทำทับทิมกรอบ ของหวานเลื่องชื่อของไทย",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🌰",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 182,
-    "name": "ข้าวโพด (สุก)",
-    "detail": "65 กรัม (1/2 ฝักกลาง)",
-    "carb": 1,
-    "description": "เมล็ดข้าวโพดสีเหลืองต้มสุก หวานกรอบเคี้ยวเพลิน อุดมไปด้วยลูทีนและไฟเบอร์ เป็นของว่างเพื่อสุขภาพ",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2g",
-    "emoji": "🌽",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 183,
-    "name": "แครกเกอร์แผ่นกลม",
-    "detail": "25 กรัม (6 แผ่น)",
-    "carb": 1,
-    "description": "แผ่นแป้งอบกรอบรสเค็มอ่อนๆ ทานรองท้องคู่กับกาแฟ หรือปาดหน้าด้วยชีสและทูน่าก็เป็นของว่างชั้นดี",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "2.5g",
-    "protein_value": "1.5g",
-    "emoji": "🍘",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 184,
-    "name": "บิสกิต Ø 2 1/2 นิ้ว",
-    "detail": "1 ชิ้น",
-    "carb": 1,
-    "description": "ขนมปังเนื้อร่วนกรอบนอกนุ่มใน หอมกลิ่นเนยชัดเจน ทานอุ่นๆ คู่กับแยมผลไม้หรือซุปครีมข้น",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "3g",
-    "protein_value": "1g",
-    "emoji": "🍪",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 185,
-    "name": "ขนมปังกรอบรูปสัตว์",
-    "detail": "25 กรัม (8 ชิ้น)",
-    "carb": 1,
-    "description": "บิสกิตอบกรอบรูปสัตว์ต่างๆ ชิ้นเล็กน่ารัก รสหวานเบาๆ ขนมสุดโปรดในวัยเด็กที่หยิบเคี้ยวเพลิน",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "2g",
-    "protein_value": "1.5g",
-    "emoji": "🍪",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 186,
-    "name": "แป้งสาลี / แป้งทำขนม / แป้งมันสำปะหลัง",
-    "detail": "3 ช้อนโต๊ะ",
-    "carb": 1,
-    "description": "วัตถุดิบพื้นฐานอเนกประสงค์สำหรับประกอบอาหาร ใช้ทำเบเกอรี่ ชุบทอด หรือละลายน้ำทำให้น้ำซุปข้นหนืด",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "1g",
-    "emoji": "🥡",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 187,
-    "name": "เมล็ดเกาลัดจีนคั่ว",
-    "detail": "30 กรัม (6 เม็ด)",
-    "carb": 1,
-    "description": "เกาลัดคั่วทรายร้อนๆ แกะเปลือกออกพบเนื้อสีเหลืองทอง หวานมันเนียนนุ่ม กลิ่นหอมฟุ้งเป็นเอกลักษณ์",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "1.5g",
-    "emoji": "🌰",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 188,
-    "name": "ซีเรียลไม่เคลือบน้ำตาล",
-    "detail": "3/4 ถ้วยตวง",
-    "carb": 1,
-    "description": "อาหารเช้าธัญพืชอบกรอบ รสจืด กรุบกรอบเมื่อเติมนม ให้พลังงานแบบรวดเร็วและเหมาะกับคนคุมน้ำตาล",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2g",
-    "emoji": "🥣",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 189,
-    "name": "ซีเรียลเคลือบน้ำตาล",
-    "detail": "1/2 ถ้วยตวง",
-    "carb": 1,
-    "description": "ซีเรียลอาหารเช้ารสหวาน หอมอร่อย ทานง่าย มักมีรูปทรงและสีสันน่ารัก เป็นเมนูเร่งด่วนที่เด็กๆ ชื่นชอบ",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "1g",
-    "emoji": "🥣",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 190,
-    "name": "ข้าวโพดคั่วไม่ใส่เนย",
-    "detail": "20 กรัม (3 ถ้วยตวง)",
-    "carb": 1,
-    "description": "ป๊อปคอร์นคั่วลมร้อนไร้น้ำมัน เมล็ดฟูเบา แคลอรีต่ำ ไฟเบอร์สูง ขนมขบเคี้ยวดูหนังที่ดีต่อสุขภาพ",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2g",
-    "emoji": "🍿",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 191,
-    "name": "ขนมปังโฮลวีต / ขนมปังสีขาว",
-    "detail": "25 กรัม (1 แผ่น)",
-    "carb": 1,
-    "description": "แผ่นขนมปังแผ่นสไลซ์ นุ่มฟู ใช้ทำแซนด์วิชง่ายๆ โฮลวีตจะได้ใยอาหารเพิ่ม หรือขนมปังขาวที่นุ่มละมุนลิ้น",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1g",
-    "protein_value": "3g",
-    "emoji": "🍞",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 192,
-    "name": "ขนมปังแฮมเบอร์เกอร์ / ฮอทด็อก",
-    "detail": "28 กรัม (1/2 คู่)",
-    "carb": 1,
-    "description": "ขนมปังก้อนนุ่มผ่าซีก โรยงาขาวด้านบน พร้อมประกบเนื้อสัตว์และผักสด สร้างสรรค์เมนูฟาสต์ฟู้ดทำเองที่บ้าน",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1.5g",
-    "protein_value": "2.5g",
-    "emoji": "🍔",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 193,
-    "name": "ขนมปังก้อนกลม (ดินเนอร์โรล)",
-    "detail": "28 กรัม (1 ก้อน)",
-    "carb": 1,
-    "description": "ขนมปังก้อนเล็กเนื้อนุ่มฟู มักเสิร์ฟอุ่นๆ ก่อนมื้ออาหารหลัก ทานคู่กับเนยสดช่วยเรียกน้ำย่อยได้ดี",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1.5g",
-    "protein_value": "2g",
-    "emoji": "🥐",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 194,
-    "name": "ขนมปังเบเกิ้ล",
-    "detail": "120 กรัม (1/4 ชิ้น)",
-    "carb": 1,
-    "description": "ขนมปังทรงโดนัทเนื้อแน่นหนึบ ผ่านการต้มก่อนอบ ผ่าครึ่งทาครีมชีสหรือแซลมอนรมควันอร่อยระดับคาเฟ่",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "3g",
-    "emoji": "🥯",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 195,
-    "name": "อิงลิชมัฟฟิน",
-    "detail": "1/2 ชิ้น",
-    "carb": 1,
-    "description": "ขนมปังแผ่นกลมแบน ผิวนอกเกรียมเล็กน้อย นิยมนำไปปิ้งให้กรอบ ทานเป็นอาหารเช้าสไตล์อังกฤษแบบคลาสสิก",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "3g",
-    "emoji": "🧁",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 196,
-    "name": "หมั่นโถว (ขนาดกลาง)",
-    "detail": "2/3 ลูก",
-    "carb": 1,
-    "description": "ซาลาเปาไร้ไส้สไตล์จีน แป้งนึ่งสีขาวนุ่มฟู รสหวานจางๆ นำไปทานคู่กับขาหมูพะโล้เข้ากันเป็นที่สุด",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2.5g",
-    "emoji": "🥟",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 197,
-    "name": "ขนมปังพีต้า Ø 6 นิ้ว",
-    "detail": "1/2 แผ่น",
-    "carb": 1,
-    "description": "แผ่นแป้งแบนสไตล์ตะวันออกกลาง ด้านในกลวงคล้ายกระเป๋า ใช้ยัดไส้เนื้อสัตว์และผักสลัดทำเคบับทานง่าย",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2.5g",
-    "emoji": "🫓",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 198,
-    "name": "ขนมปังนาน (Naan) ขนาด 8×2 นิ้ว",
-    "detail": "1/4 แผ่น",
-    "carb": 1,
-    "description": "แผ่นแป้งอินเดียอบในเตาดินเผา ผิวมีรอยไหม้พองเบาๆ หอมเนยกระเทียม ทานคู่กับแกงกะหรี่เข้มข้น",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1.5g",
-    "protein_value": "2g",
-    "emoji": "🫓",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 199,
-    "name": "แป้งทาโก้ Ø 5 นิ้ว",
-    "detail": "2 แผ่น",
-    "carb": 1,
-    "description": "แผ่นแป้งข้าวโพดทอดกรอบรูปครึ่งวงกลม ใช้บรรจุไส้เนื้อสับ ซัลซ่า และชีส อาหารเม็กซิกันเคี้ยวสนุก",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "3g",
-    "protein_value": "1.5g",
-    "emoji": "🌮",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 200,
-    "name": "แป้งตอร์ตีญ่า Ø 6 นิ้ว",
-    "detail": "1 แผ่น",
-    "carb": 1,
-    "description": "แผ่นแป้งสาลีแบนนุ่มสไตล์เม็กซิกัน ม้วนห่อเป็นเบอร์ริโต หรือทำเคซาดิย่าชีสเยิ้มๆ ก็ทำง่ายอร่อยไว",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1.5g",
-    "protein_value": "2g",
-    "emoji": "🫓",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 201,
-    "name": "แป้งข้าวโพดตอร์ตีญ่า Ø 6 นิ้ว",
-    "detail": "1 แผ่น",
-    "carb": 1,
-    "description": "แผ่นแป้งทำจากข้าวโพดบด หอมกลิ่นข้าวโพดเด่นชัด เป็นออริจินัลตอร์ตีญ่าที่ปราศจากกลูเตน",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1g",
-    "protein_value": "1.5g",
-    "emoji": "🫓",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 202,
-    "name": "แป้งโรตีย่าง (จาปาตี) Ø 6 นิ้ว",
-    "detail": "1 แผ่นเล็ก",
-    "carb": 1,
-    "description": "แผ่นแป้งโฮลวีตย่างกระทะ ไม่ใส่น้ำมัน เนื้อเหนียวนุ่ม แหล่งคาร์บสุขภาพของชาวเอเชียใต้",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "1g",
-    "protein_value": "2.5g",
-    "emoji": "🫓",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 203,
-    "name": "แป้งเปาะเปี๊ยะ",
-    "detail": "1 แผ่น",
-    "carb": 1,
-    "description": "แผ่นแป้งสาลีบางเฉียบ ห่อไส้ผักหรือหมูสับแล้วนำไปทอดจนเหลืองกรอบ เป็นเมนูเรียกน้ำย่อยยอดฮิต",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2g",
-    "emoji": "🥟",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 204,
-    "name": "แผ่นปอเปี๊ยะญวน (ลุยสวน) Ø 22 ซม.*",
-    "detail": "20 กรัม (2 แผ่น)",
-    "carb": 1,
-    "description": "แผ่นแป้งข้าวเจ้าใส นำไปชุบน้ำให้นุ่ม เหนียวหนึบ เหมาะสำหรับทำปอเปี๊ยะสดลุยสวนห่อผักสลัดเต็มคำ",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0g",
-    "protein_value": "0.5g",
-    "emoji": "🌯",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
-  },
-  {
-    "id": 205,
-    "name": "แป้งเกี๊ยว",
-    "detail": "30 กรัม (4 แผ่น)",
-    "carb": 1,
-    "description": "แผ่นแป้งสี่เหลี่ยมสีเหลืองอ่อน ห่อหุ้มหมูเด้งหรือกุ้ง ต้มเป็นเกี๊ยวน้ำซุปใส หรือทอดกรอบจิ้มน้ำจิ้มบ๊วย",
-    "calories_value": "80 kcal",
-    "carbs_value": "15g",
-    "fat_value": "0.5g",
-    "protein_value": "2.5g",
-    "emoji": "🥟",
-    "type": "rice_grain_flour",
-    "bg": "bg-orange-100"
   }
 ];
 
@@ -2984,9 +1987,14 @@ const foodItems = [
               >
                  <div className="flex items-center gap-4">
                     {/* Icon Circle */}
-                    <div className={`w-14 h-14 ${item.bg} rounded-full flex items-center justify-center text-3xl shadow-sm`}>
-                       {item.emoji}
-                    </div>
+                      <div className={`w-14 h-14 ${item.bg} rounded-full flex items-center justify-center shadow-sm overflow-hidden`}>
+                        <img
+                          src={item.img}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
                     <div>
                        <h3 className="font-bold text-slate-800 text-sm">{item.name}</h3>
                        <p className="text-xs text-slate-400">{item.detail}</p>
