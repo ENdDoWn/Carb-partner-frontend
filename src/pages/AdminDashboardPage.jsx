@@ -540,7 +540,7 @@ const AdminDashboardPage = () => {
                 dataKey="dayLabel"
                 tick={{ fill: '#64748B', fontSize: 11 }}
                 interval="preserveStartEnd"
-                padding={{ left: 170, right: 170 }}
+                padding={{ left: 80, right: 80 }}
               />
               <YAxis tick={{ fill: '#64748B', fontSize: 11 }} />
               <Tooltip
