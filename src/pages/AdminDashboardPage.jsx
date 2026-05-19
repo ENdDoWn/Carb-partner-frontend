@@ -2,6 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DesktopLayout from '../components/DesktopLayout';
 import { getAdminDashboard, getAdminUsers } from '../Api/Admin';
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from 'recharts';
 
 const FOOD_BUCKETS = [
   { key: 'breakfast', label: 'Breakfast' },
