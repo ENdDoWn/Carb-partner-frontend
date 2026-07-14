@@ -105,6 +105,7 @@ const HomePage = () => {
   const [showLowSugarAdvice, setShowLowSugarAdvice] = useState(false);
   const [showHighSugarAdvice, setShowHighSugarAdvice] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [hasLoggedToday, setHasLoggedToday] = useState(false);
   const todayLabel = formatThaiDate(new Date());
   const bloodSugarMeta = getBloodSugarMeta(userData?.bloodSugar);
   const bloodSugarValue = Number(userData?.bloodSugar);
@@ -119,6 +120,20 @@ const HomePage = () => {
       ]);
       const latestSugar = bloodSugar?.length ? bloodSugar[0] : null;
       const dailyTotalCarb = Number(dailyCarb?.totalCarb);
+
+      // Check if the latest log is from today (Asia/Bangkok)
+      if (latestSugar?.created_at) {
+        const logDate = parseAssumedUtc(latestSugar.created_at);
+        if (logDate) {
+          const nowBkk = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+          const logBkk = new Date(logDate.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+          const isSameDay =
+            nowBkk.getFullYear() === logBkk.getFullYear() &&
+            nowBkk.getMonth() === logBkk.getMonth() &&
+            nowBkk.getDate() === logBkk.getDate();
+          setHasLoggedToday(isSameDay);
+        }
+      }
 
       const user = data?.user ?? data;
       console.log(user);
@@ -198,7 +213,16 @@ const HomePage = () => {
           : null,
         date: todayLabel,
       });
+      setHasLoggedToday(true);
     } catch (error) {
+      const detail = error?.response?.data?.detail;
+      if (detail && typeof detail === 'string' && detail.includes('จำกัด')) {
+        setBloodSugarError(detail);
+        setHasLoggedToday(true);
+      } else {
+        setBloodSugarError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      }
+      return;
     } finally {
       setShowBloodSugarModal(false);
       setBloodSugarInput('');
@@ -304,9 +328,14 @@ const HomePage = () => {
                 <p className="text-[10px] text-slate-400 mb-4">ล่าสุดเมื่อ {userData?.lastCheck ?? '-'}</p>
               <button 
                 onClick={() => setShowBloodSugarModal(true)}
-                className="bg-[#55BCC3] text-white px-5 py-2 rounded-full text-xs font-bold shadow-sm active:bg-[#4aaeb5]"
+                disabled={hasLoggedToday}
+                className={`px-5 py-2 rounded-full text-xs font-bold shadow-sm transition-colors ${
+                  hasLoggedToday
+                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    : 'bg-[#55BCC3] text-white active:bg-[#4aaeb5]'
+                }`}
               >
-                บันทึกระดับน้ำตาลในเลือด
+                {hasLoggedToday ? 'บันทึกแล้ววันนี้ (1 ครั้ง/วัน)' : 'บันทึกระดับน้ำตาลในเลือด'}
               </button>
             </div>
             <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-cyan-50 rounded-full flex items-center justify-center">
